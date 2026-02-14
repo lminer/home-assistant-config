@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "input_boolean",
+  "data": {
+    "items": [
+      {
+        "id": "show_section_home",
+        "name": "show_section_home",
+        "icon": "mdi:folder-home"
+      },
+      {
+        "id": "show_section_bluray",
+        "name": "show_section_bluray",
+        "icon": "mdi:disc-player"
+      },
+      {
+        "id": "show_section_tv",
+        "name": "show_section_tv",
+        "icon": "mdi:television-classic"
+      },
+      {
+        "id": "show_section_appletv",
+        "name": "show_section_appletv",
+        "icon": "mdi:apple"
+      }
+    ]
+  }
+}

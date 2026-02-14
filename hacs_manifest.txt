@@ -1,0 +1,13 @@
+# HACS Integrations (install via HACS > Integrations)
+pyscript
+
+# HACS Frontend Cards (install via HACS > Frontend)
+button-card
+lovelace-mushroom
+lovelace-slider-entity-row
+android-tv-card
+lovelace-card-mod
+lovelace-layout-card
+bootstrap-grid-card
+kiosk-mode
+mini-media-player

@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace_resources",
+  "data": {
+    "items": [
+      {
+        "id": "f958e244ea1c481e8cebd25edbfd3102",
+        "url": "/hacsfiles/button-card/button-card.js?hacstag=146194325412",
+        "type": "module"
+      },
+      {
+        "id": "aa94cd6727fa43ddb9f1676116f02df8",
+        "url": "/hacsfiles/lovelace-mushroom/mushroom.js?hacstag=444350375421",
+        "type": "module"
+      },
+      {
+        "id": "fbe224b89035445cbd7e2e447a25b15c",
+        "url": "/hacsfiles/lovelace-slider-entity-row/slider-entity-row.js?hacstag=1448997001741",
+        "type": "module"
+      },
+      {
+        "id": "f1a063a432ee437d93e7ed633c6e8d00",
+        "url": "/hacsfiles/android-tv-card/universal-remote-card.min.js?hacstag=654393646433",
+        "type": "module"
+      },
+      {
+        "id": "1159ddc409d14181bd2cbc758b092d6d",
+        "url": "/hacsfiles/lovelace-card-mod/card-mod.js?hacstag=190927524421",
+        "type": "module"
+      },
+      {
+        "id": "8984feb4d64544f2950a7f5a03fbcc04",
+        "url": "/hacsfiles/lovelace-layout-card/layout-card.js?hacstag=156434866245",
+        "type": "module"
+      },
+      {
+        "id": "9f34f87f27d6486baad22c6571ef5752",
+        "url": "/hacsfiles/bootstrap-grid-card/bootstrap-grid-card.js?hacstag=334448958022",
+        "type": "module"
+      },
+      {
+        "id": "edb4474e3f6c45a89698945c0570aecc",
+        "url": "/hacsfiles/kiosk-mode/kiosk-mode.js?hacstag=4973191281001",
+        "type": "module"
+      },
+      {
+        "id": "8f7f891ca40f48bd9c603e194eefa574",
+        "url": "/hacsfiles/mini-media-player/mini-media-player-bundle.js?hacstag=14852083811610",
+        "type": "module"
+      }
+    ]
+  }
+}

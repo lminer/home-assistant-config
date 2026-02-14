@@ -1,0 +1,293 @@
+turn_on_apple_tv:
+  alias: Turn On Apple TV
+  sequence:
+  - target:
+      entity_id: media_player.sony_xr_85z9j
+    action: media_player.turn_on
+    data: {}
+  - action: media_player.select_source
+    target:
+      entity_id:
+      - media_player.sony_xr_85z9j
+    data:
+      source: HDMI 4
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_on
+    data: {}
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    data:
+      source: Apple TV
+    action: media_player.select_source
+  - delay: 00:00:01
+  - target:
+      entity_id: remote.appletv_duncan
+    action: remote.send_command
+    data:
+      hold_secs: 1
+      delay_secs: 1
+      command:
+      - home
+  description: ''
+  icon: mdi:apple
+turn_on_switch:
+  alias: Turn On Switch
+  sequence:
+  - target:
+      entity_id: media_player.sony_xr_85z9j
+    action: media_player.turn_on
+    data: {}
+  - action: media_player.select_source
+    target:
+      entity_id:
+      - media_player.sony_xr_85z9j
+    data:
+      source: HDMI 4
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_on
+    data: {}
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    data:
+      source: switch
+    action: media_player.select_source
+  description: ''
+  icon: mdi:nintendo-switch
+turn_off_home_theater:
+  alias: Turn Off Home Theater
+  sequence:
+  - data:
+      option: none
+    action: input_select.select_option
+    target:
+      entity_id: input_select.selected_remote
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_off
+    data: {}
+  - target:
+      entity_id: media_player.sony_xr_85z9j
+    action: media_player.turn_off
+    data: {}
+  description: ''
+  icon: mdi:power
+turn_on_ps5:
+  alias: Turn On PS5
+  sequence:
+  - target:
+      entity_id: media_player.sony_xr_85z9j
+    action: media_player.turn_on
+    data: {}
+  - action: media_player.select_source
+    target:
+      entity_id:
+      - media_player.sony_xr_85z9j
+    data:
+      source: HDMI 4
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_on
+    data: {}
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    data:
+      source: PlayStation 5
+    action: media_player.select_source
+  description: ''
+  icon: mdi:sony-playstation
+turn_on_mac_mini:
+  alias: Turn On Mac Mini
+  sequence:
+  - target:
+      entity_id: media_player.sony_xr_85z9j
+    action: media_player.turn_on
+    data: {}
+  - action: media_player.select_source
+    target:
+      entity_id:
+      - media_player.sony_xr_85z9j
+    data:
+      source: HDMI 4
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_on
+    data: {}
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    data:
+      source: Mini
+    action: media_player.select_source
+  description: ''
+  icon: mdi:laptop
+turn_on_blu_ray_player:
+  alias: Turn On Blu-ray Player
+  sequence:
+  - target:
+      entity_id: media_player.sony_xr_85z9j
+    action: media_player.turn_on
+    data: {}
+  - action: media_player.select_source
+    target:
+      entity_id:
+      - media_player.sony_xr_85z9j
+    data:
+      source: HDMI 4
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_on
+    data: {}
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    data:
+      source: UBP-X800
+    action: media_player.select_source
+  - action: remote.send_command
+    target:
+      entity_id: remote.ir_blaster
+    data:
+      device: television
+      command: toggle power
+  description: ''
+  icon: mdi:disc
+turn_on_television:
+  alias: Turn On Television
+  sequence:
+  - target:
+      entity_id: media_player.sony_xr_85z9j
+    action: media_player.turn_on
+    data: {}
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_on
+    data: {}
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    data:
+      source: TV Audio
+    action: media_player.select_source
+  description: ''
+  icon: mdi:television-classic
+learn_tv_commands:
+  alias: learn_bluray_commands
+  sequence:
+  - action: remote.learn_command
+    target:
+      entity_id: remote.ir_blaster
+    data:
+      device: television
+      command:
+      - toggle power
+      - up
+      - down
+      - left
+      - right
+      - select
+      - play
+      - pause
+      - stop
+      - fforward
+      - rewind
+      - prev
+      - next
+      - home
+      - return
+      - open close
+      - subtitle
+      - audio
+  description: ''
+turn_off_blu_ray_player:
+  alias: Turn off Blu-ray Player
+  sequence:
+  - data:
+      option: none
+    action: input_select.select_option
+    target:
+      entity_id: input_select.selected_remote
+  - action: remote.send_command
+    target:
+      entity_id: remote.ir_blaster
+    data:
+      device: television
+      command: toggle power
+  - target:
+      entity_id: media_player.sony_xr_85z9j
+    action: media_player.turn_off
+    data: {}
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_off
+    data: {}
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    data:
+      source: UBP-X800
+    action: media_player.select_source
+  description: ''
+  icon: mdi:power
+turn_on_apple_tv_and_show_remote:
+  alias: Turn On Apple TV and Show Remote
+  sequence:
+  - data:
+      entity_id: input_select.selected_remote
+      option: appletv
+    action: input_select.select_option
+  - action: script.turn_on_apple_tv
+    data: {}
+  description: ''
+turn_on_bluray_and_show:
+  alias: Turn On bluray and show
+  sequence:
+  - data:
+      option: bluray
+    action: input_select.select_option
+    target:
+      entity_id: input_select.selected_remote
+  - action: script.turn_on_blu_ray_player
+    data: {}
+  description: ''
+turn_on_macmini_and_show:
+  alias: Turn On macmini and show
+  sequence:
+  - data:
+      option: macmini
+    action: input_select.select_option
+    target:
+      entity_id: input_select.selected_remote
+  - action: script.turn_on_mac_mini
+    data: {}
+  description: ''
+turn_on_switch_and_show:
+  alias: Turn On switch and show
+  sequence:
+  - data:
+      option: switch
+    action: input_select.select_option
+    target:
+      entity_id: input_select.selected_remote
+  - action: script.turn_on_switch
+    data: {}
+  description: ''
+turn_on_ps5_and_show:
+  alias: Turn On ps5 and show
+  sequence:
+  - data:
+      option: ps5
+    action: input_select.select_option
+    target:
+      entity_id: input_select.selected_remote
+  - action: script.turn_on_ps5
+    data: {}
+  description: ''
+turn_on_tv_and_show:
+  alias: Turn On tv and show
+  sequence:
+  - data:
+      option: tv
+    action: input_select.select_option
+    target:
+      entity_id: input_select.selected_remote
+  - action: script.turn_on_television
+    data: {}
+  description: ''

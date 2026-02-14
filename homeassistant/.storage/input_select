@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "minor_version": 2,
+  "key": "input_select",
+  "data": {
+    "items": [
+      {
+        "id": "selected_remote",
+        "name": "selected_remote",
+        "icon": "mdi:air-filter",
+        "options": [
+          "none",
+          "bluray",
+          "appletv",
+          "tv",
+          "switch",
+          "ps5",
+          "macmini"
+        ]
+      }
+    ]
+  }
+}
