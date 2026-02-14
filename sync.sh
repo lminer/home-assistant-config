@@ -12,6 +12,7 @@ YAML_FILES=(
   scripts.yaml
   scenes.yaml
   scratch.yaml
+  dashboards/media-center.yaml
 )
 
 STORAGE_FILES=(
@@ -25,6 +26,7 @@ STORAGE_FILES=(
 THEME_DIRS=(
   themes/catppuccin
   themes/ios-themes
+  themes/flow
 )
 
 usage() {

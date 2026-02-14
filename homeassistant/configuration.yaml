@@ -8,6 +8,16 @@ frontend:
   extra_module_url:
     - /hacsfiles/kiosk-mode/kiosk-mode.js
 
+lovelace:
+  mode: storage
+  dashboards:
+    media-center:
+      mode: yaml
+      filename: dashboards/media-center.yaml
+      title: Media Center
+      icon: mdi:remote-tv
+      show_in_sidebar: true
+
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
