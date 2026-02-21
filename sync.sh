@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
-HA_DIR="/root/homeassistant"
+HA_DIR="/homeassistant"
 REPO_HA="$REPO_DIR/homeassistant"
 
 # Files to sync (relative to homeassistant/)
