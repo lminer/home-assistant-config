@@ -13,6 +13,8 @@ YAML_FILES=(
   scenes.yaml
   scratch.yaml
   dashboards/media-center.yaml
+  dashboards/climate.yaml
+  dashboards/lights.yaml
 )
 
 STORAGE_FILES=(

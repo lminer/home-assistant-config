@@ -1,3 +1,6 @@
+kiosk_mode:
+  hide_header: true
+
 title: Media Center
 views:
   - title: Media Center
@@ -1124,7 +1127,7 @@ views:
         card:
           type: grid
           square: false
-          columns: 5
+          columns: 4
           cards:
             - type: custom:button-card
               icon: local:house-regular
@@ -1158,7 +1161,7 @@ views:
               name: Climate
               tap_action:
                 action: navigate
-                navigation_path: /lovelace/climate
+                navigation_path: /home-climate/home
               styles:
                 icon:
                   - color: white
@@ -1205,7 +1208,6 @@ views:
                 name:
                   - font-size: 10px
                   - align-self: center
-                  - opacity: 1
                   - font-weight: 400
                   - padding-top: 6px
             - type: custom:button-card
@@ -1213,34 +1215,7 @@ views:
               name: Lights
               tap_action:
                 action: navigate
-                navigation_path: /lovelace/lights
-              styles:
-                icon:
-                  - color: white
-                  - width: 24px
-                  - height: 24px
-                img_cell:
-                  - display: flex
-                  - align-items: flex-end
-                  - justify-content: center
-                card:
-                  - background: none
-                  - padding: 0px
-                  - opacity: 0.5
-                  - top: 8px
-                  - height: null
-                  - width: 74px
-                name:
-                  - font-size: 10px
-                  - align-self: center
-                  - font-weight: 300
-                  - padding-top: 6px
-            - type: custom:button-card
-              icon: local:shield-check-regular
-              name: Security
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/security
+                navigation_path: /home-lights/home
               styles:
                 icon:
                   - color: white

@@ -17,6 +17,18 @@ lovelace:
       title: Media Center
       icon: mdi:remote-tv
       show_in_sidebar: true
+    home-climate:
+      mode: yaml
+      filename: dashboards/climate.yaml
+      title: Climate
+      icon: mdi:thermometer
+      show_in_sidebar: true
+    home-lights:
+      mode: yaml
+      filename: dashboards/lights.yaml
+      title: Lights
+      icon: mdi:lightbulb-group
+      show_in_sidebar: true
 
 automation: !include automations.yaml
 script: !include scripts.yaml
