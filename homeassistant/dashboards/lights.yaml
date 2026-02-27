@@ -9,7 +9,7 @@ views:
   - title: Lights
     path: home
     icon: mdi:lightbulb-group
-    theme: ios-dark-mode-blue-red-alternative
+    theme: ios-dark-mode-blue-red
     cards:
       # ===== TOP NAV BAR =====
       - type: custom:mod-card
@@ -77,14 +77,14 @@ views:
                     --card-primary-font-size: 22px !important;
                     --card-secondary-font-size: 50px !important;
                     --card-primary-line-height: 25px;
-                    overflow: visible !important;
+                    overflow: visible;
                     top: 10px;
                     right: 10px;
                     padding-bottom: 5px;
                     padding-top: 10px;
                   }
                   ha-state-icon {
-                    --icon-symbol-size: 20px;
+                    --icon-symbol-size: 18px;
                   }
                 mushroom-shape-icon$: |
                   .shape {
@@ -98,9 +98,7 @@ views:
                 mushroom-state-info$: |
                   .container {
                     --card-secondary-font-size: 18px;
-                    --card-primary-font-size: 20px;
-                    --card-primary-font-weight: 800;
-                    overflow: visible;
+                    --card-primary-font-size: 18px;
                   }
 
           # Room Tiles
@@ -221,15 +219,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -248,15 +243,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -275,15 +267,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -302,15 +291,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 1
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -324,7 +310,7 @@ views:
   - title: Study
     path: study
     icon: mdi:desk-lamp
-    theme: ios-dark-mode-blue-red-alternative
+    theme: ios-dark-mode-blue-red
     cards:
       # ===== TOP NAV BAR =====
       - type: custom:mod-card
@@ -396,8 +382,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -406,12 +391,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -435,8 +420,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -445,12 +429,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -477,8 +461,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -487,12 +470,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -528,8 +511,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -538,12 +520,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -567,8 +549,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -577,12 +558,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -609,8 +590,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -619,12 +599,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'open'
@@ -663,8 +643,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -673,12 +652,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -710,8 +689,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -720,12 +698,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -763,8 +741,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -773,12 +750,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -802,8 +779,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -812,12 +788,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -841,8 +817,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -851,12 +826,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -883,8 +858,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -893,12 +867,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -922,8 +896,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -932,12 +905,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -961,8 +934,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -971,12 +943,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -1003,8 +975,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -1013,12 +984,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -1042,8 +1013,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -1052,12 +1022,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -1081,8 +1051,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -1091,12 +1060,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -1123,8 +1092,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -1133,12 +1101,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -1162,8 +1130,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -1172,12 +1139,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -1251,15 +1218,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -1278,15 +1242,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -1305,15 +1266,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -1332,15 +1290,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 1
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -1354,7 +1309,7 @@ views:
   - title: Kitchen
     path: kitchen
     icon: mdi:silverware-fork-knife
-    theme: ios-dark-mode-blue-red-alternative
+    theme: ios-dark-mode-blue-red
     cards:
       # ===== TOP NAV BAR =====
       - type: custom:mod-card
@@ -1426,8 +1381,7 @@ views:
                 styles:
                   card:
                     - padding: 0px
-                    - height: 72px
-                    - border-radius: 10px
+                    - height: 60px
                   grid:
                     - grid-template-areas: '"i" "n"'
                     - grid-template-columns: 1fr
@@ -1436,12 +1390,12 @@ views:
                     - align-self: center
                     - text-align: center
                   icon:
-                    - width: 28px
+                    - width: 35px
                     - color: white
                   name:
                     - justify-self: center
-                    - font-weight: 500
-                    - font-size: 12px
+                    - font-weight: 600
+                    - font-size: 14px
                     - padding-bottom: 8px
                 state:
                   - value: 'on'
@@ -1515,15 +1469,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -1542,15 +1493,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -1569,15 +1517,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -1596,15 +1541,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 1
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px

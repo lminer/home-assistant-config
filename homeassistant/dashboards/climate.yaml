@@ -6,7 +6,7 @@ views:
   - title: Climate Overview
     path: home
     icon: mdi:fan
-    theme: ios-dark-mode-blue-red-alternative
+    theme: ios-dark-mode-blue-red
     cards:
       # ===== TOP NAV BAR =====
       - type: custom:mod-card
@@ -69,26 +69,91 @@ views:
                 entity: climate.master_suite
                 name: Master Suite
                 show_temperature_control: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% endif %}
+                    }
               - type: custom:mushroom-climate-card
                 entity: climate.family_room_study
                 name: Family Room / Study
                 show_temperature_control: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% endif %}
+                    }
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-climate-card
                 entity: climate.kids_bed_bath_1
                 name: Kids Bed/Bath 1
                 show_temperature_control: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% endif %}
+                    }
               - type: custom:mushroom-climate-card
                 entity: climate.kids_bed_bath_2
                 name: Kids Bed/Bath 2
                 show_temperature_control: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% endif %}
+                    }
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-climate-card
                 entity: climate.clea_hall
                 name: Clea Hall
                 show_temperature_control: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% endif %}
+                    }
               - type: custom:mushroom-entity-card
                 entity: climate.clea_hall
                 name: ' '
@@ -252,15 +317,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -279,15 +341,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 1
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -306,15 +365,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -333,15 +389,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px

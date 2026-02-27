@@ -2,7 +2,7 @@
 #
 # This is a direct rip from the great ios theme, with a few edits. 
 #
-ios-dark-mode-blue-red-alternative:
+flow-dark:
   # Global
   background-image: "center / cover no-repeat fixed url('/homeassistant/www/images/home-wallpaper-4.jpg')"
   lovelace-background: var(--background-image)
@@ -136,7 +136,7 @@ ios-dark-mode-blue-red:
   # Cards
   card-background-color: var(--secondary-background-color)  # Unused entities table background
   paper-listbox-background-color: var(--primary-background-color)
-  ha-card-border-radius: 5px
+  ha-card-border-radius: 10px
   ha-card-background: rgba(0, 0, 0, 0.5)
   paper-card-background-color: var(--ha-card-background)
   rgb-card-background-color: rgb(10, 10, 10) # see https://github.com/basnijholt/lovelace-ios-themes/issues/60

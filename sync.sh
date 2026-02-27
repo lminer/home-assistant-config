@@ -15,6 +15,9 @@ YAML_FILES=(
   dashboards/media-center.yaml
   dashboards/climate.yaml
   dashboards/lights.yaml
+  www/custom-icons.js
+  www/images/disney-plus.svg
+  www/images/prime-video.svg
 )
 
 STORAGE_FILES=(
@@ -28,7 +31,7 @@ STORAGE_FILES=(
 THEME_DIRS=(
   themes/catppuccin
   themes/ios-themes
-  themes/flow
+  themes/zz-flow
 )
 
 usage() {

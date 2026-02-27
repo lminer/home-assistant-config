@@ -2,7 +2,7 @@
 #
 # This is a direct rip from the great ios theme, with a few edits. 
 #
-ios-dark-mode-blue-red-alternative:
+flow-dark:
   # Global
   background-image: "center / cover no-repeat fixed url('/homeassistant/www/images/home-wallpaper-4.jpg')"
   lovelace-background: var(--background-image)

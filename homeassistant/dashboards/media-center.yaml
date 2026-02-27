@@ -6,7 +6,7 @@ views:
   - title: Media Center
     path: home
     icon: mdi:remote-tv
-    theme: ios-dark-mode-blue-red-alternative
+    theme: ios-dark-mode-blue-red
     cards:
       # ===== TOP NAV BAR =====
       - type: custom:mod-card
@@ -115,14 +115,14 @@ views:
                       --card-primary-font-size: 22px !important;
                       --card-secondary-font-size: 50px !important;
                       --card-primary-line-height: 25px;
-                      overflow: visible !important;
+                      overflow: visible;
                       top: 10px;
                       right: 10px;
                       padding-bottom: 5px;
                       padding-top: 10px;
                     }
                     ha-state-icon {
-                      --icon-symbol-size: 20px;
+                      --icon-symbol-size: 18px;
                     }
                   mushroom-shape-icon$: |
                     .shape {
@@ -136,9 +136,7 @@ views:
                   mushroom-state-info$: |
                     .container {
                       --card-secondary-font-size: 18px;
-                      --card-primary-font-size: 20px;
-                      --card-primary-font-weight: 800;
-                      overflow: visible;
+                      --card-primary-font-size: 18px;
                     }
 
             # Row 1: Apple TV | Blu-ray
@@ -330,153 +328,469 @@ views:
             state: appletv
         card:
           type: vertical-stack
+          card_mod:
+            style:
+              .: |
+                #root {
+                  gap: 0 !important;
+                }
+                #root > * {
+                  margin-top: 0 !important;
+                  margin-bottom: 0 !important;
+                }
+              hui-vertical-stack-card$: |
+                #root {
+                  gap: 0 !important;
+                }
+                #root > * {
+                  margin-top: 0 !important;
+                  margin-bottom: 0 !important;
+                }
           cards:
-            - type: custom:android-tv-card
+            # ---- Streaming App Launcher Bar ----
+            - type: custom:mod-card
               card_mod:
                 style: |
+                  :host {
+                    margin-bottom: 0 !important;
+                  }
                   ha-card {
                     background: rgba(0, 0, 0, 0.5);
-                    backdrop-filter: blur(20px);
-                    -webkit-backdrop-filter: blur(20px);
-                    border-radius: 10px;
+                    border-radius: 10px 10px 0px 0px;
+                    padding: 0px 30px;
+                    box-shadow: none;
                   }
-              rows:
-                - - power_off
-                  - appletv
-                  - max
-                  - return
-                - - netflix
-                  - hulu
-                  - primevideo
-                  - disney
-                - - touchpad
-                - - media_position
-                - - skip-backward
-                  - remote
-                  - play_pause
-                  - skip-forward
-                - - mute
-                  - volume
-                  - volume_up
-              platform: Apple TV
-              custom_actions:
-                - type: button
-                  name: power_off
-                  tap_action:
-                    action: perform-action
-                    perform_action: script.turn_off_home_theater
-                    key: POWER
-                  icon: mdi:power
-                - type: button
-                  name: return
-                  tap_action:
-                    action: perform-action
-                    perform_action: remote.send_command
-                    data:
-                      command: menu
-                    entity_id: remote.appletv_duncan
-                  icon: mdi:chevron-left
-                  styles: ".icon {\n  --size: 70px;\n}"
-                - type: slider
-                  name: volume
-                  range:
-                    - 0
-                    - 1
-                  step: 0.01
-                  value_attribute: volume_level
-                  tap_action:
-                    action: perform-action
-                    perform_action: media_player.volume_set
-                    data:
-                      volume_level: "{{ value | float }}"
-                  styles: ":host {\n  height: 20px;\n}"
-                  entity_id: media_player.denon_avr_x4700h
-                  icon: ""
-                - type: button
-                  name: mute
-                  entity_id: media_player.denon_avr_x4700h
-                  action: perform-action
-                  perform_action: media_player.volume_mute
-                  icon: mdi:volume-off
-                  styles: ".icon {\n  --size: 30px;\n}"
-                - type: button
-                  name: volume_up
-                  tap_action:
-                    action: key
-                    key: volume_up
-                  hold_action:
-                    action: repeat
-                  icon: mdi:volume-plus
-                  entity_id: media_player.denon_avr_x4700h
-                  action: perform-action
-                  perform_action: media_player.volume_up
-                  styles: ".icon {\n  --size: 30px;\n}"
-                - type: slider
-                  name: media_position
-                  value_attribute: media_position
-                  range:
-                    - 0
-                    - "{{ state_attr(config.entity, \"media_duration\") }}"
-                  tap_action:
-                    action: perform-action
-                    perform_action: media_player.media_seek
-                    data:
-                      seek_position: "{{ value }}"
-                  step: 1
-                  styles: |-
-                    :host {
-                      --thumb-width: 5px;
-                      --tooltip-label: '{{ (value / 60) | int }}:{{ 0 if (value - 60*((value / 60) | int)) < 10 else "" }}{{ (value - 60*((value / 60) | int)) | int }}';
-                      height: 11px;
-                      border-radius: 4px;
-                    }
-                    .label {
-                      filter: invert(1);
-                      mix-blend-mode: difference;
-                    }
-                  label: >-
-                    {% set minutes = (value / 60) | int %} {% set seconds =
-                    (value - 60 * minutes) | int %} {{ minutes }}:{{ 0 if
-                    seconds < 10 else "" }}{{ seconds | int }}/{{
-                    (state_attr(config.entity, "media_duration") / 60) | int
-                    }}:{{ 0 if (state_attr(config.entity, "media_duration") -
-                    60*((state_attr(config.entity, "media_duration") / 60) |
-                    int)) < 10 else "" }}{{ (state_attr(config.entity,
-                    "media_duration") - 60*((state_attr(config.entity,
-                    "media_duration") / 60) | int)) | int }}
-                - icon: mdi:rewind-10
-                  tap_action:
-                    action: key
-                    key: skip_backward
-                  name: skip-backward
-                  type: button
-                - icon: mdi:fast-forward-10
-                  action: key
-                  name: skip-forward
-                  tap_action:
-                    key: skip_forward
-                    action: key
-                  type: button
-                - show_name: false
-                  show_icon: true
-                  type: button
-                  name: remote
-                  tap_action:
-                    action: url
-                    url_path: "tvremote://"
-                  icon: mdi:remote
-                  icon_height: 24px
-                - icon: mdi:play-pause
-                  action: key
-                  name: play_pause
-                  tap_action:
-                    action: perform-action
-                    perform_action: media_player.media_play_pause
-                  type: button
+              card:
+                type: grid
+                square: false
+                columns: 5
+                cards:
+                  - type: custom:button-card
+                    icon: mdi:apple
+                    tap_action:
+                      action: perform-action
+                      perform_action: media_player.select_source
+                      target:
+                        entity_id: media_player.appletv_duncan
+                      data:
+                        source: TV
+                    styles:
+                      icon:
+                        - width: 25px
+                        - color: rgba(255,255,255,0.8)
+                      img_cell:
+                        - width: 40px
+                        - height: 40px
+                      card:
+                        - background: none
+                        - padding: 0
+                  - type: custom:button-card
+                    icon: mdi:netflix
+                    tap_action:
+                      action: perform-action
+                      perform_action: media_player.select_source
+                      target:
+                        entity_id: media_player.appletv_duncan
+                      data:
+                        source: Netflix
+                    styles:
+                      icon:
+                        - width: 25px
+                        - color: rgba(255,255,255,0.8)
+                      img_cell:
+                        - width: 40px
+                        - height: 40px
+                      card:
+                        - background: none
+                        - padding: 0
+                  - type: custom:button-card
+                    show_icon: false
+                    show_name: false
+                    custom_fields:
+                      img: '<img src="/local/images/disney-plus.svg" style="width:25px;height:25px;opacity:0.8;">'
+                    tap_action:
+                      action: perform-action
+                      perform_action: media_player.select_source
+                      target:
+                        entity_id: media_player.appletv_duncan
+                      data:
+                        source: Disney+
+                    styles:
+                      custom_fields:
+                        img:
+                          - display: flex
+                          - justify-content: center
+                          - align-items: center
+                          - width: 40px
+                          - height: 40px
+                      card:
+                        - background: none
+                        - padding: 0
+                  - type: custom:button-card
+                    show_icon: false
+                    show_name: false
+                    custom_fields:
+                      img: '<img src="/local/images/prime-video.svg" style="width:25px;height:25px;opacity:0.8;">'
+                    tap_action:
+                      action: perform-action
+                      perform_action: media_player.select_source
+                      target:
+                        entity_id: media_player.appletv_duncan
+                      data:
+                        source: Prime Video
+                    styles:
+                      custom_fields:
+                        img:
+                          - display: flex
+                          - justify-content: center
+                          - align-items: center
+                          - width: 40px
+                          - height: 40px
+                      card:
+                        - background: none
+                        - padding: 0
+                  - type: custom:button-card
+                    icon: mdi:hulu
+                    tap_action:
+                      action: perform-action
+                      perform_action: media_player.select_source
+                      target:
+                        entity_id: media_player.appletv_duncan
+                      data:
+                        source: Hulu
+                    styles:
+                      icon:
+                        - width: 25px
+                        - color: rgba(255,255,255,0.8)
+                      img_cell:
+                        - width: 40px
+                        - height: 40px
+                      card:
+                        - background: none
+                        - padding: 0
+
+            # ---- Touchpad (fills main area) ----
+            - type: custom:android-tv-card
               remote_id: remote.appletv_duncan
               keyboard_id: remote.appletv_duncan
               media_player_id: media_player.appletv_duncan
-              custom_icons: []
+              platform: Apple TV
+              rows:
+                - - touchpad
+              custom_actions:
+                - type: touchpad
+                  name: touchpad
+                  tap_action:
+                    action: key
+                    key: select
+                  double_tap_action:
+                    action: key
+                    key: menu
+                  up:
+                    tap_action:
+                      action: key
+                      key: up
+                    hold_action:
+                      action: repeat
+                  down:
+                    tap_action:
+                      action: key
+                      key: down
+                    hold_action:
+                      action: repeat
+                  left:
+                    tap_action:
+                      action: key
+                      key: left
+                    hold_action:
+                      action: repeat
+                  right:
+                    tap_action:
+                      action: key
+                      key: right
+                    hold_action:
+                      action: repeat
+                  styles: |-
+                    toucharea {
+                      height: 410px;
+                      background-image: url('https://i.ibb.co/pbf8yC8/swipe-nav.png');
+                      background-color: rgba(0,0,0,0);
+                      background-size: 55%;
+                      background-repeat: no-repeat;
+                      background-position: center;
+                      border-radius: 0px;
+                      opacity: 1;
+                      padding-bottom: 20px;
+                    }
+              card_mod:
+                style: |
+                  :host {
+                    margin-top: 0 !important;
+                    margin-bottom: 0 !important;
+                  }
+                  ha-card {
+                    background: rgba(0, 0, 0, 0.5);
+                    border-radius: 0px;
+                    padding: 0px !important;
+                    box-shadow: none;
+                  }
+
+            # ---- Bottom Control Panel ----
+            - type: custom:button-card
+              show_icon: false
+              show_name: false
+              show_state: false
+              entity: media_player.appletv_duncan
+              styles:
+                grid:
+                  - grid-template-areas: '"seekbar" "transport" "vol"'
+                  - grid-template-columns: 1fr
+                  - grid-template-rows: min-content min-content min-content
+                card:
+                  - background-color: rgba(0,0,0,0.5)
+                  - box-shadow: none
+                  - border-radius: 0px 0px 10px 10px
+                  - border-width: 0px
+                  - padding: 15px
+                  - margin: 0px
+                  - height: 185px
+              custom_fields:
+                seekbar:
+                  card:
+                    type: custom:android-tv-card
+                    remote_id: remote.appletv_duncan
+                    media_player_id: media_player.appletv_duncan
+                    rows:
+                      - - media_position
+                    custom_actions:
+                      - type: slider
+                        name: media_position
+                        value_attribute: media_position
+                        range:
+                          - 0
+                          - "{{ state_attr(config.entity, 'media_duration') }}"
+                        tap_action:
+                          action: perform-action
+                          perform_action: media_player.media_seek
+                          data:
+                            seek_position: "{{ value }}"
+                        step: 1
+                        styles: |-
+                          :host {
+                            --thumb-width: 5px;
+                            --tooltip-label: '{{ (value / 60) | int }}:{{ 0 if (value - 60*((value / 60) | int)) < 10 else "" }}{{ (value - 60*((value / 60) | int)) | int }}';
+                            height: 11px;
+                            border-radius: 4px;
+                          }
+                          .label {
+                            filter: invert(1);
+                            mix-blend-mode: difference;
+                          }
+                        label: >-
+                          {% set minutes = (value / 60) | int %} {% set seconds
+                          = (value - 60 * minutes) | int %} {{ minutes }}:{{ 0
+                          if seconds < 10 else "" }}{{ seconds | int }}/{{
+                          (state_attr(config.entity, "media_duration") / 60) |
+                          int }}:{{ 0 if (state_attr(config.entity,
+                          "media_duration") - 60*((state_attr(config.entity,
+                          "media_duration") / 60) | int)) < 10 else "" }}{{
+                          (state_attr(config.entity, "media_duration") -
+                          60*((state_attr(config.entity, "media_duration") / 60)
+                          | int)) | int }}
+                    card_mod:
+                      style: |
+                        ha-card {
+                          background: none;
+                          box-shadow: none;
+                          border: none;
+                          padding: 0;
+                          margin: 0;
+                        }
+                transport:
+                  card:
+                    type: custom:button-card
+                    show_icon: false
+                    show_name: false
+                    custom_fields:
+                      skip_back:
+                        card:
+                          type: custom:button-card
+                          tap_action:
+                            action: perform-action
+                            perform_action: remote.send_command
+                            target:
+                              entity_id: remote.appletv_duncan
+                            data:
+                              command: skip_backward
+                          icon: mdi:rewind-10
+                          show_name: false
+                          styles:
+                            card:
+                              - background: rgba(255,255,255,0.0)
+                              - box-shadow: none
+                              - border-width: 0px
+                              - padding: 0px
+                            icon:
+                              - width: 20px
+                              - color: rgba(255,255,255,0.5)
+                      menu_back:
+                        card:
+                          type: custom:button-card
+                          tap_action:
+                            action: perform-action
+                            perform_action: remote.send_command
+                            target:
+                              entity_id: remote.appletv_duncan
+                            data:
+                              command: menu
+                          icon: mdi:backspace
+                          show_name: false
+                          styles:
+                            card:
+                              - background: rgba(255,255,255,0.0)
+                              - box-shadow: none
+                              - border-width: 0px
+                              - padding: 0px
+                            icon:
+                              - width: 40px
+                              - color: rgba(255,255,255,0.8)
+                      play_pause:
+                        card:
+                          type: custom:button-card
+                          entity: media_player.appletv_duncan
+                          tap_action:
+                            action: perform-action
+                            perform_action: media_player.media_play_pause
+                            target:
+                              entity_id: media_player.appletv_duncan
+                          icon: mdi:play
+                          state:
+                            - value: playing
+                              icon: mdi:pause
+                          show_name: false
+                          styles:
+                            card:
+                              - background: rgba(255,255,255,0.0)
+                              - box-shadow: none
+                              - border-width: 0px
+                              - padding: 0px
+                            icon:
+                              - width: 55px
+                              - color: rgba(255,255,255,0.8)
+                      home_btn:
+                        card:
+                          type: custom:button-card
+                          tap_action:
+                            action: url
+                            url_path: "tvremote://"
+                          icon: mdi:remote
+                          show_name: false
+                          styles:
+                            card:
+                              - background: rgba(255,255,255,0.0)
+                              - box-shadow: none
+                              - border-width: 0px
+                              - padding: 0px
+                            icon:
+                              - width: 40px
+                              - color: rgba(255,255,255,0.8)
+                      skip_fwd:
+                        card:
+                          type: custom:button-card
+                          tap_action:
+                            action: perform-action
+                            perform_action: remote.send_command
+                            target:
+                              entity_id: remote.appletv_duncan
+                            data:
+                              command: skip_forward
+                          icon: mdi:fast-forward-10
+                          show_name: false
+                          styles:
+                            card:
+                              - background: rgba(255,255,255,0.0)
+                              - box-shadow: none
+                              - border-width: 0px
+                              - padding: 0px
+                            icon:
+                              - width: 20px
+                              - color: rgba(255,255,255,0.5)
+                    styles:
+                      grid:
+                        - grid-template-columns: 2fr 3fr 3fr 3fr 2fr
+                        - grid-template-rows: min-content
+                        - grid-template-areas: '"skip_back menu_back play_pause home_btn skip_fwd"'
+                      card:
+                        - padding: 0
+                        - margin: 3px 0px 0px 0px
+                        - background: none
+                        - box-shadow: none
+                        - border-width: 0px
+                vol:
+                  card:
+                    type: custom:android-tv-card
+                    remote_id: remote.appletv_duncan
+                    media_player_id: media_player.denon_avr_x4700h
+                    rows:
+                      - - mute
+                        - volume
+                        - volume_up
+                    custom_actions:
+                      - type: slider
+                        name: volume
+                        range:
+                          - 0
+                          - 1
+                        step: 0.01
+                        value_attribute: volume_level
+                        tap_action:
+                          action: perform-action
+                          perform_action: media_player.volume_set
+                          data:
+                            volume_level: "{{ value | float }}"
+                        styles: ":host {\n  height: 20px;\n}"
+                        entity_id: media_player.denon_avr_x4700h
+                        icon: ""
+                      - type: button
+                        name: mute
+                        entity_id: media_player.denon_avr_x4700h
+                        tap_action:
+                          action: perform-action
+                          perform_action: media_player.volume_mute
+                          target:
+                            entity_id: media_player.denon_avr_x4700h
+                        icon: mdi:volume-off
+                        styles: ".icon {\n  --size: 30px;\n}"
+                      - type: button
+                        name: volume_up
+                        tap_action:
+                          action: perform-action
+                          perform_action: media_player.volume_up
+                          target:
+                            entity_id: media_player.denon_avr_x4700h
+                        hold_action:
+                          action: repeat
+                        icon: mdi:volume-plus
+                        styles: ".icon {\n  --size: 30px;\n}"
+                    card_mod:
+                      style: |
+                        ha-card {
+                          background: none;
+                          box-shadow: none;
+                          border: none;
+                          padding: 0;
+                          margin: 0;
+                        }
+              card_mod:
+                style: |
+                  :host {
+                    margin-top: 0 !important;
+                  }
+                  ha-card {
+                    border-width: 0px;
+                    box-shadow: none;
+                  }
+
             # Spacer for bottom nav
             - type: custom:gap-card
               height: 50
@@ -1141,15 +1455,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -1168,15 +1479,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -1195,15 +1503,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 1
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
@@ -1222,15 +1527,12 @@ views:
                   - width: 24px
                   - height: 24px
                 img_cell:
-                  - display: flex
-                  - align-items: flex-end
                   - justify-content: center
+                  - height: 100%
                 card:
                   - background: none
-                  - padding: 0px
+                  - padding: 7px
                   - opacity: 0.5
-                  - top: 8px
-                  - height: null
                   - width: 74px
                 name:
                   - font-size: 10px
