@@ -48,12 +48,8 @@ views:
                       Blu-ray
                     {% elif states('input_select.selected_remote') == 'tv' %}
                       Television
-                    {% elif states('input_select.selected_remote') == 'ps5' %}
-                      PlayStation 5
                     {% elif states('input_select.selected_remote') == 'switch' %}
                       Nintendo Switch
-                    {% elif states('input_select.selected_remote') == 'macmini' %}
-                      Mac Mini
                     {% endif %}
                   tap_action:
                     action: perform-action
@@ -72,7 +68,7 @@ views:
                   entity: media_player.tx_rz920
                   tap_action:
                     action: perform-action
-                    perform_action: script.turn_off_home_theater
+                    perform_action: script.turn_off_all_media
                   icon: mdi:power
                   content_info: none
                   card_mod:
@@ -148,7 +144,7 @@ views:
                   show_state: false
                   tap_action:
                     action: perform-action
-                    perform_action: script.turn_on_apple_tv_and_show_remote
+                    perform_action: script.turn_on_appletv
                   styles:
                     card:
                       - padding: 0px
@@ -176,7 +172,7 @@ views:
                   show_state: false
                   tap_action:
                     action: perform-action
-                    perform_action: script.turn_on_bluray_and_show
+                    perform_action: script.turn_on_bluray
                   styles:
                     card:
                       - padding: 0px
@@ -198,66 +194,7 @@ views:
                       - font-size: 14px
                       - padding-bottom: 15px
 
-            # Row 2: PlayStation 5 | Mac Mini
-            - type: horizontal-stack
-              cards:
-                - type: custom:button-card
-                  name: PlayStation 5
-                  icon: mdi:sony-playstation
-                  show_state: false
-                  tap_action:
-                    action: perform-action
-                    perform_action: script.turn_on_ps5_and_show
-                  styles:
-                    card:
-                      - padding: 0px
-                      - height: 128px
-                      - border-radius: 10px
-                    grid:
-                      - grid-template-areas: '"i" "n"'
-                      - grid-template-columns: 1fr
-                      - grid-template-rows: 1fr min-content
-                    img_cell:
-                      - align-self: center
-                      - text-align: center
-                    icon:
-                      - width: 40px
-                      - color: white
-                    name:
-                      - justify-self: center
-                      - font-weight: 600
-                      - font-size: 14px
-                      - padding-bottom: 15px
-
-                - type: custom:button-card
-                  name: Mac Mini
-                  icon: mdi:desktop-classic
-                  show_state: false
-                  tap_action:
-                    action: perform-action
-                    perform_action: script.turn_on_macmini_and_show
-                  styles:
-                    card:
-                      - padding: 0px
-                      - height: 128px
-                      - border-radius: 10px
-                    grid:
-                      - grid-template-areas: '"i" "n"'
-                      - grid-template-columns: 1fr
-                      - grid-template-rows: 1fr min-content
-                    img_cell:
-                      - align-self: center
-                      - text-align: center
-                    icon:
-                      - width: 40px
-                      - color: white
-                    name:
-                      - justify-self: center
-                      - font-weight: 600
-                      - font-size: 14px
-                      - padding-bottom: 15px
-
-            # Row 3: Nintendo Switch | Television
+            # Row 2: Nintendo Switch | Television
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
@@ -266,7 +203,7 @@ views:
                   show_state: false
                   tap_action:
                     action: perform-action
-                    perform_action: script.turn_on_switch_and_show
+                    perform_action: script.turn_on_game
                   styles:
                     card:
                       - padding: 0px
@@ -294,7 +231,7 @@ views:
                   show_state: false
                   tap_action:
                     action: perform-action
-                    perform_action: script.turn_on_tv_and_show
+                    perform_action: script.turn_on_tv
                   styles:
                     card:
                       - padding: 0px
@@ -1151,7 +1088,7 @@ views:
                   name: power
                   tap_action:
                     action: perform-action
-                    perform_action: script.turn_off_home_theater
+                    perform_action: script.turn_off_tv
                   icon: mdi:power
                 - type: slider
                   name: volume
@@ -1193,75 +1130,6 @@ views:
             - type: custom:gap-card
               height: 50
 
-      # ===== PS5 REMOTE =====
-      - type: conditional
-        conditions:
-          - condition: state
-            entity: input_select.selected_remote
-            state: ps5
-        card:
-          type: vertical-stack
-          cards:
-            - type: custom:android-tv-card
-              card_mod:
-                style: |
-                  ha-card {
-                    background: rgba(0, 0, 0, 0.5);
-                    backdrop-filter: blur(20px);
-                    -webkit-backdrop-filter: blur(20px);
-                    border-radius: 10px;
-                  }
-              rows:
-                - - power
-                - - null
-                - - null
-                - - null
-                - - mute
-                  - volume
-                  - volume_up
-              custom_actions:
-                - type: button
-                  name: power
-                  tap_action:
-                    action: perform-action
-                    perform_action: script.turn_off_home_theater
-                  icon: mdi:power
-                - type: slider
-                  name: volume
-                  range:
-                    - 0
-                    - 1
-                  step: 0.01
-                  value_attribute: volume_level
-                  tap_action:
-                    action: perform-action
-                    perform_action: media_player.volume_set
-                    data:
-                      volume_level: "{{ value | float }}"
-                  entity_id: media_player.tx_rz920
-                - type: button
-                  name: mute
-                  entity_id: media_player.tx_rz920
-                  action: perform-action
-                  perform_action: media_player.volume_mute
-                  icon: mdi:volume-off
-                  styles: ".icon {\n  --size: 30px;\n}"
-                - type: button
-                  name: volume_up
-                  tap_action:
-                    action: key
-                    key: volume_up
-                  hold_action:
-                    action: repeat
-                  icon: mdi:volume-plus
-                  entity_id: media_player.tx_rz920
-                  action: perform-action
-                  perform_action: media_player.volume_up
-                  styles: ".icon {\n  --size: 30px;\n}"
-            # Spacer for bottom nav
-            - type: custom:gap-card
-              height: 50
-
       # ===== SWITCH REMOTE =====
       - type: conditional
         conditions:
@@ -1293,76 +1161,7 @@ views:
                   name: power
                   tap_action:
                     action: perform-action
-                    perform_action: script.turn_off_home_theater
-                  icon: mdi:power
-                - type: slider
-                  name: volume
-                  range:
-                    - 0
-                    - 1
-                  step: 0.01
-                  value_attribute: volume_level
-                  tap_action:
-                    action: perform-action
-                    perform_action: media_player.volume_set
-                    data:
-                      volume_level: "{{ value | float }}"
-                  entity_id: media_player.tx_rz920
-                - type: button
-                  name: mute
-                  entity_id: media_player.tx_rz920
-                  action: perform-action
-                  perform_action: media_player.volume_mute
-                  icon: mdi:volume-off
-                  styles: ".icon {\n  --size: 30px;\n}"
-                - type: button
-                  name: volume_up
-                  tap_action:
-                    action: key
-                    key: volume_up
-                  hold_action:
-                    action: repeat
-                  icon: mdi:volume-plus
-                  entity_id: media_player.tx_rz920
-                  action: perform-action
-                  perform_action: media_player.volume_up
-                  styles: ".icon {\n  --size: 30px;\n}"
-            # Spacer for bottom nav
-            - type: custom:gap-card
-              height: 50
-
-      # ===== MAC MINI REMOTE =====
-      - type: conditional
-        conditions:
-          - condition: state
-            entity: input_select.selected_remote
-            state: macmini
-        card:
-          type: vertical-stack
-          cards:
-            - type: custom:android-tv-card
-              card_mod:
-                style: |
-                  ha-card {
-                    background: rgba(0, 0, 0, 0.5);
-                    backdrop-filter: blur(20px);
-                    -webkit-backdrop-filter: blur(20px);
-                    border-radius: 10px;
-                  }
-              rows:
-                - - power
-                - - null
-                - - null
-                - - null
-                - - mute
-                  - volume
-                  - volume_up
-              custom_actions:
-                - type: button
-                  name: power
-                  tap_action:
-                    action: perform-action
-                    perform_action: script.turn_off_home_theater
+                    perform_action: script.turn_off_game
                   icon: mdi:power
                 - type: slider
                   name: volume
