@@ -69,7 +69,7 @@ views:
                       }
                 - type: spacer
                 - type: entity
-                  entity: media_player.denon_avr_x4700h
+                  entity: media_player.tx_rz920
                   tap_action:
                     action: perform-action
                     perform_action: script.turn_off_home_theater
@@ -371,7 +371,7 @@ views:
                       action: perform-action
                       perform_action: media_player.select_source
                       target:
-                        entity_id: media_player.appletv_duncan
+                        entity_id: media_player.trinity_2
                       data:
                         source: TV
                     styles:
@@ -390,7 +390,7 @@ views:
                       action: perform-action
                       perform_action: media_player.select_source
                       target:
-                        entity_id: media_player.appletv_duncan
+                        entity_id: media_player.trinity_2
                       data:
                         source: Netflix
                     styles:
@@ -412,7 +412,7 @@ views:
                       action: perform-action
                       perform_action: media_player.select_source
                       target:
-                        entity_id: media_player.appletv_duncan
+                        entity_id: media_player.trinity_2
                       data:
                         source: Disney+
                     styles:
@@ -435,7 +435,7 @@ views:
                       action: perform-action
                       perform_action: media_player.select_source
                       target:
-                        entity_id: media_player.appletv_duncan
+                        entity_id: media_player.trinity_2
                       data:
                         source: Prime Video
                     styles:
@@ -455,7 +455,7 @@ views:
                       action: perform-action
                       perform_action: media_player.select_source
                       target:
-                        entity_id: media_player.appletv_duncan
+                        entity_id: media_player.trinity_2
                       data:
                         source: Hulu
                     styles:
@@ -471,9 +471,9 @@ views:
 
             # ---- Touchpad (fills main area) ----
             - type: custom:android-tv-card
-              remote_id: remote.appletv_duncan
-              keyboard_id: remote.appletv_duncan
-              media_player_id: media_player.appletv_duncan
+              remote_id: remote.trinity_2
+              keyboard_id: remote.trinity_2
+              media_player_id: media_player.trinity_2
               platform: Apple TV
               rows:
                 - - touchpad
@@ -540,7 +540,7 @@ views:
               show_icon: false
               show_name: false
               show_state: false
-              entity: media_player.appletv_duncan
+              entity: media_player.trinity_2
               styles:
                 grid:
                   - grid-template-areas: '"seekbar" "transport" "vol"'
@@ -558,8 +558,8 @@ views:
                 seekbar:
                   card:
                     type: custom:android-tv-card
-                    remote_id: remote.appletv_duncan
-                    media_player_id: media_player.appletv_duncan
+                    remote_id: remote.trinity_2
+                    media_player_id: media_player.trinity_2
                     rows:
                       - - media_position
                     custom_actions:
@@ -619,7 +619,7 @@ views:
                             action: perform-action
                             perform_action: remote.send_command
                             target:
-                              entity_id: remote.appletv_duncan
+                              entity_id: remote.trinity_2
                             data:
                               command: skip_backward
                           icon: mdi:rewind-10
@@ -640,7 +640,7 @@ views:
                             action: perform-action
                             perform_action: remote.send_command
                             target:
-                              entity_id: remote.appletv_duncan
+                              entity_id: remote.trinity_2
                             data:
                               command: menu
                           icon: mdi:backspace
@@ -657,12 +657,12 @@ views:
                       play_pause:
                         card:
                           type: custom:button-card
-                          entity: media_player.appletv_duncan
+                          entity: media_player.trinity_2
                           tap_action:
                             action: perform-action
                             perform_action: media_player.media_play_pause
                             target:
-                              entity_id: media_player.appletv_duncan
+                              entity_id: media_player.trinity_2
                           icon: mdi:play
                           state:
                             - value: playing
@@ -701,7 +701,7 @@ views:
                             action: perform-action
                             perform_action: remote.send_command
                             target:
-                              entity_id: remote.appletv_duncan
+                              entity_id: remote.trinity_2
                             data:
                               command: skip_forward
                           icon: mdi:fast-forward-10
@@ -729,8 +729,8 @@ views:
                 vol:
                   card:
                     type: custom:android-tv-card
-                    remote_id: remote.appletv_duncan
-                    media_player_id: media_player.denon_avr_x4700h
+                    remote_id: remote.trinity_2
+                    media_player_id: media_player.tx_rz920
                     rows:
                       - - mute
                         - volume
@@ -749,16 +749,16 @@ views:
                           data:
                             volume_level: "{{ value | float }}"
                         styles: ":host {\n  height: 20px;\n}"
-                        entity_id: media_player.denon_avr_x4700h
+                        entity_id: media_player.tx_rz920
                         icon: ""
                       - type: button
                         name: mute
-                        entity_id: media_player.denon_avr_x4700h
+                        entity_id: media_player.tx_rz920
                         tap_action:
                           action: perform-action
                           perform_action: media_player.volume_mute
                           target:
-                            entity_id: media_player.denon_avr_x4700h
+                            entity_id: media_player.tx_rz920
                         icon: mdi:volume-off
                         styles: ".icon {\n  --size: 30px;\n}"
                       - type: button
@@ -767,7 +767,7 @@ views:
                           action: perform-action
                           perform_action: media_player.volume_up
                           target:
-                            entity_id: media_player.denon_avr_x4700h
+                            entity_id: media_player.tx_rz920
                         hold_action:
                           action: repeat
                         icon: mdi:volume-plus
@@ -848,12 +848,12 @@ views:
                       device: television
                       command: up
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Up
                   hold_action:
                     action: repeat
                   icon: mdi:chevron-up
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: down
                   tap_action:
@@ -863,12 +863,12 @@ views:
                       device: television
                       command: down
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Down
                   hold_action:
                     action: repeat
                   icon: mdi:chevron-down
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: left
                   tap_action:
@@ -878,12 +878,12 @@ views:
                       device: television
                       command: left
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Left
                   hold_action:
                     action: repeat
                   icon: mdi:chevron-left
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: right
                   tap_action:
@@ -893,12 +893,12 @@ views:
                       device: television
                       command: right
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Right
                   hold_action:
                     action: repeat
                   icon: mdi:chevron-right
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: center
                   tap_action:
@@ -908,10 +908,10 @@ views:
                       device: television
                       command: select
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Select
                   icon: mdi:circle
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: play
                   tap_action:
@@ -921,10 +921,10 @@ views:
                       device: television
                       command: play
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Play
                   icon: mdi:play
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: pause
                   tap_action:
@@ -934,10 +934,10 @@ views:
                       device: television
                       command: pause
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Pause
                   icon: mdi:pause
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: stop
                   tap_action:
@@ -947,10 +947,10 @@ views:
                       device: television
                       command: stop
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Stop
                   icon: mdi:stop
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: fast_forward
                   tap_action:
@@ -960,10 +960,10 @@ views:
                       device: television
                       command: fforward
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: fast_forward
                   icon: mdi:fast-forward
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: rewind
                   tap_action:
@@ -973,10 +973,10 @@ views:
                       device: television
                       command: rewind
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Rewind
                   icon: mdi:rewind
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: prev
                   tap_action:
@@ -986,10 +986,10 @@ views:
                       device: television
                       command: prev
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Previous
                   icon: mdi:skip-previous
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: next
                   tap_action:
@@ -999,10 +999,10 @@ views:
                       device: television
                       command: next
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Next
                   icon: mdi:skip-next
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: home
                   tap_action:
@@ -1012,10 +1012,10 @@ views:
                       device: television
                       command: home
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Home
                   icon: mdi:home
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: return
                   tap_action:
@@ -1025,10 +1025,10 @@ views:
                       device: television
                       command: return
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Return
                   icon: mdi:keyboard-return
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: eject
                   tap_action:
@@ -1038,10 +1038,10 @@ views:
                       device: television
                       command: open close
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Open
                   icon: mdi:eject
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: subtitle
                   tap_action:
@@ -1051,10 +1051,10 @@ views:
                       device: television
                       command: subtitle
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Subtitle
                   icon: mdi:subtitles
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: button
                   name: audio
                   tap_action:
@@ -1064,10 +1064,10 @@ views:
                       device: television
                       command: audio
                     target:
-                      entity_id: remote.ir_blaster
+                      entity_id: remote.bravia_4k_gb_atv3
                     key: Audio
                   icon: mdi:audio-video
-                  entity_id: remote.ir_blaster
+                  entity_id: remote.bravia_4k_gb_atv3
                 - type: slider
                   name: volume
                   range:
@@ -1080,11 +1080,11 @@ views:
                     perform_action: media_player.volume_set
                     data:
                       volume_level: "{{ value | float }}"
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   icon: mdi:volume-high
                 - type: button
                   name: mute
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   action: perform-action
                   perform_action: media_player.volume_mute
                   icon: mdi:volume-off
@@ -1097,14 +1097,14 @@ views:
                   hold_action:
                     action: repeat
                   icon: mdi:volume-plus
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   action: perform-action
                   perform_action: media_player.volume_up
                   styles: ".icon {\n  --size: 30px;\n}"
               platform: Sony BRAVIA
-              remote_id: remote.ir_blaster
-              keyboard_id: remote.ir_blaster
-              media_player_id: media_player.sony_xr_85z9j_2
+              remote_id: remote.bravia_4k_gb_atv3
+              keyboard_id: remote.bravia_4k_gb_atv3
+              media_player_id: media_player.bravia_4k_gb_atv3_2
             # Spacer for bottom nav
             - type: custom:gap-card
               height: 50
@@ -1165,11 +1165,11 @@ views:
                     perform_action: media_player.volume_set
                     data:
                       volume_level: "{{ value | float }}"
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   icon: mdi:volume-high
                 - type: button
                   name: mute
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   action: perform-action
                   perform_action: media_player.volume_mute
                   icon: mdi:volume-off
@@ -1182,13 +1182,13 @@ views:
                   hold_action:
                     action: repeat
                   icon: mdi:volume-plus
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   action: perform-action
                   perform_action: media_player.volume_up
                   styles: ".icon {\n  --size: 30px;\n}"
-              remote_id: remote.sony_xr_85z9j
-              keyboard_id: remote.sony_xr_85z9j
-              media_player_id: media_player.sony_xr_85z9j
+              remote_id: remote.sony_xbr_85x900f
+              keyboard_id: remote.sony_xbr_85x900f
+              media_player_id: media_player.sony_xbr_85x900f
             # Spacer for bottom nav
             - type: custom:gap-card
               height: 50
@@ -1238,10 +1238,10 @@ views:
                     perform_action: media_player.volume_set
                     data:
                       volume_level: "{{ value | float }}"
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                 - type: button
                   name: mute
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   action: perform-action
                   perform_action: media_player.volume_mute
                   icon: mdi:volume-off
@@ -1254,7 +1254,7 @@ views:
                   hold_action:
                     action: repeat
                   icon: mdi:volume-plus
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   action: perform-action
                   perform_action: media_player.volume_up
                   styles: ".icon {\n  --size: 30px;\n}"
@@ -1307,10 +1307,10 @@ views:
                     perform_action: media_player.volume_set
                     data:
                       volume_level: "{{ value | float }}"
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                 - type: button
                   name: mute
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   action: perform-action
                   perform_action: media_player.volume_mute
                   icon: mdi:volume-off
@@ -1323,7 +1323,7 @@ views:
                   hold_action:
                     action: repeat
                   icon: mdi:volume-plus
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   action: perform-action
                   perform_action: media_player.volume_up
                   styles: ".icon {\n  --size: 30px;\n}"
@@ -1376,10 +1376,10 @@ views:
                     perform_action: media_player.volume_set
                     data:
                       volume_level: "{{ value | float }}"
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                 - type: button
                   name: mute
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   action: perform-action
                   perform_action: media_player.volume_mute
                   icon: mdi:volume-off
@@ -1392,7 +1392,7 @@ views:
                   hold_action:
                     action: repeat
                   icon: mdi:volume-plus
-                  entity_id: media_player.denon_avr_x4700h
+                  entity_id: media_player.tx_rz920
                   action: perform-action
                   perform_action: media_player.volume_up
                   styles: ".icon {\n  --size: 30px;\n}"

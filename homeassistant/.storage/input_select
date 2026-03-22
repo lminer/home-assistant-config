@@ -6,16 +6,13 @@
     "items": [
       {
         "id": "selected_remote",
-        "name": "selected_remote",
-        "icon": "mdi:air-filter",
+        "name": "Selected Remote",
         "options": [
           "none",
-          "bluray",
           "appletv",
           "tv",
-          "switch",
-          "ps5",
-          "macmini"
+          "bluray",
+          "game"
         ]
       }
     ]

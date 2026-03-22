@@ -5,53 +5,48 @@
   "data": {
     "items": [
       {
-        "id": "f958e244ea1c481e8cebd25edbfd3102",
-        "url": "/hacsfiles/button-card/button-card.js?hacstag=146194325412",
+        "id": "b0aadf786d1a4496a274ceec6c6934dc",
+        "url": "/hacsfiles/Bubble-Card/bubble-card.js?hacstag=680112919314",
         "type": "module"
       },
       {
-        "id": "aa94cd6727fa43ddb9f1676116f02df8",
-        "url": "/hacsfiles/lovelace-mushroom/mushroom.js?hacstag=444350375421",
+        "id": "8180a3a0c2f84648abb0f24620c8dfe3",
+        "url": "/hacsfiles/lovelace-layout-card/layout-card.js?hacstag=156434866247",
         "type": "module"
       },
       {
-        "id": "fbe224b89035445cbd7e2e447a25b15c",
-        "url": "/hacsfiles/lovelace-slider-entity-row/slider-entity-row.js?hacstag=1448997001741",
+        "id": "719595d080f54cabac20867a6c48b96e",
+        "url": "/hacsfiles/custom-brand-icons/custom-brand-icons.js?hacstag=366862031202633",
         "type": "module"
       },
       {
-        "id": "f1a063a432ee437d93e7ed633c6e8d00",
-        "url": "/hacsfiles/android-tv-card/universal-remote-card.min.js?hacstag=654393646433",
-        "type": "module"
-      },
-      {
-        "id": "1159ddc409d14181bd2cbc758b092d6d",
+        "id": "521b73de30e34f78a3572477e3ed8aaa",
         "url": "/hacsfiles/lovelace-card-mod/card-mod.js?hacstag=190927524421",
         "type": "module"
       },
       {
-        "id": "8984feb4d64544f2950a7f5a03fbcc04",
-        "url": "/hacsfiles/lovelace-layout-card/layout-card.js?hacstag=156434866245",
+        "id": "30a39d6be0a149c099f892bd564ee23f",
+        "url": "/hacsfiles/universal-remote-card/universal-remote-card.min.js?hacstag=6543936464107",
         "type": "module"
       },
       {
-        "id": "9f34f87f27d6486baad22c6571ef5752",
+        "id": "89a83b13d5344f869651bc2ec3c415f1",
+        "url": "/hacsfiles/lovelace-mushroom/mushroom.js?hacstag=444350375511",
+        "type": "module"
+      },
+      {
+        "id": "3366af9b3e20440ea127ef40833c01a2",
+        "url": "/hacsfiles/button-card/button-card.js?hacstag=146194325701",
+        "type": "module"
+      },
+      {
+        "id": "e205a99de2d54e85b8ecf121bd517409",
         "url": "/hacsfiles/bootstrap-grid-card/bootstrap-grid-card.js?hacstag=334448958022",
         "type": "module"
       },
       {
-        "id": "edb4474e3f6c45a89698945c0570aecc",
-        "url": "/hacsfiles/kiosk-mode/kiosk-mode.js?hacstag=4973191281001",
-        "type": "module"
-      },
-      {
-        "id": "8f7f891ca40f48bd9c603e194eefa574",
-        "url": "/hacsfiles/mini-media-player/mini-media-player-bundle.js?hacstag=14852083811610",
-        "type": "module"
-      },
-      {
-        "id": "a1b2c3d4e5f6789012345678abcdef01",
-        "url": "/local/custom-icons.js?v=2",
+        "id": "a1b2c3d4e5f64789abcdef0123456789",
+        "url": "/local/custom-icons.js",
         "type": "module"
       }
     ]

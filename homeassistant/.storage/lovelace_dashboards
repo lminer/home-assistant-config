@@ -9,18 +9,27 @@
         "icon": "mdi:map",
         "title": "Map",
         "url_path": "map",
+        "mode": "storage",
         "require_admin": false,
+        "show_in_sidebar": false
+      },
+      {
+        "id": "dashboard_remote",
         "show_in_sidebar": false,
-        "mode": "storage"
+        "icon": "mdi:remote-tv",
+        "title": "Remote_Old",
+        "require_admin": false,
+        "mode": "storage",
+        "url_path": "dashboard-remote"
       },
       {
         "id": "dashboard_test",
         "show_in_sidebar": true,
-        "title": "TV Controls",
+        "title": "Remote",
         "require_admin": false,
         "mode": "storage",
         "url_path": "dashboard-test",
-        "icon": "mdi:television-classic"
+        "icon": "mdi:remote"
       }
     ]
   }
