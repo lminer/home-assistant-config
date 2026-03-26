@@ -168,7 +168,7 @@ views:
       - type: custom:mod-card
         card_mod:
           style: |
-            @media (max-width: 767px) {
+            @media (max-width: 1023px) {
               ha-card {
                 z-index: 1;
                 position: fixed;
@@ -188,7 +188,7 @@ views:
                 box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.3);
               }
             }
-            @media (min-width: 766px) {
+            @media (min-width: 1024px) {
               ha-card {
                 z-index: -1;
                 position: fixed;
@@ -1167,7 +1167,7 @@ views:
       - type: custom:mod-card
         card_mod:
           style: |
-            @media (max-width: 767px) {
+            @media (max-width: 1023px) {
               ha-card {
                 z-index: 1;
                 position: fixed;
@@ -1187,7 +1187,7 @@ views:
                 box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.3);
               }
             }
-            @media (min-width: 766px) {
+            @media (min-width: 1024px) {
               ha-card {
                 z-index: -1;
                 position: fixed;
@@ -1418,7 +1418,7 @@ views:
       - type: custom:mod-card
         card_mod:
           style: |
-            @media (max-width: 767px) {
+            @media (max-width: 1023px) {
               ha-card {
                 z-index: 1;
                 position: fixed;
@@ -1438,7 +1438,7 @@ views:
                 box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.3);
               }
             }
-            @media (min-width: 766px) {
+            @media (min-width: 1024px) {
               ha-card {
                 z-index: -1;
                 position: fixed;

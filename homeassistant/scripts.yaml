@@ -51,7 +51,7 @@ turn_on_switch:
   - target:
       entity_id: media_player.denon_avr_x4700h
     data:
-      source: switch
+      source: Switch 2
     action: media_player.select_source
   description: ''
   icon: mdi:nintendo-switch
@@ -117,7 +117,7 @@ turn_on_mac_mini:
   - target:
       entity_id: media_player.denon_avr_x4700h
     data:
-      source: Mini
+      source: Mac Mini
     action: media_player.select_source
   description: ''
   icon: mdi:laptop
