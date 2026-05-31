@@ -20,11 +20,6 @@
         "type": "module"
       },
       {
-        "id": "f1a063a432ee437d93e7ed633c6e8d00",
-        "url": "/hacsfiles/android-tv-card/universal-remote-card.min.js?hacstag=654393646433",
-        "type": "module"
-      },
-      {
         "id": "1159ddc409d14181bd2cbc758b092d6d",
         "url": "/hacsfiles/lovelace-card-mod/card-mod.js?hacstag=190927524421",
         "type": "module"
@@ -41,17 +36,22 @@
       },
       {
         "id": "edb4474e3f6c45a89698945c0570aecc",
-        "url": "/hacsfiles/kiosk-mode/kiosk-mode.js?hacstag=4973191281001",
+        "url": "/hacsfiles/kiosk-mode/kiosk-mode.js?hacstag=4973191281310",
         "type": "module"
       },
       {
         "id": "8f7f891ca40f48bd9c603e194eefa574",
-        "url": "/hacsfiles/mini-media-player/mini-media-player-bundle.js?hacstag=14852083811610",
+        "url": "/hacsfiles/mini-media-player/mini-media-player-bundle.js?hacstag=14852083811612",
         "type": "module"
       },
       {
         "id": "a1b2c3d4e5f6789012345678abcdef01",
         "url": "/local/custom-icons.js?v=2",
+        "type": "module"
+      },
+      {
+        "id": "61736123520b4e2d9e9293d0469fbacc",
+        "url": "/hacsfiles/universal-remote-card/universal-remote-card.min.js?hacstag=6543936464111",
         "type": "module"
       }
     ]

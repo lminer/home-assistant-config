@@ -520,7 +520,7 @@ views:
                           background-color: rgba(0,0,0,0);
                           background-size: 55%;
                           background-repeat: no-repeat;
-                          background-position: center;
+                          background-position: center calc(50% - 24px);
                           border-radius: 0px;
                           opacity: 1;
                           padding-bottom: 20px;
@@ -569,6 +569,7 @@ views:
                           - type: slider
                             name: media_position
                             value_attribute: media_position
+                            value_from_hass_delay: 1000
                             range:
                               - 0
                               - "{{ state_attr(config.entity, 'media_duration') }}"
@@ -582,24 +583,25 @@ views:
                               :host {
                                 --thumb-width: 5px;
                                 --tooltip-label: '{{ (value / 60) | int }}:{{ 0 if (value - 60*((value / 60) | int)) < 10 else "" }}{{ (value - 60*((value / 60) | int)) | int }}';
-                                height: 11px;
-                                border-radius: 4px;
+                                height: 22px;
+                                border-radius: 7px;
+                                background: rgba(255,255,255,0.25);
                               }
                               .label {
-                                filter: invert(1);
-                                mix-blend-mode: difference;
+                                color: #ffffff;
+                                filter: none;
+                                mix-blend-mode: normal;
+                                font-size: 16px;
+                                font-weight: 700;
+                                white-space: nowrap;
+                                text-shadow: 0 1px 2px rgba(0,0,0,0.9);
                               }
-                            label: >-
-                              {% set minutes = (value / 60) | int %} {% set seconds
-                              = (value - 60 * minutes) | int %} {{ minutes }}:{{ 0
-                              if seconds < 10 else "" }}{{ seconds | int }}/{{
-                              (state_attr(config.entity, "media_duration") / 60) |
-                              int }}:{{ 0 if (state_attr(config.entity,
-                              "media_duration") - 60*((state_attr(config.entity,
-                              "media_duration") / 60) | int)) < 10 else "" }}{{
-                              (state_attr(config.entity, "media_duration") -
-                              60*((state_attr(config.entity, "media_duration") / 60)
-                              | int)) | int }}
+                            label: |-
+                              {%- set dur = state_attr(config.entity, 'media_duration') -%}
+                              {%- if dur is not none and (dur | int) > 0 -%}
+                              {%- set pos = value | int -%}{%- set dur = dur | int -%}{%- set rem = dur - pos if dur > pos else 0 -%}
+                              {{ pos // 60 }}:{{ '0' if pos % 60 < 10 else '' }}{{ pos % 60 }} / {{ dur // 60 }}:{{ '0' if dur % 60 < 10 else '' }}{{ dur % 60 }} (-{{ rem // 60 }}:{{ '0' if rem % 60 < 10 else '' }}{{ rem % 60 }})
+                              {%- endif -%}
                         card_mod:
                           style: |
                             ha-card {
