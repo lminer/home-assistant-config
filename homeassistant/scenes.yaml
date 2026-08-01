@@ -1,0 +1,70 @@
+- id: master_suite_all_on
+  name: Master Suite All On
+  icon: mdi:white-balance-sunny
+  entities:
+    light.master_bedroom_master_bedroom_main_lights:
+      state: "on"
+      brightness: 255
+    light.master_bedroom_master_bedroom_accent:
+      state: "on"
+      brightness: 255
+    light.master_bedroom_master_bedroom_left_reading:
+      state: "on"
+      brightness: 255
+    light.master_bedroom_master_bedroom_right_reading:
+      state: "on"
+      brightness: 255
+    light.master_bathroom_master_bathroom_toilet:
+      state: "on"
+      brightness: 255
+    switch.master_closet_master_closet_entrance:
+      state: "on"
+    switch.master_closet_master_closet_main:
+      state: "on"
+
+- id: master_suite_all_low
+  name: Master Suite All Low
+  icon: mdi:brightness-4
+  entities:
+    light.master_bedroom_master_bedroom_main_lights:
+      state: "on"
+      brightness: 51
+    light.master_bedroom_master_bedroom_accent:
+      state: "on"
+      brightness: 51
+    light.master_bedroom_master_bedroom_left_reading:
+      state: "on"
+      brightness: 51
+    light.master_bedroom_master_bedroom_right_reading:
+      state: "on"
+      brightness: 51
+    light.master_bathroom_master_bathroom_toilet:
+      state: "on"
+      brightness: 51
+    # Closet fixtures are DVRF-5NS switches with no dimming, so they stay off
+    # here rather than sitting at full brightness in a "low" scene.
+    switch.master_closet_master_closet_entrance:
+      state: "off"
+    switch.master_closet_master_closet_main:
+      state: "off"
+
+- id: master_suite_reading
+  name: Master Suite Reading
+  icon: mdi:book-open-variant
+  entities:
+    light.master_bedroom_master_bedroom_left_reading:
+      state: "on"
+      brightness: 128
+    light.master_bedroom_master_bedroom_right_reading:
+      state: "on"
+      brightness: 128
+    light.master_bedroom_master_bedroom_main_lights:
+      state: "off"
+    light.master_bedroom_master_bedroom_accent:
+      state: "off"
+    light.master_bathroom_master_bathroom_toilet:
+      state: "off"
+    switch.master_closet_master_closet_entrance:
+      state: "off"
+    switch.master_closet_master_closet_main:
+      state: "off"

@@ -737,7 +737,7 @@ views:
                         remote_id: remote.appletv_duncan
                         media_player_id: media_player.denon_avr_x4700h
                         rows:
-                          - - mute
+                          - - volume_down
                             - volume
                             - volume_up
                         custom_actions:
@@ -757,14 +757,16 @@ views:
                             entity_id: media_player.denon_avr_x4700h
                             icon: ""
                           - type: button
-                            name: mute
+                            name: volume_down
                             entity_id: media_player.denon_avr_x4700h
                             tap_action:
                               action: perform-action
-                              perform_action: media_player.volume_mute
+                              perform_action: media_player.volume_down
                               target:
                                 entity_id: media_player.denon_avr_x4700h
-                            icon: mdi:volume-off
+                            hold_action:
+                              action: repeat
+                            icon: mdi:volume-minus
                             styles: ".icon {\n  --size: 30px;\n}"
                           - type: button
                             name: volume_up
@@ -834,7 +836,7 @@ views:
                     - - subtitle
                       - stop
                       - audio
-                    - - mute
+                    - - volume_down
                       - volume
                       - volume_up
                   custom_actions:
@@ -1089,11 +1091,14 @@ views:
                       entity_id: media_player.denon_avr_x4700h
                       icon: mdi:volume-high
                     - type: button
-                      name: mute
+                      name: volume_down
                       entity_id: media_player.denon_avr_x4700h
-                      action: perform-action
-                      perform_action: media_player.volume_mute
-                      icon: mdi:volume-off
+                      tap_action:
+                        action: key
+                        key: volume_down
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-minus
                       styles: ".icon {\n  --size: 30px;\n}"
                     - type: button
                       name: volume_up
@@ -1149,7 +1154,7 @@ views:
                       - n0
                       - channel_down
                     - - dpad
-                    - - mute
+                    - - volume_down
                       - volume
                       - volume_up
                   platform: Sony BRAVIA
@@ -1175,11 +1180,14 @@ views:
                       entity_id: media_player.denon_avr_x4700h
                       icon: mdi:volume-high
                     - type: button
-                      name: mute
+                      name: volume_down
                       entity_id: media_player.denon_avr_x4700h
-                      action: perform-action
-                      perform_action: media_player.volume_mute
-                      icon: mdi:volume-off
+                      tap_action:
+                        action: key
+                        key: volume_down
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-minus
                       styles: ".icon {\n  --size: 30px;\n}"
                     - type: button
                       name: volume_up
@@ -1224,7 +1232,7 @@ views:
                     - - null
                     - - null
                     - - null
-                    - - mute
+                    - - volume_down
                       - volume
                       - volume_up
                   custom_actions:
@@ -1248,11 +1256,14 @@ views:
                           volume_level: "{{ value | float }}"
                       entity_id: media_player.denon_avr_x4700h
                     - type: button
-                      name: mute
+                      name: volume_down
                       entity_id: media_player.denon_avr_x4700h
-                      action: perform-action
-                      perform_action: media_player.volume_mute
-                      icon: mdi:volume-off
+                      tap_action:
+                        action: key
+                        key: volume_down
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-minus
                       styles: ".icon {\n  --size: 30px;\n}"
                     - type: button
                       name: volume_up
@@ -1294,7 +1305,7 @@ views:
                     - - null
                     - - null
                     - - null
-                    - - mute
+                    - - volume_down
                       - volume
                       - volume_up
                   custom_actions:
@@ -1318,11 +1329,14 @@ views:
                           volume_level: "{{ value | float }}"
                       entity_id: media_player.denon_avr_x4700h
                     - type: button
-                      name: mute
+                      name: volume_down
                       entity_id: media_player.denon_avr_x4700h
-                      action: perform-action
-                      perform_action: media_player.volume_mute
-                      icon: mdi:volume-off
+                      tap_action:
+                        action: key
+                        key: volume_down
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-minus
                       styles: ".icon {\n  --size: 30px;\n}"
                     - type: button
                       name: volume_up
@@ -1364,7 +1378,7 @@ views:
                     - - null
                     - - null
                     - - null
-                    - - mute
+                    - - volume_down
                       - volume
                       - volume_up
                   custom_actions:
@@ -1388,11 +1402,14 @@ views:
                           volume_level: "{{ value | float }}"
                       entity_id: media_player.denon_avr_x4700h
                     - type: button
-                      name: mute
+                      name: volume_down
                       entity_id: media_player.denon_avr_x4700h
-                      action: perform-action
-                      perform_action: media_player.volume_mute
-                      icon: mdi:volume-off
+                      tap_action:
+                        action: key
+                        key: volume_down
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-minus
                       styles: ".icon {\n  --size: 30px;\n}"
                     - type: button
                       name: volume_up

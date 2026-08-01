@@ -1,1 +1,91 @@
-[]
+- id: master_bedroom_pico
+  alias: Master Bedroom Pico
+  description: >-
+    4-button Pico (PJ2-4B-GXX-X01, serial 156170791) driving the master suite:
+    On = everything full, Raise = everything low, Lower = reading lamps only,
+    Off = everything off.
+  mode: queued
+  max: 4
+  triggers:
+    - trigger: event
+      event_type: lutron_caseta_button_event
+      event_data:
+        serial: 156170791
+        button_type: "on"
+        action: press
+      id: all_on
+    - trigger: event
+      event_type: lutron_caseta_button_event
+      event_data:
+        serial: 156170791
+        button_type: raise
+        action: press
+      id: all_low
+    - trigger: event
+      event_type: lutron_caseta_button_event
+      event_data:
+        serial: 156170791
+        button_type: lower
+        action: press
+      id: reading
+    - trigger: event
+      event_type: lutron_caseta_button_event
+      event_data:
+        serial: 156170791
+        button_type: "off"
+        action: press
+      id: all_off
+  actions:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: all_on
+          sequence:
+            - action: scene.turn_on
+              target:
+                entity_id: scene.master_suite_all_on
+              data:
+                transition: 1
+
+        - conditions:
+            - condition: trigger
+              id: all_low
+          sequence:
+            - action: scene.turn_on
+              target:
+                entity_id: scene.master_suite_all_low
+              data:
+                transition: 1
+
+        - conditions:
+            - condition: trigger
+              id: reading
+          sequence:
+            - action: scene.turn_on
+              target:
+                entity_id: scene.master_suite_reading
+              data:
+                transition: 1
+
+        - conditions:
+            - condition: trigger
+              id: all_off
+          sequence:
+            # Explicit entity lists, never area_id: these areas are also full of
+            # Sonos config switches (loudness, crossfade, alarms) that an
+            # area-wide turn_off would silently clobber.
+            - action: light.turn_off
+              target:
+                entity_id:
+                  - light.master_bedroom_master_bedroom_main_lights
+                  - light.master_bedroom_master_bedroom_accent
+                  - light.master_bedroom_master_bedroom_left_reading
+                  - light.master_bedroom_master_bedroom_right_reading
+                  - light.master_bathroom_master_bathroom_toilet
+              data:
+                transition: 2
+            - action: switch.turn_off
+              target:
+                entity_id:
+                  - switch.master_closet_master_closet_entrance
+                  - switch.master_closet_master_closet_main
