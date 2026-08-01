@@ -1,0 +1,1568 @@
+kiosk_mode:
+  hide_header: true
+
+title: Media Center
+views:
+  - title: Media Center
+    path: home
+    icon: mdi:remote-tv
+    theme: ios-dark-mode-blue-red
+    type: panel
+    cards:
+      - type: vertical-stack
+        cards:
+          # ===== TOP NAV BAR =====
+          - type: custom:mod-card
+            card_mod:
+              style: |
+                ha-card {
+                  position: static;
+                  z-index: 3;
+                  top: 8px;
+                  left: 8px;
+                  right: 8px;
+                  height: 45px;
+                  padding: 4px 10px;
+                  border-radius: 10px;
+                  background-color: rgba(10, 10, 10, .5);
+                  -webkit-backdrop-filter: blur(100px);
+                  backdrop-filter: blur(100px);
+                }
+            card:
+              type: grid
+              square: false
+              columns: 1
+              cards:
+                - type: custom:mushroom-chips-card
+                  chips:
+                    - type: back
+                      icon: mdi:arrow-left
+                    - type: spacer
+                    - type: template
+                      entity: input_select.selected_remote
+                      icon: local:tv-retro-regular
+                      icon_color: '#0171A4'
+                      content: >-
+                        {% if states('input_select.selected_remote') == 'none' %}
+                          Select Device
+                        {% elif states('input_select.selected_remote') == 'appletv' %}
+                          Apple TV
+                        {% elif states('input_select.selected_remote') == 'bluray' %}
+                          Blu-ray
+                        {% elif states('input_select.selected_remote') == 'tv' %}
+                          Television
+                        {% elif states('input_select.selected_remote') == 'ps5' %}
+                          PlayStation 5
+                        {% elif states('input_select.selected_remote') == 'switch' %}
+                          Nintendo Switch
+                        {% elif states('input_select.selected_remote') == 'macmini' %}
+                          Mac Mini
+                        {% endif %}
+                      tap_action:
+                        action: perform-action
+                        perform_action: input_select.select_option
+                        data:
+                          option: none
+                        target:
+                          entity_id: input_select.selected_remote
+                      card_mod:
+                        style: |
+                          ha-card {
+                            --chip-padding: 4px;
+                          }
+                    - type: spacer
+                    - type: entity
+                      entity: media_player.denon_avr_x4700h
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_off_home_theater
+                      icon: mdi:power
+                      content_info: none
+                      card_mod:
+                        style: |
+                          ha-card {
+                            --chip-padding: 4px;
+                          }
+                  card_mod:
+                    style: |
+                      :host {
+                        --chip-background: rgba(0, 0, 0, 0) !important;
+                        --mush-card-primary-font-size: 28px;
+                      }
+                      ha-card {
+                        --card-primary-font-size: 30px !important;
+                        --card-secondary-font-size: 30px;
+                        --chip-icon-size: 15px;
+                      }
+
+          # ===== DEVICE SELECTION (when no remote selected) =====
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: input_select.selected_remote
+                state: none
+            card:
+              type: vertical-stack
+              cards:
+                # Section Header
+                - type: custom:mushroom-template-card
+                  primary: Media Center
+                  secondary: ''
+                  icon: local:tv-retro-regular
+                  badge_icon: ''
+                  card_mod:
+                    style:
+                      .: |
+                        ha-card {
+                          background: transparent;
+                          --card-primary-font-size: 22px !important;
+                          --card-secondary-font-size: 50px !important;
+                          --card-primary-line-height: 25px;
+                          overflow: visible;
+                          top: 10px;
+                          right: 10px;
+                          padding-bottom: 5px;
+                          padding-top: 10px;
+                        }
+                        ha-state-icon {
+                          --icon-symbol-size: 18px;
+                        }
+                      mushroom-shape-icon$: |
+                        .shape {
+                          padding-right: 0px;
+                          padding-left: 0px;
+                          padding-bottom: 0px;
+                          padding-top: 0px;
+                          left: 5px;
+                          background: transparent !important;
+                        }
+                      mushroom-state-info$: |
+                        .container {
+                          --card-secondary-font-size: 18px;
+                          --card-primary-font-size: 18px;
+                        }
+
+                # Row 1: Apple TV | Blu-ray
+                - type: horizontal-stack
+                  cards:
+                    - type: custom:button-card
+                      name: Apple TV
+                      icon: mdi:apple
+                      show_state: false
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_on_apple_tv_and_show_remote
+                      styles:
+                        card:
+                          - padding: 0px
+                          - height: 128px
+                          - border-radius: 10px
+                        grid:
+                          - grid-template-areas: '"i" "n"'
+                          - grid-template-columns: 1fr
+                          - grid-template-rows: 1fr min-content
+                        img_cell:
+                          - align-self: center
+                          - text-align: center
+                        icon:
+                          - width: 40px
+                          - color: white
+                        name:
+                          - justify-self: center
+                          - font-weight: 600
+                          - font-size: 14px
+                          - padding-bottom: 15px
+
+                    - type: custom:button-card
+                      name: Blu-ray
+                      icon: mdi:disc-player
+                      show_state: false
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_on_bluray_and_show
+                      styles:
+                        card:
+                          - padding: 0px
+                          - height: 128px
+                          - border-radius: 10px
+                        grid:
+                          - grid-template-areas: '"i" "n"'
+                          - grid-template-columns: 1fr
+                          - grid-template-rows: 1fr min-content
+                        img_cell:
+                          - align-self: center
+                          - text-align: center
+                        icon:
+                          - width: 40px
+                          - color: white
+                        name:
+                          - justify-self: center
+                          - font-weight: 600
+                          - font-size: 14px
+                          - padding-bottom: 15px
+
+                # Row 2: PlayStation 5 | Mac Mini
+                - type: horizontal-stack
+                  cards:
+                    - type: custom:button-card
+                      name: PlayStation 5
+                      icon: mdi:sony-playstation
+                      show_state: false
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_on_ps5_and_show
+                      styles:
+                        card:
+                          - padding: 0px
+                          - height: 128px
+                          - border-radius: 10px
+                        grid:
+                          - grid-template-areas: '"i" "n"'
+                          - grid-template-columns: 1fr
+                          - grid-template-rows: 1fr min-content
+                        img_cell:
+                          - align-self: center
+                          - text-align: center
+                        icon:
+                          - width: 40px
+                          - color: white
+                        name:
+                          - justify-self: center
+                          - font-weight: 600
+                          - font-size: 14px
+                          - padding-bottom: 15px
+
+                    - type: custom:button-card
+                      name: Mac Mini
+                      icon: mdi:desktop-classic
+                      show_state: false
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_on_macmini_and_show
+                      styles:
+                        card:
+                          - padding: 0px
+                          - height: 128px
+                          - border-radius: 10px
+                        grid:
+                          - grid-template-areas: '"i" "n"'
+                          - grid-template-columns: 1fr
+                          - grid-template-rows: 1fr min-content
+                        img_cell:
+                          - align-self: center
+                          - text-align: center
+                        icon:
+                          - width: 40px
+                          - color: white
+                        name:
+                          - justify-self: center
+                          - font-weight: 600
+                          - font-size: 14px
+                          - padding-bottom: 15px
+
+                # Row 3: Nintendo Switch | Television
+                - type: horizontal-stack
+                  cards:
+                    - type: custom:button-card
+                      name: Nintendo Switch
+                      icon: mdi:nintendo-switch
+                      show_state: false
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_on_switch_and_show
+                      styles:
+                        card:
+                          - padding: 0px
+                          - height: 128px
+                          - border-radius: 10px
+                        grid:
+                          - grid-template-areas: '"i" "n"'
+                          - grid-template-columns: 1fr
+                          - grid-template-rows: 1fr min-content
+                        img_cell:
+                          - align-self: center
+                          - text-align: center
+                        icon:
+                          - width: 40px
+                          - color: white
+                        name:
+                          - justify-self: center
+                          - font-weight: 600
+                          - font-size: 14px
+                          - padding-bottom: 15px
+
+                    - type: custom:button-card
+                      name: Television
+                      icon: mdi:television-classic
+                      show_state: false
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_on_tv_and_show
+                      styles:
+                        card:
+                          - padding: 0px
+                          - height: 128px
+                          - border-radius: 10px
+                        grid:
+                          - grid-template-areas: '"i" "n"'
+                          - grid-template-columns: 1fr
+                          - grid-template-rows: 1fr min-content
+                        img_cell:
+                          - align-self: center
+                          - text-align: center
+                        icon:
+                          - width: 40px
+                          - color: white
+                        name:
+                          - justify-self: center
+                          - font-weight: 600
+                          - font-size: 14px
+                          - padding-bottom: 15px
+
+                # Spacer for bottom nav
+                - type: custom:gap-card
+                  height: 50
+
+          # ===== APPLE TV REMOTE =====
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: input_select.selected_remote
+                state: appletv
+            card:
+              type: vertical-stack
+              card_mod:
+                style:
+                  .: |
+                    #root {
+                      gap: 0 !important;
+                    }
+                    #root > * {
+                      margin-top: 0 !important;
+                      margin-bottom: 0 !important;
+                    }
+                  hui-vertical-stack-card$: |
+                    #root {
+                      gap: 0 !important;
+                    }
+                    #root > * {
+                      margin-top: 0 !important;
+                      margin-bottom: 0 !important;
+                    }
+              cards:
+                # ---- Streaming App Launcher Bar ----
+                - type: custom:mod-card
+                  card_mod:
+                    style: |
+                      :host {
+                        margin-bottom: 0 !important;
+                      }
+                      ha-card {
+                        background: rgba(0, 0, 0, 0.5);
+                        border-radius: 10px 10px 0px 0px;
+                        padding: 0px 30px;
+                        box-shadow: none;
+                      }
+                  card:
+                    type: grid
+                    square: false
+                    columns: 5
+                    cards:
+                      - type: custom:button-card
+                        icon: mdi:apple
+                        tap_action:
+                          action: perform-action
+                          perform_action: media_player.select_source
+                          target:
+                            entity_id: media_player.appletv_duncan
+                          data:
+                            source: TV
+                        styles:
+                          icon:
+                            - width: 25px
+                            - color: rgba(255,255,255,0.8)
+                          img_cell:
+                            - width: 40px
+                            - height: 40px
+                          card:
+                            - background: none
+                            - padding: 0
+                      - type: custom:button-card
+                        icon: mdi:netflix
+                        tap_action:
+                          action: perform-action
+                          perform_action: media_player.select_source
+                          target:
+                            entity_id: media_player.appletv_duncan
+                          data:
+                            source: Netflix
+                        styles:
+                          icon:
+                            - width: 25px
+                            - color: rgba(255,255,255,0.8)
+                          img_cell:
+                            - width: 40px
+                            - height: 40px
+                          card:
+                            - background: none
+                            - padding: 0
+                      - type: custom:button-card
+                        show_icon: false
+                        show_name: false
+                        custom_fields:
+                          img: '<img src="/local/images/disney-plus.svg" style="width:25px;height:25px;opacity:0.8;">'
+                        tap_action:
+                          action: perform-action
+                          perform_action: media_player.select_source
+                          target:
+                            entity_id: media_player.appletv_duncan
+                          data:
+                            source: Disney+
+                        styles:
+                          custom_fields:
+                            img:
+                              - display: flex
+                              - justify-content: center
+                              - align-items: center
+                              - width: 40px
+                              - height: 40px
+                          card:
+                            - background: none
+                            - padding: 0
+                      - type: custom:button-card
+                        show_icon: false
+                        show_name: false
+                        custom_fields:
+                          img: '<img src="/local/images/prime-video.svg" style="width:25px;height:25px;opacity:0.8;">'
+                        tap_action:
+                          action: perform-action
+                          perform_action: media_player.select_source
+                          target:
+                            entity_id: media_player.appletv_duncan
+                          data:
+                            source: Prime Video
+                        styles:
+                          custom_fields:
+                            img:
+                              - display: flex
+                              - justify-content: center
+                              - align-items: center
+                              - width: 40px
+                              - height: 40px
+                          card:
+                            - background: none
+                            - padding: 0
+                      - type: custom:button-card
+                        icon: mdi:hulu
+                        tap_action:
+                          action: perform-action
+                          perform_action: media_player.select_source
+                          target:
+                            entity_id: media_player.appletv_duncan
+                          data:
+                            source: Hulu
+                        styles:
+                          icon:
+                            - width: 25px
+                            - color: rgba(255,255,255,0.8)
+                          img_cell:
+                            - width: 40px
+                            - height: 40px
+                          card:
+                            - background: none
+                            - padding: 0
+
+                # ---- Touchpad (fills main area) ----
+                - type: custom:android-tv-card
+                  remote_id: remote.appletv_duncan
+                  keyboard_id: remote.appletv_duncan
+                  media_player_id: media_player.appletv_duncan
+                  platform: Apple TV
+                  rows:
+                    - - touchpad
+                  custom_actions:
+                    - type: touchpad
+                      name: touchpad
+                      tap_action:
+                        action: key
+                        key: select
+                      double_tap_action:
+                        action: key
+                        key: menu
+                      up:
+                        tap_action:
+                          action: key
+                          key: up
+                        hold_action:
+                          action: repeat
+                      down:
+                        tap_action:
+                          action: key
+                          key: down
+                        hold_action:
+                          action: repeat
+                      left:
+                        tap_action:
+                          action: key
+                          key: left
+                        hold_action:
+                          action: repeat
+                      right:
+                        tap_action:
+                          action: key
+                          key: right
+                        hold_action:
+                          action: repeat
+                      styles: |-
+                        toucharea {
+                          height: calc(100vh - 380px);
+                          background-image: url('https://i.ibb.co/pbf8yC8/swipe-nav.png');
+                          background-color: rgba(0,0,0,0);
+                          background-size: 55%;
+                          background-repeat: no-repeat;
+                          background-position: center calc(50% - 24px);
+                          border-radius: 0px;
+                          opacity: 1;
+                          padding-bottom: 20px;
+                        }
+                  card_mod:
+                    style: |
+                      :host {
+                        margin-top: 0 !important;
+                        margin-bottom: 0 !important;
+                      }
+                      ha-card {
+                        background: rgba(0, 0, 0, 0.5);
+                        border-radius: 0px;
+                        padding: 0px !important;
+                        box-shadow: none;
+                      }
+
+                # ---- Bottom Control Panel ----
+                - type: custom:button-card
+                  show_icon: false
+                  show_name: false
+                  show_state: false
+                  entity: media_player.appletv_duncan
+                  styles:
+                    grid:
+                      - grid-template-areas: '"seekbar" "transport" "vol"'
+                      - grid-template-columns: 1fr
+                      - grid-template-rows: min-content min-content min-content
+                    card:
+                      - background-color: rgba(0,0,0,0.5)
+                      - box-shadow: none
+                      - border-radius: 0px 0px 10px 10px
+                      - border-width: 0px
+                      - padding: 15px
+                      - margin: 0px
+                      - height: 185px
+                  custom_fields:
+                    seekbar:
+                      card:
+                        type: custom:android-tv-card
+                        remote_id: remote.appletv_duncan
+                        media_player_id: media_player.appletv_duncan
+                        rows:
+                          - - media_position
+                        custom_actions:
+                          - type: slider
+                            name: media_position
+                            value_attribute: media_position
+                            value_from_hass_delay: 1000
+                            range:
+                              - 0
+                              - "{{ state_attr(config.entity, 'media_duration') }}"
+                            tap_action:
+                              action: perform-action
+                              perform_action: media_player.media_seek
+                              data:
+                                seek_position: "{{ value }}"
+                            step: 1
+                            styles: |-
+                              :host {
+                                --thumb-width: 5px;
+                                --tooltip-label: '{{ (value / 60) | int }}:{{ 0 if (value - 60*((value / 60) | int)) < 10 else "" }}{{ (value - 60*((value / 60) | int)) | int }}';
+                                height: 22px;
+                                border-radius: 7px;
+                                background: rgba(255,255,255,0.25);
+                              }
+                              .label {
+                                color: #ffffff;
+                                filter: none;
+                                mix-blend-mode: normal;
+                                font-size: 16px;
+                                font-weight: 700;
+                                white-space: nowrap;
+                                text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+                              }
+                            label: |-
+                              {%- set dur = state_attr(config.entity, 'media_duration') -%}
+                              {%- if dur is not none and (dur | int) > 0 -%}
+                              {%- set pos = value | int -%}{%- set dur = dur | int -%}{%- set rem = dur - pos if dur > pos else 0 -%}
+                              {{ pos // 60 }}:{{ '0' if pos % 60 < 10 else '' }}{{ pos % 60 }} / {{ dur // 60 }}:{{ '0' if dur % 60 < 10 else '' }}{{ dur % 60 }} (-{{ rem // 60 }}:{{ '0' if rem % 60 < 10 else '' }}{{ rem % 60 }})
+                              {%- endif -%}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              background: none;
+                              box-shadow: none;
+                              border: none;
+                              padding: 0;
+                              margin: 0;
+                            }
+                    transport:
+                      card:
+                        type: custom:button-card
+                        show_icon: false
+                        show_name: false
+                        custom_fields:
+                          skip_back:
+                            card:
+                              type: custom:button-card
+                              tap_action:
+                                action: perform-action
+                                perform_action: remote.send_command
+                                target:
+                                  entity_id: remote.appletv_duncan
+                                data:
+                                  command: skip_backward
+                              icon: mdi:rewind-10
+                              show_name: false
+                              styles:
+                                card:
+                                  - background: rgba(255,255,255,0.0)
+                                  - box-shadow: none
+                                  - border-width: 0px
+                                  - padding: 0px
+                                icon:
+                                  - width: 20px
+                                  - color: rgba(255,255,255,0.5)
+                          menu_back:
+                            card:
+                              type: custom:button-card
+                              tap_action:
+                                action: perform-action
+                                perform_action: remote.send_command
+                                target:
+                                  entity_id: remote.appletv_duncan
+                                data:
+                                  command: menu
+                              icon: mdi:backspace
+                              show_name: false
+                              styles:
+                                card:
+                                  - background: rgba(255,255,255,0.0)
+                                  - box-shadow: none
+                                  - border-width: 0px
+                                  - padding: 0px
+                                icon:
+                                  - width: 40px
+                                  - color: rgba(255,255,255,0.8)
+                          play_pause:
+                            card:
+                              type: custom:button-card
+                              entity: media_player.appletv_duncan
+                              tap_action:
+                                action: perform-action
+                                perform_action: media_player.media_play_pause
+                                target:
+                                  entity_id: media_player.appletv_duncan
+                              icon: mdi:play
+                              state:
+                                - value: playing
+                                  icon: mdi:pause
+                              show_name: false
+                              styles:
+                                card:
+                                  - background: rgba(255,255,255,0.0)
+                                  - box-shadow: none
+                                  - border-width: 0px
+                                  - padding: 0px
+                                icon:
+                                  - width: 55px
+                                  - color: rgba(255,255,255,0.8)
+                          home_btn:
+                            card:
+                              type: custom:button-card
+                              tap_action:
+                                action: url
+                                url_path: "tvremote://"
+                              icon: mdi:remote
+                              show_name: false
+                              styles:
+                                card:
+                                  - background: rgba(255,255,255,0.0)
+                                  - box-shadow: none
+                                  - border-width: 0px
+                                  - padding: 0px
+                                icon:
+                                  - width: 40px
+                                  - color: rgba(255,255,255,0.8)
+                          skip_fwd:
+                            card:
+                              type: custom:button-card
+                              tap_action:
+                                action: perform-action
+                                perform_action: remote.send_command
+                                target:
+                                  entity_id: remote.appletv_duncan
+                                data:
+                                  command: skip_forward
+                              icon: mdi:fast-forward-10
+                              show_name: false
+                              styles:
+                                card:
+                                  - background: rgba(255,255,255,0.0)
+                                  - box-shadow: none
+                                  - border-width: 0px
+                                  - padding: 0px
+                                icon:
+                                  - width: 20px
+                                  - color: rgba(255,255,255,0.5)
+                        styles:
+                          grid:
+                            - grid-template-columns: 2fr 3fr 3fr 3fr 2fr
+                            - grid-template-rows: min-content
+                            - grid-template-areas: '"skip_back menu_back play_pause home_btn skip_fwd"'
+                          card:
+                            - padding: 0
+                            - margin: 3px 0px 0px 0px
+                            - background: none
+                            - box-shadow: none
+                            - border-width: 0px
+                    vol:
+                      card:
+                        type: custom:android-tv-card
+                        remote_id: remote.appletv_duncan
+                        media_player_id: media_player.denon_avr_x4700h
+                        rows:
+                          - - volume_down
+                            - volume
+                            - volume_up
+                        custom_actions:
+                          - type: slider
+                            name: volume
+                            range:
+                              - 0
+                              - 1
+                            step: 0.01
+                            value_attribute: volume_level
+                            tap_action:
+                              action: perform-action
+                              perform_action: media_player.volume_set
+                              data:
+                                volume_level: "{{ value | float }}"
+                            styles: ":host {\n  height: 20px;\n}"
+                            entity_id: media_player.denon_avr_x4700h
+                            icon: ""
+                          - type: button
+                            name: volume_down
+                            entity_id: media_player.denon_avr_x4700h
+                            tap_action:
+                              action: perform-action
+                              perform_action: media_player.volume_down
+                              target:
+                                entity_id: media_player.denon_avr_x4700h
+                            hold_action:
+                              action: repeat
+                            icon: mdi:volume-minus
+                            styles: ".icon {\n  --size: 30px;\n}"
+                          - type: button
+                            name: volume_up
+                            tap_action:
+                              action: perform-action
+                              perform_action: media_player.volume_up
+                              target:
+                                entity_id: media_player.denon_avr_x4700h
+                            hold_action:
+                              action: repeat
+                            icon: mdi:volume-plus
+                            styles: ".icon {\n  --size: 30px;\n}"
+                        card_mod:
+                          style: |
+                            ha-card {
+                              background: none;
+                              box-shadow: none;
+                              border: none;
+                              padding: 0;
+                              margin: 0;
+                            }
+                  card_mod:
+                    style: |
+                      :host {
+                        margin-top: 0 !important;
+                      }
+                      ha-card {
+                        border-width: 0px;
+                        box-shadow: none;
+                      }
+
+                # Spacer for bottom nav
+                - type: custom:gap-card
+                  height: 50
+
+          # ===== BLU-RAY REMOTE =====
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: input_select.selected_remote
+                state: bluray
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:android-tv-card
+                  card_mod:
+                    style: |
+                      ha-card {
+                        background: rgba(0, 0, 0, 0.5);
+                        backdrop-filter: blur(20px);
+                        -webkit-backdrop-filter: blur(20px);
+                        border-radius: 10px;
+                        min-height: calc(100vh - 180px);
+                      }
+                  rows:
+                    - - power
+                      - return
+                      - eject
+                    - - dpad
+                    - - home
+                    - - rewind
+                      - play
+                      - fast_forward
+                    - - prev
+                      - pause
+                      - next
+                    - - subtitle
+                      - stop
+                      - audio
+                    - - volume_down
+                      - volume
+                      - volume_up
+                  custom_actions:
+                    - type: button
+                      name: power
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_off_blu_ray_player
+                        key: POWER
+                      icon: mdi:power
+                    - type: button
+                      name: up
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: up
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Up
+                      hold_action:
+                        action: repeat
+                      icon: mdi:chevron-up
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: down
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: down
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Down
+                      hold_action:
+                        action: repeat
+                      icon: mdi:chevron-down
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: left
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: left
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Left
+                      hold_action:
+                        action: repeat
+                      icon: mdi:chevron-left
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: right
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: right
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Right
+                      hold_action:
+                        action: repeat
+                      icon: mdi:chevron-right
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: center
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: select
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Select
+                      icon: mdi:circle
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: play
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: play
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Play
+                      icon: mdi:play
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: pause
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: pause
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Pause
+                      icon: mdi:pause
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: stop
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: stop
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Stop
+                      icon: mdi:stop
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: fast_forward
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: fforward
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: fast_forward
+                      icon: mdi:fast-forward
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: rewind
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: rewind
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Rewind
+                      icon: mdi:rewind
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: prev
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: prev
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Previous
+                      icon: mdi:skip-previous
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: next
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: next
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Next
+                      icon: mdi:skip-next
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: home
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: home
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Home
+                      icon: mdi:home
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: return
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: return
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Return
+                      icon: mdi:keyboard-return
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: eject
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: open close
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Open
+                      icon: mdi:eject
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: subtitle
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: subtitle
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Subtitle
+                      icon: mdi:subtitles
+                      entity_id: remote.ir_blaster
+                    - type: button
+                      name: audio
+                      tap_action:
+                        action: perform-action
+                        perform_action: remote.send_command
+                        data:
+                          device: television
+                          command: audio
+                        target:
+                          entity_id: remote.ir_blaster
+                        key: Audio
+                      icon: mdi:audio-video
+                      entity_id: remote.ir_blaster
+                    - type: slider
+                      name: volume
+                      range:
+                        - 0
+                        - 1
+                      step: 0.01
+                      value_attribute: volume_level
+                      tap_action:
+                        action: perform-action
+                        perform_action: media_player.volume_set
+                        data:
+                          volume_level: "{{ value | float }}"
+                      entity_id: media_player.denon_avr_x4700h
+                      icon: mdi:volume-high
+                    - type: button
+                      name: volume_down
+                      entity_id: media_player.denon_avr_x4700h
+                      tap_action:
+                        action: key
+                        key: volume_down
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-minus
+                      styles: ".icon {\n  --size: 30px;\n}"
+                    - type: button
+                      name: volume_up
+                      tap_action:
+                        action: key
+                        key: volume_up
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-plus
+                      entity_id: media_player.denon_avr_x4700h
+                      action: perform-action
+                      perform_action: media_player.volume_up
+                      styles: ".icon {\n  --size: 30px;\n}"
+                  platform: Sony BRAVIA
+                  remote_id: remote.ir_blaster
+                  keyboard_id: remote.ir_blaster
+                  media_player_id: media_player.sony_xr_85z9j_2
+                # Spacer for bottom nav
+                - type: custom:gap-card
+                  height: 50
+
+          # ===== TV REMOTE =====
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: input_select.selected_remote
+                state: tv
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:android-tv-card
+                  card_mod:
+                    style: |
+                      ha-card {
+                        background: rgba(0, 0, 0, 0.5);
+                        backdrop-filter: blur(20px);
+                        -webkit-backdrop-filter: blur(20px);
+                        border-radius: 10px;
+                        min-height: calc(100vh - 180px);
+                      }
+                  rows:
+                    - - power
+                    - - n1
+                      - n2
+                      - n3
+                    - - n4
+                      - n5
+                      - n6
+                    - - n7
+                      - n8
+                      - n9
+                    - - channel_up
+                      - n0
+                      - channel_down
+                    - - dpad
+                    - - volume_down
+                      - volume
+                      - volume_up
+                  platform: Sony BRAVIA
+                  custom_actions:
+                    - type: button
+                      name: power
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_off_home_theater
+                      icon: mdi:power
+                    - type: slider
+                      name: volume
+                      range:
+                        - 0
+                        - 1
+                      step: 0.01
+                      value_attribute: volume_level
+                      tap_action:
+                        action: perform-action
+                        perform_action: media_player.volume_set
+                        data:
+                          volume_level: "{{ value | float }}"
+                      entity_id: media_player.denon_avr_x4700h
+                      icon: mdi:volume-high
+                    - type: button
+                      name: volume_down
+                      entity_id: media_player.denon_avr_x4700h
+                      tap_action:
+                        action: key
+                        key: volume_down
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-minus
+                      styles: ".icon {\n  --size: 30px;\n}"
+                    - type: button
+                      name: volume_up
+                      tap_action:
+                        action: key
+                        key: volume_up
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-plus
+                      entity_id: media_player.denon_avr_x4700h
+                      action: perform-action
+                      perform_action: media_player.volume_up
+                      styles: ".icon {\n  --size: 30px;\n}"
+                  remote_id: remote.sony_xr_85z9j
+                  keyboard_id: remote.sony_xr_85z9j
+                  media_player_id: media_player.sony_xr_85z9j
+                # Spacer for bottom nav
+                - type: custom:gap-card
+                  height: 50
+
+          # ===== PS5 REMOTE =====
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: input_select.selected_remote
+                state: ps5
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:android-tv-card
+                  card_mod:
+                    style: |
+                      ha-card {
+                        background: rgba(0, 0, 0, 0.5);
+                        backdrop-filter: blur(20px);
+                        -webkit-backdrop-filter: blur(20px);
+                        border-radius: 10px;
+                        min-height: calc(100vh - 180px);
+                      }
+                  rows:
+                    - - power
+                    - - null
+                    - - null
+                    - - null
+                    - - volume_down
+                      - volume
+                      - volume_up
+                  custom_actions:
+                    - type: button
+                      name: power
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_off_home_theater
+                      icon: mdi:power
+                    - type: slider
+                      name: volume
+                      range:
+                        - 0
+                        - 1
+                      step: 0.01
+                      value_attribute: volume_level
+                      tap_action:
+                        action: perform-action
+                        perform_action: media_player.volume_set
+                        data:
+                          volume_level: "{{ value | float }}"
+                      entity_id: media_player.denon_avr_x4700h
+                    - type: button
+                      name: volume_down
+                      entity_id: media_player.denon_avr_x4700h
+                      tap_action:
+                        action: key
+                        key: volume_down
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-minus
+                      styles: ".icon {\n  --size: 30px;\n}"
+                    - type: button
+                      name: volume_up
+                      tap_action:
+                        action: key
+                        key: volume_up
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-plus
+                      entity_id: media_player.denon_avr_x4700h
+                      action: perform-action
+                      perform_action: media_player.volume_up
+                      styles: ".icon {\n  --size: 30px;\n}"
+                # Spacer for bottom nav
+                - type: custom:gap-card
+                  height: 50
+
+          # ===== SWITCH REMOTE =====
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: input_select.selected_remote
+                state: switch
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:android-tv-card
+                  card_mod:
+                    style: |
+                      ha-card {
+                        background: rgba(0, 0, 0, 0.5);
+                        backdrop-filter: blur(20px);
+                        -webkit-backdrop-filter: blur(20px);
+                        border-radius: 10px;
+                        min-height: calc(100vh - 180px);
+                      }
+                  rows:
+                    - - power
+                    - - null
+                    - - null
+                    - - null
+                    - - volume_down
+                      - volume
+                      - volume_up
+                  custom_actions:
+                    - type: button
+                      name: power
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_off_home_theater
+                      icon: mdi:power
+                    - type: slider
+                      name: volume
+                      range:
+                        - 0
+                        - 1
+                      step: 0.01
+                      value_attribute: volume_level
+                      tap_action:
+                        action: perform-action
+                        perform_action: media_player.volume_set
+                        data:
+                          volume_level: "{{ value | float }}"
+                      entity_id: media_player.denon_avr_x4700h
+                    - type: button
+                      name: volume_down
+                      entity_id: media_player.denon_avr_x4700h
+                      tap_action:
+                        action: key
+                        key: volume_down
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-minus
+                      styles: ".icon {\n  --size: 30px;\n}"
+                    - type: button
+                      name: volume_up
+                      tap_action:
+                        action: key
+                        key: volume_up
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-plus
+                      entity_id: media_player.denon_avr_x4700h
+                      action: perform-action
+                      perform_action: media_player.volume_up
+                      styles: ".icon {\n  --size: 30px;\n}"
+                # Spacer for bottom nav
+                - type: custom:gap-card
+                  height: 50
+
+          # ===== MAC MINI REMOTE =====
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: input_select.selected_remote
+                state: macmini
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:android-tv-card
+                  card_mod:
+                    style: |
+                      ha-card {
+                        background: rgba(0, 0, 0, 0.5);
+                        backdrop-filter: blur(20px);
+                        -webkit-backdrop-filter: blur(20px);
+                        border-radius: 10px;
+                        min-height: calc(100vh - 180px);
+                      }
+                  rows:
+                    - - power
+                    - - null
+                    - - null
+                    - - null
+                    - - volume_down
+                      - volume
+                      - volume_up
+                  custom_actions:
+                    - type: button
+                      name: power
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_off_home_theater
+                      icon: mdi:power
+                    - type: slider
+                      name: volume
+                      range:
+                        - 0
+                        - 1
+                      step: 0.01
+                      value_attribute: volume_level
+                      tap_action:
+                        action: perform-action
+                        perform_action: media_player.volume_set
+                        data:
+                          volume_level: "{{ value | float }}"
+                      entity_id: media_player.denon_avr_x4700h
+                    - type: button
+                      name: volume_down
+                      entity_id: media_player.denon_avr_x4700h
+                      tap_action:
+                        action: key
+                        key: volume_down
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-minus
+                      styles: ".icon {\n  --size: 30px;\n}"
+                    - type: button
+                      name: volume_up
+                      tap_action:
+                        action: key
+                        key: volume_up
+                      hold_action:
+                        action: repeat
+                      icon: mdi:volume-plus
+                      entity_id: media_player.denon_avr_x4700h
+                      action: perform-action
+                      perform_action: media_player.volume_up
+                      styles: ".icon {\n  --size: 30px;\n}"
+                # Spacer for bottom nav
+                - type: custom:gap-card
+                  height: 50
+
+          # ===== BOTTOM NAV BAR =====
+          - type: custom:mod-card
+            card_mod:
+              style: |
+                @media (max-width: 1023px) {
+                  ha-card {
+                    z-index: 1;
+                    position: fixed;
+                    bottom: 0px;
+                    left: 0px;
+                    width: 100%;
+                    height: 80px;
+                    backdrop-filter: blur(120px);
+                    -webkit-backdrop-filter: blur(150px);
+                    background: rgba(15, 1, 31, .8);
+                    opacity: 1;
+                    border-radius: 0px;
+                    padding: 0px;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                    border-top: .5px solid rgba(100, 100, 100, 0.2);
+                    box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.3);
+                  }
+                }
+                @media (min-width: 1024px) {
+                  ha-card {
+                    z-index: -1;
+                    position: fixed;
+                    bottom: 0px;
+                    left: 0px;
+                    width: 20%;
+                    height: 75px;
+                    background: RGBA(0,0,0,0.50);
+                    opacity: 1;
+                    border-radius: 0px;
+                    padding: 5px;
+                  }
+                }
+            card:
+              type: grid
+              square: false
+              columns: 4
+              cards:
+                - type: custom:button-card
+                  icon: local:house-regular
+                  name: Home
+                  tap_action:
+                    action: navigate
+                    navigation_path: /lovelace/home
+                  styles:
+                    icon:
+                      - color: white
+                      - width: 24px
+                      - height: 24px
+                    img_cell:
+                      - justify-content: center
+                      - height: 100%
+                    card:
+                      - background: none
+                      - padding: 7px
+                      - opacity: 0.5
+                      - width: 74px
+                    name:
+                      - font-size: 10px
+                      - align-self: center
+                      - font-weight: 300
+                      - padding-top: 6px
+                - type: custom:button-card
+                  icon: local:circle-sort-regular
+                  name: Climate
+                  tap_action:
+                    action: navigate
+                    navigation_path: /home-climate/home
+                  styles:
+                    icon:
+                      - color: white
+                      - width: 24px
+                      - height: 24px
+                    img_cell:
+                      - justify-content: center
+                      - height: 100%
+                    card:
+                      - background: none
+                      - padding: 7px
+                      - opacity: 0.5
+                      - width: 74px
+                    name:
+                      - font-size: 10px
+                      - align-self: center
+                      - font-weight: 300
+                      - padding-top: 6px
+                - type: custom:button-card
+                  icon: local:tv-retro-regular
+                  name: Media
+                  tap_action:
+                    action: navigate
+                    navigation_path: /media-center/home
+                  styles:
+                    icon:
+                      - color: white
+                      - width: 24px
+                      - height: 24px
+                    img_cell:
+                      - justify-content: center
+                      - height: 100%
+                    card:
+                      - background: none
+                      - padding: 7px
+                      - opacity: 1
+                      - width: 74px
+                    name:
+                      - font-size: 10px
+                      - align-self: center
+                      - font-weight: 400
+                      - padding-top: 6px
+                - type: custom:button-card
+                  icon: local:lightbulb-on-regular
+                  name: Lights
+                  tap_action:
+                    action: navigate
+                    navigation_path: /home-lights/home
+                  styles:
+                    icon:
+                      - color: white
+                      - width: 24px
+                      - height: 24px
+                    img_cell:
+                      - justify-content: center
+                      - height: 100%
+                    card:
+                      - background: none
+                      - padding: 7px
+                      - opacity: 0.5
+                      - width: 74px
+                    name:
+                      - font-size: 10px
+                      - align-self: center
+                      - font-weight: 300
+                      - padding-top: 6px
