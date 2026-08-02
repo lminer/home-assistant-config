@@ -864,19 +864,23 @@ views:
                 - type: spacer
               card_mod: *chips_card_mod
 
-      # ===== TRACK LIGHTING =====
+      # ===== LIGHTS =====
+      # Track Lighting and LED Lighting are group helpers defined in
+      # configuration.yaml. The Connect Bridge publishes each track head and
+      # LED run separately; the groups collapse them to one control each.
       - type: vertical-stack
         cards:
           - type: custom:mushroom-title-card
-            subtitle: Track Lighting
+            subtitle: Lights
 
+          # Row 1: Track Lighting | LED Lighting
           - type: horizontal-stack
             cards:
               - type: vertical-stack
                 cards:
                   - type: custom:button-card
-                    entity: light.track_a
-                    name: Track A
+                    entity: light.track_lighting
+                    name: Track Lighting
                     icon: mdi:track-light
                     show_state: false
                     tap_action:
@@ -889,121 +893,13 @@ views:
                     card_mod: *slider_mod
                     entities:
                       - type: custom:slider-entity-row
-                        entity: light.track_a
+                        entity: light.track_lighting
                         full_row: true
               - type: vertical-stack
                 cards:
                   - type: custom:button-card
-                    entity: light.track_b
-                    name: Track B
-                    icon: mdi:track-light
-                    show_state: false
-                    tap_action:
-                      action: toggle
-                    hold_action:
-                      action: more-info
-                    styles: *tile_styles
-                    state: *tile_on_state
-                  - type: entities
-                    card_mod: *slider_mod
-                    entities:
-                      - type: custom:slider-entity-row
-                        entity: light.track_b
-                        full_row: true
-          - type: horizontal-stack
-            cards:
-              - type: vertical-stack
-                cards:
-                  - type: custom:button-card
-                    entity: light.track_c
-                    name: Track C
-                    icon: mdi:track-light
-                    show_state: false
-                    tap_action:
-                      action: toggle
-                    hold_action:
-                      action: more-info
-                    styles: *tile_styles
-                    state: *tile_on_state
-                  - type: entities
-                    card_mod: *slider_mod
-                    entities:
-                      - type: custom:slider-entity-row
-                        entity: light.track_c
-                        full_row: true
-              - type: vertical-stack
-                cards:
-                  - type: custom:button-card
-                    entity: light.track_d
-                    name: Track D
-                    icon: mdi:track-light
-                    show_state: false
-                    tap_action:
-                      action: toggle
-                    hold_action:
-                      action: more-info
-                    styles: *tile_styles
-                    state: *tile_on_state
-                  - type: entities
-                    card_mod: *slider_mod
-                    entities:
-                      - type: custom:slider-entity-row
-                        entity: light.track_d
-                        full_row: true
-          - type: horizontal-stack
-            cards:
-              - type: vertical-stack
-                cards:
-                  - type: custom:button-card
-                    entity: light.track_e
-                    name: Track E
-                    icon: mdi:track-light
-                    show_state: false
-                    tap_action:
-                      action: toggle
-                    hold_action:
-                      action: more-info
-                    styles: *tile_styles
-                    state: *tile_on_state
-                  - type: entities
-                    card_mod: *slider_mod
-                    entities:
-                      - type: custom:slider-entity-row
-                        entity: light.track_e
-                        full_row: true
-              - type: vertical-stack
-                cards:
-                  - type: custom:button-card
-                    entity: light.track_f
-                    name: Track F
-                    icon: mdi:track-light
-                    show_state: false
-                    tap_action:
-                      action: toggle
-                    hold_action:
-                      action: more-info
-                    styles: *tile_styles
-                    state: *tile_on_state
-                  - type: entities
-                    card_mod: *slider_mod
-                    entities:
-                      - type: custom:slider-entity-row
-                        entity: light.track_f
-                        full_row: true
-
-      # ===== LED GROUPS =====
-      - type: vertical-stack
-        cards:
-          - type: custom:mushroom-title-card
-            subtitle: LED Groups
-
-          - type: horizontal-stack
-            cards:
-              - type: vertical-stack
-                cards:
-                  - type: custom:button-card
-                    entity: light.led_group_a
-                    name: LED Group A
+                    entity: light.led_lighting
+                    name: LED Lighting
                     icon: mdi:led-strip-variant
                     show_state: false
                     tap_action:
@@ -1016,57 +912,10 @@ views:
                     card_mod: *slider_mod
                     entities:
                       - type: custom:slider-entity-row
-                        entity: light.led_group_a
+                        entity: light.led_lighting
                         full_row: true
-              - type: vertical-stack
-                cards:
-                  - type: custom:button-card
-                    entity: light.led_group_b
-                    name: LED Group B
-                    icon: mdi:led-strip-variant
-                    show_state: false
-                    tap_action:
-                      action: toggle
-                    hold_action:
-                      action: more-info
-                    styles: *tile_styles
-                    state: *tile_on_state
-                  - type: entities
-                    card_mod: *slider_mod
-                    entities:
-                      - type: custom:slider-entity-row
-                        entity: light.led_group_b
-                        full_row: true
-          - type: horizontal-stack
-            cards:
-              - type: vertical-stack
-                cards:
-                  - type: custom:button-card
-                    entity: light.led_group_c
-                    name: LED Group C
-                    icon: mdi:led-strip-variant
-                    show_state: false
-                    tap_action:
-                      action: toggle
-                    hold_action:
-                      action: more-info
-                    styles: *tile_styles
-                    state: *tile_on_state
-                  - type: entities
-                    card_mod: *slider_mod
-                    entities:
-                      - type: custom:slider-entity-row
-                        entity: light.led_group_c
-                        full_row: true
-              - type: custom:button-card
-                color_type: blank-card
 
-      # ===== CLOSET =====
-      - type: vertical-stack
-        cards:
-          - type: custom:mushroom-title-card
-            subtitle: Closet
-
+          # Row 2: Closet | (gap)
           - type: horizontal-stack
             cards:
               - type: vertical-stack

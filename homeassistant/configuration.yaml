@@ -30,6 +30,32 @@ lovelace:
       icon: mdi:lightbulb-group
       show_in_sidebar: true
 
+# Study lighting groups. The Connect Bridge publishes every track head and LED
+# run as its own HomeKit accessory, which is more granularity than the room
+# needs day to day. These collapse them into one control each, and the Study
+# dashboard view drives the groups rather than the individual lights.
+# Defined here rather than as UI helpers because sync.sh tracks this file and
+# does not track .storage/core.config_entries.
+light:
+  - platform: group
+    name: Track Lighting
+    unique_id: study_track_lighting
+    entities:
+      - light.track_a
+      - light.track_b
+      - light.track_c
+      - light.track_d
+      - light.track_e
+      - light.track_f
+
+  - platform: group
+    name: LED Lighting
+    unique_id: study_led_lighting
+    entities:
+      - light.led_group_a
+      - light.led_group_b
+      - light.led_group_c
+
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
