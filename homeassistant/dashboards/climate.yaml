@@ -258,17 +258,16 @@ views:
           # secondary-line override here: it is a portable sitting in the room it
           # cools, so its built-in sensor is already the right one to show.
           #
-          # The highlight keys off the state rather than hvac_action, which every
-          # other card on this page uses. midea_ac_lan does not implement
-          # hvac_action at all -- climate.py exposes only hvac_mode,
-          # target_temperature, current_temperature and preset_mode -- so the
-          # usual rule would leave this card dark whenever the unit is running.
-          # hvac_mode is derived straight from the device's "power" attribute, so
-          # a non-off state is the dependable "it is running" signal. Slightly
-          # different meaning from the ecobee cards: those go white only while the
-          # compressor is actually engaged, this goes white whenever the unit is
-          # on. The device reports no compressor state, so that is the best
-          # available signal.
+          #
+          # The highlight rule below is the same hvac_action rule every other card
+          # on this page uses, and in practice it never fires: midea_ac_lan does
+          # not implement hvac_action at all (climate.py exposes only hvac_mode,
+          # target_temperature, current_temperature and preset_mode). Keeping it
+          # anyway rather than substituting a state-based rule -- highlighting on
+          # "powered on" would mean something different from the ecobee cards,
+          # which highlight only while the compressor is actually engaged, and an
+          # inconsistent highlight is worse than none. If the integration ever
+          # gains hvac_action, this starts working with no edit.
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-climate-card
@@ -278,7 +277,11 @@ views:
                 card_mod:
                   style: |
                     ha-card {
-                      {% if states(config.entity) not in ['off', 'unavailable', 'unknown'] %}
+                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
                         background-color: rgba(255, 255, 255, 0.8) !important;
                         --primary-text-color: black;
                         --secondary-text-color: #333;
@@ -346,11 +349,18 @@ views:
           # off the climate entity's attribute instead. Enabling the extra
           # sensors in the integration's options would give a real sensor entity
           # (and therefore history and statistics); swap this card if that happens.
+          #
+          # icon_color is set explicitly because mushroom-template-card has no
+          # entity to infer a color from -- left unset it renders the neutral
+          # grey, which looked wrong next to the seven entity cards above. Those
+          # get blue from mushroom's default --rgb-state-entity, so this matches
+          # it by name.
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-template-card
                 entity: climate.150633093664036_climate
                 icon: mdi:thermometer
+                icon_color: blue
                 primary: Server Room
                 secondary: >-
                   {% set t = state_attr(config.entity, 'current_temperature') %}
