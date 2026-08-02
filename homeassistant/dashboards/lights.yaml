@@ -147,28 +147,7 @@ views:
                   navigation_path: /home-lights/master-bedroom
                 styles: *room_tile_styles
 
-          # Row 2: Master Bathroom | Master Closet
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                name: Master Bathroom
-                icon: mdi:shower
-                show_state: false
-                tap_action:
-                  action: navigate
-                  navigation_path: /home-lights/master-bathroom
-                styles: *room_tile_styles
-
-              - type: custom:button-card
-                name: Master Closet
-                icon: mdi:hanger
-                show_state: false
-                tap_action:
-                  action: navigate
-                  navigation_path: /home-lights/master-closet
-                styles: *room_tile_styles
-
-          # Row 3: Study | Basement Game Area
+          # Row 2: Study | Basement Game Area
           - type: horizontal-stack
             cards:
               - type: custom:button-card
@@ -501,7 +480,8 @@ views:
 
   # =============================================
   # VIEW 3: Master Bedroom
-  # Four Caseta dimmers, each with an inline brightness slider.
+  # Covers the whole master suite: bedroom, bathroom and closet. Five Caseta
+  # dimmers, each with an inline brightness slider, plus two closet switches.
   # =============================================
   - title: Master Bedroom
     path: master-bedroom
@@ -629,6 +609,75 @@ views:
                         entity: light.master_bedroom_master_bedroom_right_reading
                         full_row: true
 
+      # ===== BATHROOM SECTION =====
+      # The master bathroom and closet used to be their own views. They are one
+      # light and two switches between them, which did not justify two taps to
+      # reach, so they live here with the rest of the master suite.
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: Bathroom
+
+          # Row 1: Toilet | (gap)
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.master_bathroom_master_bathroom_toilet
+                    name: Toilet
+                    icon: mdi:toilet
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.master_bathroom_master_bathroom_toilet
+                        full_row: true
+
+              - type: custom:button-card
+                color_type: blank-card
+
+      # ===== CLOSET SECTION =====
+      # DVRF-5NS switches — no dimming, so no sliders.
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: Closet
+
+          # Row 1: Entrance | Main
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.master_closet_master_closet_entrance
+                name: Entrance
+                icon: mdi:door-open
+                show_state: false
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+                state: *tile_on_state
+
+              - type: custom:button-card
+                entity: switch.master_closet_master_closet_main
+                name: Main
+                icon: mdi:hanger
+                show_state: false
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+                state: *tile_on_state
+
       # ===== SCENES SECTION =====
       # The same three scenes the 4-button Pico fires, so the dashboard and the
       # wall control stay in agreement.
@@ -700,141 +749,7 @@ views:
       - *bottom_nav
 
   # =============================================
-  # VIEW 4: Master Bathroom
-  # =============================================
-  - title: Master Bathroom
-    path: master-bathroom
-    icon: mdi:shower
-    theme: ios-dark-mode-blue-red
-    cards:
-      # ===== TOP NAV BAR =====
-      - type: custom:mod-card
-        card_mod: *topnav_mod
-        card:
-          type: grid
-          square: false
-          columns: 1
-          cards:
-            - type: custom:mushroom-chips-card
-              chips:
-                - type: back
-                  icon: mdi:arrow-left
-                - type: spacer
-                - type: template
-                  icon: mdi:shower
-                  icon_color: '#0171A4'
-                  content: Master Bathroom
-                  card_mod: *chip_mod
-                - type: spacer
-              card_mod: *chips_card_mod
-
-      # ===== LIGHTS SECTION =====
-      - type: vertical-stack
-        cards:
-          - type: custom:mushroom-title-card
-            subtitle: Lights
-
-          # Row 1: Toilet | (gap)
-          - type: horizontal-stack
-            cards:
-              - type: vertical-stack
-                cards:
-                  - type: custom:button-card
-                    entity: light.master_bathroom_master_bathroom_toilet
-                    name: Toilet
-                    icon: mdi:toilet
-                    show_state: false
-                    tap_action:
-                      action: toggle
-                    hold_action:
-                      action: more-info
-                    styles: *tile_styles
-                    state: *tile_on_state
-                  - type: entities
-                    card_mod: *slider_mod
-                    entities:
-                      - type: custom:slider-entity-row
-                        entity: light.master_bathroom_master_bathroom_toilet
-                        full_row: true
-
-              - type: custom:button-card
-                color_type: blank-card
-
-          - *spacer
-
-      # ===== BOTTOM NAV BAR =====
-      - *bottom_nav
-
-  # =============================================
-  # VIEW 5: Master Closet
-  # DVRF-5NS switches — no dimming, so no sliders.
-  # =============================================
-  - title: Master Closet
-    path: master-closet
-    icon: mdi:hanger
-    theme: ios-dark-mode-blue-red
-    cards:
-      # ===== TOP NAV BAR =====
-      - type: custom:mod-card
-        card_mod: *topnav_mod
-        card:
-          type: grid
-          square: false
-          columns: 1
-          cards:
-            - type: custom:mushroom-chips-card
-              chips:
-                - type: back
-                  icon: mdi:arrow-left
-                - type: spacer
-                - type: template
-                  icon: mdi:hanger
-                  icon_color: '#0171A4'
-                  content: Master Closet
-                  card_mod: *chip_mod
-                - type: spacer
-              card_mod: *chips_card_mod
-
-      # ===== LIGHTS SECTION =====
-      - type: vertical-stack
-        cards:
-          - type: custom:mushroom-title-card
-            subtitle: Lights
-
-          # Row 1: Entrance | Main
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                entity: switch.master_closet_master_closet_entrance
-                name: Entrance
-                icon: mdi:door-open
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles: *tile_styles
-                state: *tile_on_state
-
-              - type: custom:button-card
-                entity: switch.master_closet_master_closet_main
-                name: Main
-                icon: mdi:hanger
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles: *tile_styles
-                state: *tile_on_state
-
-          - *spacer
-
-      # ===== BOTTOM NAV BAR =====
-      - *bottom_nav
-
-  # =============================================
-  # VIEW 6: Study
+  # VIEW 4: Study
   # Lutron HomeWorks, reached through the Connect Bridge over HomeKit.
   # All ten lights dim; the three shades report position.
   # =============================================
@@ -1024,7 +939,7 @@ views:
       - *bottom_nav
 
   # =============================================
-  # VIEW 7: Basement Game Area
+  # VIEW 5: Basement Game Area
   # =============================================
   - title: Basement Game Area
     path: basement-game-area
