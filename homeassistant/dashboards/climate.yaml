@@ -287,12 +287,37 @@ views:
                         --secondary-text-color: #333;
                       {% endif %}
                     }
+              # Mitsubishi PEAD ducted heat pump in the office, via the
+              # dlarrick/hass-kumo HACS integration talking to the unit's WiFi
+              # adapter directly on the LAN. No secondary-line override: it is a
+              # ducted unit reading its own return air in the space it serves.
+              #
+              # Unlike the Midea above, this integration does implement
+              # hvac_action, so the shared rule below genuinely fires. pykumo
+              # reports standby separately from mode, so the card goes white only
+              # while the compressor is engaged -- same meaning as the ecobees.
+              #
+              # The ugly entity id is what the integration generated: the unit's
+              # label is empty in kumo_cache.json, so HA fell back to the serial.
+              # Renaming the entity to climate.office in the UI is safe; update
+              # this card and the temperature card below to match if you do.
               - type: custom:mushroom-climate-card
-                entity: climate.150633093664036_climate
-                name: ' '
+                entity: climate.kumo_0y34p0085100105f
+                name: Office
+                show_temperature_control: true
                 card_mod:
                   style: |
-                    ha-card { visibility: hidden; }
+                    ha-card {
+                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% endif %}
+                    }
 
       # ===== TEMPERATURE SECTION =====
       #
@@ -366,13 +391,19 @@ views:
                   {% set t = state_attr(config.entity, 'current_temperature') %}
                   {{ (t | round(1) ~ ' °F') if t is not none else 'Unavailable' }}
                 layout: horizontal
+              # Unlike the Server Room card beside it, hass-kumo does create a
+              # real sensor entity, so this is a plain entity card like the seven
+              # above -- with history and long-term statistics, which the
+              # attribute-reading template cards do not get.
+              #
+              # The entity id is HA's fallback: the unit's label is empty in
+              # kumo_cache.json, so it derived one from the config entry title.
+              # Renaming it to sensor.office_current_temperature in the UI is
+              # safe; just update this line to match.
               - type: custom:mushroom-entity-card
-                entity: sensor.basement_current_temperature
-                name: ' '
+                entity: sensor.lminer_gmail_com_current_temperature
+                name: Office
                 layout: horizontal
-                card_mod:
-                  style: |
-                    ha-card { visibility: hidden; }
 
       # ===== HUMIDITY SECTION =====
       #

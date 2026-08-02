@@ -17,6 +17,9 @@ custom-components/pyscript                    # pyscript
 thomasloven/hass-custom_icons                 # custom_icons - serves /homeassistant/custom_icons/*.svg
 dwainscheeren/dwains-lovelace-dashboard       # dwains_dashboard
 rzulian/lutron_lip                            # lutron_lip v0.1.4 -- CUSTOM REPOSITORY, see note below
+dlarrick/hass-kumo                            # kumo v0.4.6 -- Mitsubishi heat pump. Pin to the
+                                              # latest non-prerelease; HACS defaults the dropdown
+                                              # to v0.4.7-beta. Needs kumo_cache.json, see RECOVERY.md.
 
 
 ## Frontend plugins (HACS > Frontend)

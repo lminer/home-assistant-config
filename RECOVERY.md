@@ -95,6 +95,7 @@ Nothing below is in git, and none of it can be reconstructed by hand without pai
 | `.storage/core.config_entries` | Every integration's setup **and its credentials** — Ecobee OAuth, mobile_app secrets, Bravia/Sony keys, MQTT login. Excluded from git on purpose. |
 | `secrets.yaml` | Referenced by `configuration.yaml`. Gitignored; see `secrets.yaml.example` for shape. |
 | `.storage/broadlink_remote_*_codes` | **Learned IR codes.** Lose these and you re-learn every button on every remote by hand. The single most annoying thing to lose. |
+| `kumo_cache.json` (config root) | **Mitsubishi local credentials — currently irreplaceable.** See the section below. |
 | `.storage/auth`, `.storage/auth_provider.homeassistant` | User accounts, long-lived tokens, refresh tokens. |
 | `homekit.*`, `homekit_controller-entity-map` | HomeKit bridge pairing state. Without it, re-pair every accessory. |
 | `lutron_caseta-*.pem` | Lutron bridge cert/key/pem at the config root. |
@@ -163,6 +164,53 @@ actually fire.
 ---
 
 ## Notes
+
+### `kumo_cache.json` cannot currently be regenerated
+
+The Mitsubishi Office heat pump is driven by `dlarrick/hass-kumo`, which talks to the
+adapter directly on the LAN using a per-unit `password` and `cryptoSerial`. Those are
+normally fetched once from Mitsubishi's cloud at setup.
+
+**Since roughly 2026-07-28 the V3 API stops returning them.** Login still works, sites and
+zones enumerate, `adapter_update` events still fire — but `password` and `cryptoSerial`
+appear in no response, at any depth, from any endpoint. Reproduced independently on
+separate accounts; see [pykumo#78](https://github.com/dlarrick/pykumo/issues/78) and
+[hass-kumo#230](https://github.com/dlarrick/hass-kumo/issues/230). The official core
+`mitsubishi_comfort` integration fails the same way, so switching integrations is not a
+workaround. Power-cycling the units does not help.
+
+The only surviving copy of those credentials for this house is `kumo_cache.json` at the
+config root, which predates the change. It is **not in git** — it holds the units' local
+passwords and the WiFi PSK — and it is not in `sync.sh`. It is in supervisor backups.
+**Keep an offline copy.** If it is lost, there is no local control until Mitsubishi
+restores the API, and a factory reset of the adapter would invalidate it regardless.
+
+Setup depends on it in a way that needs a temporary patch. `__init__.py` passes the cache
+to pykumo at runtime, but `config_flow.py` does not, so a fresh install reaches for the
+dead cloud API and fails with a misleading "invalid credentials". To re-add the
+integration while the API is broken, edit `custom_components/kumo/config_flow.py`, in
+`validate_input()`:
+
+```python
+    cached_dict = None
+    cache_path = hass.config.path(KUMO_CONFIG_CACHE)
+    if prefer_cache and os.path.exists(cache_path):
+        cached_dict = await hass.async_add_executor_job(load_json, cache_path)
+
+    account = KumoCloudAccount(
+        data["username"], data["password"], kumo_dict=cached_dict
+    )
+```
+
+replacing the bare `KumoCloudAccount(data["username"], data["password"])`. All the imports
+it needs are already at the top of the file. Restart, run the flow with **`prefer_cache`
+ticked**, then revert the patch — only the setup path needs it, and HACS updates overwrite
+it anyway. Check whether upstream has fixed this before bothering.
+
+The account also covers a second property (`Middle unit`, `South unit`, on `10.0.0.x`).
+Those come along with the cache and are disabled at the device level in HA; leaving them
+enabled costs ~24 seconds per poll cycle in connection timeouts. Do not prune them from
+the cache — that discards their credentials permanently, on the same terms as above.
 
 ### Registry files churn
 
