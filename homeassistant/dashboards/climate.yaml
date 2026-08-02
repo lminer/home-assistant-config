@@ -154,12 +154,59 @@ views:
                         --secondary-text-color: #333;
                       {% endif %}
                     }
-              - type: custom:mushroom-entity-card
-                entity: climate.clea_hall
-                name: ' '
+              - type: custom:mushroom-climate-card
+                entity: climate.main_floor_hvac
+                name: Main Floor HVAC
+                show_temperature_control: true
                 card_mod:
                   style: |
-                    ha-card { visibility: hidden; }
+                    ha-card {
+                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% endif %}
+                    }
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-climate-card
+                entity: climate.bottom_floor_hvac
+                name: Bottom Floor HVAC
+                show_temperature_control: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% endif %}
+                    }
+              - type: custom:mushroom-climate-card
+                entity: climate.basement
+                name: Basement
+                show_temperature_control: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                        background-color: rgba(255, 255, 255, 0.8) !important;
+                        --primary-text-color: black;
+                        --secondary-text-color: #333;
+                      {% endif %}
+                    }
 
       # ===== TEMPERATURE SECTION =====
       - type: vertical-stack
@@ -218,6 +265,30 @@ views:
                 name: SmartSensor
                 layout: horizontal
 
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.main_floor_hvac_current_temperature
+                name: Main Floor HVAC
+                layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.bottom_floor_hvac_current_temperature
+                name: Bottom Floor HVAC
+                layout: horizontal
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.basement_current_temperature
+                name: Basement
+                layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.basement_current_temperature
+                name: ' '
+                layout: horizontal
+                card_mod:
+                  style: |
+                    ha-card { visibility: hidden; }
+
       # ===== HUMIDITY SECTION =====
       - type: vertical-stack
         cards:
@@ -251,16 +322,28 @@ views:
                 name: Clea Hall
                 layout: horizontal
               - type: custom:mushroom-entity-card
-                entity: sensor.clea_hall_current_humidity
-                name: ' '
+                entity: sensor.main_floor_hvac_current_humidity
+                name: Main Floor HVAC
                 layout: horizontal
-                card_mod:
-                  style: |
-                    ha-card { visibility: hidden; }
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.bottom_floor_hvac_current_humidity
+                name: Bottom Floor HVAC
+                layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.basement_current_humidity
+                name: Basement
+                layout: horizontal
 
       # ===== SPACER =====
-      - type: custom:gap-card
-        height: 80
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - height: 80px
+            - background: none
+            - box-shadow: none
 
       # ===== BOTTOM NAV BAR =====
       - type: custom:mod-card
