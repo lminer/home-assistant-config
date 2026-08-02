@@ -58,6 +58,18 @@ views:
                   }
 
       # ===== THERMOSTATS SECTION =====
+      #
+      # Five of the eight thermostats are physically mounted in a different room
+      # than the coils they control, so their on-unit temperature reading says
+      # nothing useful about the room being conditioned. Each of those five has a
+      # paired Ecobee SmartSensor (linked as a child device in the device registry)
+      # that sits in the right room.
+      #
+      # mushroom-climate-card always builds its secondary line as
+      # "<hvac state> ⸱ <on-unit current_temperature>" with no option to suppress
+      # the temperature, so the five relocated units blank that line via card_mod
+      # and rebuild it from the remote sensor. Main Floor HVAC, Bottom Floor HVAC,
+      # and Basement have no remote sensor and are left as-is.
       - type: vertical-stack
         cards:
           - type: custom:mushroom-title-card
@@ -70,35 +82,49 @@ views:
                 name: Master Suite
                 show_temperature_control: true
                 card_mod:
-                  style: |
-                    ha-card {
-                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
-                        background-color: rgba(255, 255, 255, 0.8) !important;
-                        --primary-text-color: black;
-                        --secondary-text-color: #333;
-                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
-                        background-color: rgba(255, 255, 255, 0.8) !important;
-                        --primary-text-color: black;
-                        --secondary-text-color: #333;
-                      {% endif %}
-                    }
+                  style:
+                    mushroom-state-item mushroom-state-info$: |
+                      .secondary { font-size: 0; }
+                      .secondary:after {
+                        font-size: var(--card-secondary-font-size, 12px);
+                        content: "{{ states(config.entity) | replace('_', ' ') | title }} ⸱ {% set t = 'sensor.smartsensor_temperature' %}{{ states(t) }}{{ state_attr(t, 'unit_of_measurement') or '' }}";
+                      }
+                    .: |
+                      ha-card {
+                        {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                          background-color: rgba(255, 255, 255, 0.8) !important;
+                          --primary-text-color: black;
+                          --secondary-text-color: #333;
+                        {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                          background-color: rgba(255, 255, 255, 0.8) !important;
+                          --primary-text-color: black;
+                          --secondary-text-color: #333;
+                        {% endif %}
+                      }
               - type: custom:mushroom-climate-card
                 entity: climate.family_room_study
                 name: Family Room / Study
                 show_temperature_control: true
                 card_mod:
-                  style: |
-                    ha-card {
-                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
-                        background-color: rgba(255, 255, 255, 0.8) !important;
-                        --primary-text-color: black;
-                        --secondary-text-color: #333;
-                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
-                        background-color: rgba(255, 255, 255, 0.8) !important;
-                        --primary-text-color: black;
-                        --secondary-text-color: #333;
-                      {% endif %}
-                    }
+                  style:
+                    mushroom-state-item mushroom-state-info$: |
+                      .secondary { font-size: 0; }
+                      .secondary:after {
+                        font-size: var(--card-secondary-font-size, 12px);
+                        content: "{{ states(config.entity) | replace('_', ' ') | title }} ⸱ {% set t = 'sensor.living_room_temperature' %}{{ states(t) }}{{ state_attr(t, 'unit_of_measurement') or '' }}";
+                      }
+                    .: |
+                      ha-card {
+                        {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                          background-color: rgba(255, 255, 255, 0.8) !important;
+                          --primary-text-color: black;
+                          --secondary-text-color: #333;
+                        {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                          background-color: rgba(255, 255, 255, 0.8) !important;
+                          --primary-text-color: black;
+                          --secondary-text-color: #333;
+                        {% endif %}
+                      }
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-climate-card
@@ -106,35 +132,49 @@ views:
                 name: Kids Bed/Bath 1
                 show_temperature_control: true
                 card_mod:
-                  style: |
-                    ha-card {
-                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
-                        background-color: rgba(255, 255, 255, 0.8) !important;
-                        --primary-text-color: black;
-                        --secondary-text-color: #333;
-                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
-                        background-color: rgba(255, 255, 255, 0.8) !important;
-                        --primary-text-color: black;
-                        --secondary-text-color: #333;
-                      {% endif %}
-                    }
+                  style:
+                    mushroom-state-item mushroom-state-info$: |
+                      .secondary { font-size: 0; }
+                      .secondary:after {
+                        font-size: var(--card-secondary-font-size, 12px);
+                        content: "{{ states(config.entity) | replace('_', ' ') | title }} ⸱ {% set t = 'sensor.kids_room_1_temperature' %}{{ states(t) }}{{ state_attr(t, 'unit_of_measurement') or '' }}";
+                      }
+                    .: |
+                      ha-card {
+                        {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                          background-color: rgba(255, 255, 255, 0.8) !important;
+                          --primary-text-color: black;
+                          --secondary-text-color: #333;
+                        {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                          background-color: rgba(255, 255, 255, 0.8) !important;
+                          --primary-text-color: black;
+                          --secondary-text-color: #333;
+                        {% endif %}
+                      }
               - type: custom:mushroom-climate-card
                 entity: climate.kids_bed_bath_2
                 name: Kids Bed/Bath 2
                 show_temperature_control: true
                 card_mod:
-                  style: |
-                    ha-card {
-                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
-                        background-color: rgba(255, 255, 255, 0.8) !important;
-                        --primary-text-color: black;
-                        --secondary-text-color: #333;
-                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
-                        background-color: rgba(255, 255, 255, 0.8) !important;
-                        --primary-text-color: black;
-                        --secondary-text-color: #333;
-                      {% endif %}
-                    }
+                  style:
+                    mushroom-state-item mushroom-state-info$: |
+                      .secondary { font-size: 0; }
+                      .secondary:after {
+                        font-size: var(--card-secondary-font-size, 12px);
+                        content: "{{ states(config.entity) | replace('_', ' ') | title }} ⸱ {% set t = 'sensor.kids_2_temperature' %}{{ states(t) }}{{ state_attr(t, 'unit_of_measurement') or '' }}";
+                      }
+                    .: |
+                      ha-card {
+                        {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                          background-color: rgba(255, 255, 255, 0.8) !important;
+                          --primary-text-color: black;
+                          --secondary-text-color: #333;
+                        {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                          background-color: rgba(255, 255, 255, 0.8) !important;
+                          --primary-text-color: black;
+                          --secondary-text-color: #333;
+                        {% endif %}
+                      }
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-climate-card
@@ -142,18 +182,25 @@ views:
                 name: Clea Hall
                 show_temperature_control: true
                 card_mod:
-                  style: |
-                    ha-card {
-                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
-                        background-color: rgba(255, 255, 255, 0.8) !important;
-                        --primary-text-color: black;
-                        --secondary-text-color: #333;
-                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
-                        background-color: rgba(255, 255, 255, 0.8) !important;
-                        --primary-text-color: black;
-                        --secondary-text-color: #333;
-                      {% endif %}
-                    }
+                  style:
+                    mushroom-state-item mushroom-state-info$: |
+                      .secondary { font-size: 0; }
+                      .secondary:after {
+                        font-size: var(--card-secondary-font-size, 12px);
+                        content: "{{ states(config.entity) | replace('_', ' ') | title }} ⸱ {% set t = 'sensor.clea_room_sensor_temperature' %}{{ states(t) }}{{ state_attr(t, 'unit_of_measurement') or '' }}";
+                      }
+                    .: |
+                      ha-card {
+                        {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
+                          background-color: rgba(255, 255, 255, 0.8) !important;
+                          --primary-text-color: black;
+                          --secondary-text-color: #333;
+                        {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                          background-color: rgba(255, 255, 255, 0.8) !important;
+                          --primary-text-color: black;
+                          --secondary-text-color: #333;
+                        {% endif %}
+                      }
               - type: custom:mushroom-climate-card
                 entity: climate.main_floor_hvac
                 name: Main Floor HVAC
@@ -209,6 +256,10 @@ views:
                     }
 
       # ===== TEMPERATURE SECTION =====
+      #
+      # Named for the room, sourced from whichever sensor is actually in it: the
+      # paired remote SmartSensor for the five relocated thermostats, the unit's
+      # own sensor for the three that sit with their coils.
       - type: vertical-stack
         cards:
           - type: custom:mushroom-title-card
@@ -217,79 +268,49 @@ views:
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-entity-card
-                entity: sensor.master_suite_current_temperature
+                entity: sensor.smartsensor_temperature
                 name: Master Suite
                 layout: horizontal
               - type: custom:mushroom-entity-card
-                entity: sensor.family_room_study_current_temperature
+                entity: sensor.living_room_temperature
                 name: Family Room / Study
                 layout: horizontal
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-entity-card
-                entity: sensor.kids_bed_bath_1_current_temperature
+                entity: sensor.kids_room_1_temperature
                 name: Kids Bed/Bath 1
                 layout: horizontal
               - type: custom:mushroom-entity-card
-                entity: sensor.kids_bed_bath_2_current_temperature
+                entity: sensor.kids_2_temperature
                 name: Kids Bed/Bath 2
                 layout: horizontal
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-entity-card
-                entity: sensor.clea_hall_current_temperature
+                entity: sensor.clea_room_sensor_temperature
                 name: Clea Hall
                 layout: horizontal
-              - type: custom:mushroom-entity-card
-                entity: sensor.living_room_temperature
-                name: Living Room
-                layout: horizontal
-          - type: horizontal-stack
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.clea_room_sensor_temperature
-                name: Clea Room Sensor
-                layout: horizontal
-              - type: custom:mushroom-entity-card
-                entity: sensor.kids_room_1_temperature
-                name: Kids Room 1
-                layout: horizontal
-          - type: horizontal-stack
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.kids_2_temperature
-                name: Kids 2
-                layout: horizontal
-              - type: custom:mushroom-entity-card
-                entity: sensor.smartsensor_temperature
-                name: SmartSensor
-                layout: horizontal
-
-          - type: horizontal-stack
-            cards:
               - type: custom:mushroom-entity-card
                 entity: sensor.main_floor_hvac_current_temperature
                 name: Main Floor HVAC
                 layout: horizontal
+          - type: horizontal-stack
+            cards:
               - type: custom:mushroom-entity-card
                 entity: sensor.bottom_floor_hvac_current_temperature
                 name: Bottom Floor HVAC
                 layout: horizontal
-          - type: horizontal-stack
-            cards:
               - type: custom:mushroom-entity-card
                 entity: sensor.basement_current_temperature
                 name: Basement
                 layout: horizontal
-              - type: custom:mushroom-entity-card
-                entity: sensor.basement_current_temperature
-                name: ' '
-                layout: horizontal
-                card_mod:
-                  style: |
-                    ha-card { visibility: hidden; }
 
       # ===== HUMIDITY SECTION =====
+      #
+      # Only the three thermostats that sit with their coils. Ecobee SmartSensors
+      # report temperature, occupancy, and battery -- no humidity -- so for the
+      # five relocated units there is no humidity reading worth showing.
       - type: vertical-stack
         cards:
           - type: custom:mushroom-title-card
@@ -298,43 +319,26 @@ views:
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-entity-card
-                entity: sensor.master_suite_current_humidity
-                name: Master Suite
-                layout: horizontal
-              - type: custom:mushroom-entity-card
-                entity: sensor.family_room_study_current_humidity
-                name: Family Room / Study
-                layout: horizontal
-          - type: horizontal-stack
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.kids_bed_bath_1_current_humidity
-                name: Kids Bed/Bath 1
-                layout: horizontal
-              - type: custom:mushroom-entity-card
-                entity: sensor.kids_bed_bath_2_current_humidity
-                name: Kids Bed/Bath 2
-                layout: horizontal
-          - type: horizontal-stack
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.clea_hall_current_humidity
-                name: Clea Hall
-                layout: horizontal
-              - type: custom:mushroom-entity-card
                 entity: sensor.main_floor_hvac_current_humidity
                 name: Main Floor HVAC
                 layout: horizontal
-          - type: horizontal-stack
-            cards:
               - type: custom:mushroom-entity-card
                 entity: sensor.bottom_floor_hvac_current_humidity
                 name: Bottom Floor HVAC
                 layout: horizontal
+          - type: horizontal-stack
+            cards:
               - type: custom:mushroom-entity-card
                 entity: sensor.basement_current_humidity
                 name: Basement
                 layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.basement_current_humidity
+                name: ' '
+                layout: horizontal
+                card_mod:
+                  style: |
+                    ha-card { visibility: hidden; }
 
       # ===== SPACER =====
       - type: custom:button-card
