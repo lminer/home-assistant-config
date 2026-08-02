@@ -257,6 +257,18 @@ views:
           # Midea MAP10S1XWT portable unit, via the midea_ac_lan integration. No
           # secondary-line override here: it is a portable sitting in the room it
           # cools, so its built-in sensor is already the right one to show.
+          #
+          # The highlight keys off the state rather than hvac_action, which every
+          # other card on this page uses. midea_ac_lan does not implement
+          # hvac_action at all -- climate.py exposes only hvac_mode,
+          # target_temperature, current_temperature and preset_mode -- so the
+          # usual rule would leave this card dark whenever the unit is running.
+          # hvac_mode is derived straight from the device's "power" attribute, so
+          # a non-off state is the dependable "it is running" signal. Slightly
+          # different meaning from the ecobee cards: those go white only while the
+          # compressor is actually engaged, this goes white whenever the unit is
+          # on. The device reports no compressor state, so that is the best
+          # available signal.
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-climate-card
@@ -266,11 +278,7 @@ views:
                 card_mod:
                   style: |
                     ha-card {
-                      {% if state_attr(config.entity, 'hvac_action') == 'cooling' %}
-                        background-color: rgba(255, 255, 255, 0.8) !important;
-                        --primary-text-color: black;
-                        --secondary-text-color: #333;
-                      {% elif state_attr(config.entity, 'hvac_action') == 'heating' %}
+                      {% if states(config.entity) not in ['off', 'unavailable', 'unknown'] %}
                         background-color: rgba(255, 255, 255, 0.8) !important;
                         --primary-text-color: black;
                         --secondary-text-color: #333;
