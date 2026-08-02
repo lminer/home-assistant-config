@@ -2,6 +2,11 @@ kiosk_mode:
   hide_header: true
 
 title: Lights
+
+# Anchors defined at first use and aliased afterwards: the bottom nav bar, the
+# bottom spacer, the top nav styling, and the shared button-card style blocks.
+# Without them the six views would repeat ~1000 lines of identical markup.
+
 views:
   # =============================================
   # VIEW 1: Room Grid
@@ -13,7 +18,7 @@ views:
     cards:
       # ===== TOP NAV BAR =====
       - type: custom:mod-card
-        card_mod:
+        card_mod: &topnav_mod
           style: |
             ha-card {
               position: static;
@@ -42,13 +47,13 @@ views:
                   icon: local:lightbulb-on-regular
                   icon_color: '#0171A4'
                   content: Lights
-                  card_mod:
+                  card_mod: &chip_mod
                     style: |
                       ha-card {
                         --chip-padding: 4px;
                       }
                 - type: spacer
-              card_mod:
+              card_mod: &chips_card_mod
                 style: |
                   :host {
                     --chip-background: rgba(0, 0, 0, 0) !important;
@@ -101,37 +106,10 @@ views:
                     --card-primary-font-size: 18px;
                   }
 
-          # Room Tiles
+          # Room Tiles — one per HA area that has a light.
+          # Row 1: Kitchen | Master Bedroom
           - type: horizontal-stack
             cards:
-              - type: custom:button-card
-                name: Study
-                icon: mdi:desk-lamp
-                show_state: false
-                tap_action:
-                  action: navigate
-                  navigation_path: /home-lights/study
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 128px
-                    - border-radius: 10px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 40px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 15px
-
               - type: custom:button-card
                 name: Kitchen
                 icon: mdi:silverware-fork-knife
@@ -139,7 +117,7 @@ views:
                 tap_action:
                   action: navigate
                   navigation_path: /home-lights/kitchen
-                styles:
+                styles: &room_tile_styles
                   card:
                     - padding: 0px
                     - height: 128px
@@ -160,12 +138,65 @@ views:
                     - font-size: 14px
                     - padding-bottom: 15px
 
-          # Spacer for bottom nav
-          - type: custom:gap-card
-            height: 80
+              - type: custom:button-card
+                name: Master Bedroom
+                icon: mdi:bed-king
+                show_state: false
+                tap_action:
+                  action: navigate
+                  navigation_path: /home-lights/master-bedroom
+                styles: *room_tile_styles
+
+          # Row 2: Master Bathroom | Master Closet
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                name: Master Bathroom
+                icon: mdi:shower
+                show_state: false
+                tap_action:
+                  action: navigate
+                  navigation_path: /home-lights/master-bathroom
+                styles: *room_tile_styles
+
+              - type: custom:button-card
+                name: Master Closet
+                icon: mdi:hanger
+                show_state: false
+                tap_action:
+                  action: navigate
+                  navigation_path: /home-lights/master-closet
+                styles: *room_tile_styles
+
+          # Row 3: Basement Game Area | (gap)
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                name: Basement Game Area
+                icon: mdi:gamepad-variant
+                show_state: false
+                tap_action:
+                  action: navigate
+                  navigation_path: /home-lights/basement-game-area
+                styles: *room_tile_styles
+
+              - type: custom:button-card
+                color_type: blank-card
+
+          # Spacer for bottom nav. gap-card is not installed, so this is a
+          # blank button-card sized to match the fixed bottom bar.
+          - &spacer
+            type: custom:button-card
+            color_type: blank-card
+            styles:
+              card:
+                - height: 80px
+                - background: none
+                - box-shadow: none
 
       # ===== BOTTOM NAV BAR =====
-      - type: custom:mod-card
+      - &bottom_nav
+        type: custom:mod-card
         card_mod:
           style: |
             @media (max-width: 1023px) {
@@ -305,1006 +336,8 @@ views:
                   - padding-top: 6px
 
   # =============================================
-  # VIEW 2: Study
-  # =============================================
-  - title: Study
-    path: study
-    icon: mdi:desk-lamp
-    theme: ios-dark-mode-blue-red
-    cards:
-      # ===== TOP NAV BAR =====
-      - type: custom:mod-card
-        card_mod:
-          style: |
-            ha-card {
-              position: static;
-              z-index: 3;
-              top: 8px;
-              left: 8px;
-              right: 8px;
-              height: 45px;
-              padding: 4px 10px;
-              border-radius: 10px;
-              background-color: rgba(10, 10, 10, .5);
-              -webkit-backdrop-filter: blur(100px);
-              backdrop-filter: blur(100px);
-            }
-        card:
-          type: grid
-          square: false
-          columns: 1
-          cards:
-            - type: custom:mushroom-chips-card
-              chips:
-                - type: back
-                  icon: mdi:arrow-left
-                - type: spacer
-                - type: template
-                  icon: mdi:desk-lamp
-                  icon_color: '#0171A4'
-                  content: Study
-                  card_mod:
-                    style: |
-                      ha-card {
-                        --chip-padding: 4px;
-                      }
-                - type: spacer
-              card_mod:
-                style: |
-                  :host {
-                    --chip-background: rgba(0, 0, 0, 0) !important;
-                    --mush-card-primary-font-size: 28px;
-                  }
-                  ha-card {
-                    --card-primary-font-size: 30px !important;
-                    --card-secondary-font-size: 30px;
-                    --chip-icon-size: 15px;
-                  }
-
-      # ===== LIGHTS SECTION =====
-      - type: vertical-stack
-        cards:
-          - type: custom:mushroom-title-card
-            subtitle: Lights
-
-          # Row 1: Track Lighting | LED Lighting
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                entity: light.track_lighting
-                name: Track Lighting
-                icon: mdi:track-light
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                entity: light.led_lighting
-                name: LED Lighting
-                icon: mdi:led-strip
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-          # Row 2: Closet | (gap)
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                entity: light.closet
-                name: Closet
-                icon: mdi:lightbulb
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                color_type: blank-card
-
-      # ===== SHADES SECTION =====
-      - type: vertical-stack
-        cards:
-          - type: custom:mushroom-title-card
-            subtitle: Shades
-
-          # Row 1: North Skylights | South Skylights
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                entity: light.north_skylight_shades
-                name: North Skylights
-                icon: mdi:blinds-horizontal
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                entity: light.south_skylight_shades
-                name: South Skylights
-                icon: mdi:blinds-horizontal
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-          # Row 2: Window Shades | (gap)
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                entity: cover.window_shades
-                name: Window Shades
-                icon: mdi:blinds
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'open'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#0171A4'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                color_type: blank-card
-
-      # ===== SKYLIGHT CONTROLS SECTION =====
-      - type: vertical-stack
-        cards:
-          - type: custom:mushroom-title-card
-            subtitle: Skylight Controls
-
-          # Row 1: N Skylight | S Skylight
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                entity: switch.n_skylight_open
-                name: N Skylight
-                icon: mdi:window-open-variant
-                show_state: false
-                tap_action:
-                  action: perform-action
-                  perform_action: switch.turn_on
-                  target:
-                    entity_id: switch.n_skylight_open
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    tap_action:
-                      action: perform-action
-                      perform_action: switch.turn_on
-                      target:
-                        entity_id: switch.n_skylight_close
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                entity: switch.s_skylight_open
-                name: S Skylight
-                icon: mdi:window-open-variant
-                show_state: false
-                tap_action:
-                  action: perform-action
-                  perform_action: switch.turn_on
-                  target:
-                    entity_id: switch.s_skylight_open
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    tap_action:
-                      action: perform-action
-                      perform_action: switch.turn_on
-                      target:
-                        entity_id: switch.s_skylight_close
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-      # ===== KEYPAD SCENES SECTION =====
-      - type: vertical-stack
-        cards:
-          - type: custom:mushroom-title-card
-            subtitle: Keypad Scenes
-
-          # CSD 001 Row 1: Strip | Track | Daybed
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                entity: switch.csd_001_strip
-                name: Strip
-                icon: mdi:gesture-tap-button
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                entity: switch.csd_001_track
-                name: Track
-                icon: mdi:gesture-tap-button
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                entity: switch.csd_001_daybed
-                name: Daybed
-                icon: mdi:gesture-tap-button
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-          # CSD 001 Row 2: All I/O | F. Shade | R. Shade
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                entity: switch.csd_001_all_i_o
-                name: All I/O
-                icon: mdi:gesture-tap-button
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                entity: switch.csd_001_f_shade
-                name: F. Shade
-                icon: mdi:gesture-tap-button
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                entity: switch.csd_001_r_shade
-                name: R. Shade
-                icon: mdi:gesture-tap-button
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-          # CSD 002 Row 1: West | North | East
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                entity: switch.csd_002_west
-                name: West
-                icon: mdi:gesture-tap-button
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                entity: switch.csd_002_north
-                name: North
-                icon: mdi:gesture-tap-button
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                entity: switch.csd_002_east
-                name: East
-                icon: mdi:gesture-tap-button
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-          # CSD 002 Row 2: South | North 2 | (gap)
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                entity: switch.csd_002_south
-                name: South
-                icon: mdi:gesture-tap-button
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                entity: switch.csd_002_north_2
-                name: North 2
-                icon: mdi:gesture-tap-button
-                show_state: false
-                tap_action:
-                  action: toggle
-                hold_action:
-                  action: more-info
-                styles:
-                  card:
-                    - padding: 0px
-                    - height: 60px
-                  grid:
-                    - grid-template-areas: '"i" "n"'
-                    - grid-template-columns: 1fr
-                    - grid-template-rows: 1fr min-content
-                  img_cell:
-                    - align-self: center
-                    - text-align: center
-                  icon:
-                    - width: 35px
-                    - color: white
-                  name:
-                    - justify-self: center
-                    - font-weight: 600
-                    - font-size: 14px
-                    - padding-bottom: 8px
-                state:
-                  - value: 'on'
-                    styles:
-                      card:
-                        - background-color: 'rgba(255, 255, 255, .8)'
-                      icon:
-                        - color: '#FF9500'
-                      name:
-                        - color: black
-
-              - type: custom:button-card
-                color_type: blank-card
-
-          # Spacer for bottom nav
-          - type: custom:gap-card
-            height: 80
-
-      # ===== BOTTOM NAV BAR =====
-      - type: custom:mod-card
-        card_mod:
-          style: |
-            @media (max-width: 1023px) {
-              ha-card {
-                z-index: 1;
-                position: fixed;
-                bottom: 0px;
-                left: 0px;
-                width: 100%;
-                height: 80px;
-                backdrop-filter: blur(120px);
-                -webkit-backdrop-filter: blur(150px);
-                background: rgba(15, 1, 31, .8);
-                opacity: 1;
-                border-radius: 0px;
-                padding: 0px;
-                padding-left: 5px;
-                padding-right: 5px;
-                border-top: .5px solid rgba(100, 100, 100, 0.2);
-                box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.3);
-              }
-            }
-            @media (min-width: 1024px) {
-              ha-card {
-                z-index: -1;
-                position: fixed;
-                bottom: 0px;
-                left: 0px;
-                width: 20%;
-                height: 75px;
-                background: RGBA(0,0,0,0.50);
-                opacity: 1;
-                border-radius: 0px;
-                padding: 5px;
-              }
-            }
-        card:
-          type: grid
-          square: false
-          columns: 4
-          cards:
-            - type: custom:button-card
-              icon: local:house-regular
-              name: Home
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/home
-              styles:
-                icon:
-                  - color: white
-                  - width: 24px
-                  - height: 24px
-                img_cell:
-                  - justify-content: center
-                  - height: 100%
-                card:
-                  - background: none
-                  - padding: 7px
-                  - opacity: 0.5
-                  - width: 74px
-                name:
-                  - font-size: 10px
-                  - align-self: center
-                  - font-weight: 300
-                  - padding-top: 6px
-            - type: custom:button-card
-              icon: local:circle-sort-regular
-              name: Climate
-              tap_action:
-                action: navigate
-                navigation_path: /home-climate/home
-              styles:
-                icon:
-                  - color: white
-                  - width: 24px
-                  - height: 24px
-                img_cell:
-                  - justify-content: center
-                  - height: 100%
-                card:
-                  - background: none
-                  - padding: 7px
-                  - opacity: 0.5
-                  - width: 74px
-                name:
-                  - font-size: 10px
-                  - align-self: center
-                  - font-weight: 300
-                  - padding-top: 6px
-            - type: custom:button-card
-              icon: local:tv-retro-regular
-              name: Media
-              tap_action:
-                action: navigate
-                navigation_path: /media-center/home
-              styles:
-                icon:
-                  - color: white
-                  - width: 24px
-                  - height: 24px
-                img_cell:
-                  - justify-content: center
-                  - height: 100%
-                card:
-                  - background: none
-                  - padding: 7px
-                  - opacity: 0.5
-                  - width: 74px
-                name:
-                  - font-size: 10px
-                  - align-self: center
-                  - font-weight: 300
-                  - padding-top: 6px
-            - type: custom:button-card
-              icon: local:lightbulb-on-regular
-              name: Lights
-              tap_action:
-                action: navigate
-                navigation_path: /home-lights/home
-              styles:
-                icon:
-                  - color: white
-                  - width: 24px
-                  - height: 24px
-                img_cell:
-                  - justify-content: center
-                  - height: 100%
-                card:
-                  - background: none
-                  - padding: 7px
-                  - opacity: 1
-                  - width: 74px
-                name:
-                  - font-size: 10px
-                  - align-self: center
-                  - font-weight: 400
-                  - padding-top: 6px
-
-  # =============================================
-  # VIEW 3: Kitchen
+  # VIEW 2: Kitchen
+  # Caseta DVRF-5NS switches — no dimming, so no sliders.
   # =============================================
   - title: Kitchen
     path: kitchen
@@ -1313,21 +346,7 @@ views:
     cards:
       # ===== TOP NAV BAR =====
       - type: custom:mod-card
-        card_mod:
-          style: |
-            ha-card {
-              position: static;
-              z-index: 3;
-              top: 8px;
-              left: 8px;
-              right: 8px;
-              height: 45px;
-              padding: 4px 10px;
-              border-radius: 10px;
-              background-color: rgba(10, 10, 10, .5);
-              -webkit-backdrop-filter: blur(100px);
-              backdrop-filter: blur(100px);
-            }
+        card_mod: *topnav_mod
         card:
           type: grid
           square: false
@@ -1342,23 +361,9 @@ views:
                   icon: mdi:silverware-fork-knife
                   icon_color: '#0171A4'
                   content: Kitchen
-                  card_mod:
-                    style: |
-                      ha-card {
-                        --chip-padding: 4px;
-                      }
+                  card_mod: *chip_mod
                 - type: spacer
-              card_mod:
-                style: |
-                  :host {
-                    --chip-background: rgba(0, 0, 0, 0) !important;
-                    --mush-card-primary-font-size: 28px;
-                  }
-                  ha-card {
-                    --card-primary-font-size: 30px !important;
-                    --card-secondary-font-size: 30px;
-                    --chip-icon-size: 15px;
-                  }
+              card_mod: *chips_card_mod
 
       # ===== LIGHTS SECTION =====
       - type: vertical-stack
@@ -1366,7 +371,7 @@ views:
           - type: custom:mushroom-title-card
             subtitle: Lights
 
-          # Row 1: Kitchen / Living Wall | (gap)
+          # Row 1: Kitchen / Living Wall | Pantry
           - type: horizontal-stack
             cards:
               - type: custom:button-card
@@ -1378,7 +383,7 @@ views:
                   action: toggle
                 hold_action:
                   action: more-info
-                styles:
+                styles: &tile_styles
                   card:
                     - padding: 0px
                     - height: 60px
@@ -1397,7 +402,7 @@ views:
                     - font-weight: 600
                     - font-size: 14px
                     - padding-bottom: 8px
-                state:
+                state: &tile_on_state
                   - value: 'on'
                     styles:
                       card:
@@ -1408,148 +413,474 @@ views:
                         - color: black
 
               - type: custom:button-card
-                color_type: blank-card
+                entity: switch.kitchen_pantry
+                name: Pantry
+                icon: mdi:cupboard
+                show_state: false
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+                state: *tile_on_state
 
-          # Spacer for bottom nav
-          - type: custom:gap-card
-            height: 80
+          # Row 2: Toilet | Bathroom
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.kitchen_kitchen_toilet
+                name: Toilet
+                icon: mdi:toilet
+                show_state: false
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+                state: *tile_on_state
+
+              - type: custom:button-card
+                entity: switch.kitchen_bathroom
+                name: Bathroom
+                icon: mdi:shower-head
+                show_state: false
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+                state: *tile_on_state
+
+      # ===== BRIDGE SECTION =====
+      # Smart Bridge 2 lives in the Kitchen area, so its own controls surface
+      # here. They are not kitchen lights, hence the separate section.
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: Smart Bridge
+
+          # Row 1: Smart Away | Bedroom Sleep
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.unassigned_smart_away
+                name: Smart Away
+                icon: mdi:home-export-outline
+                show_state: false
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+                state: *tile_on_state
+
+              - type: custom:button-card
+                entity: scene.kitchen_smart_bridge_2_master_bedroom_sleep
+                name: Bedroom Sleep
+                icon: mdi:sleep
+                show_state: false
+                tap_action:
+                  action: perform-action
+                  perform_action: scene.turn_on
+                  target:
+                    entity_id: scene.kitchen_smart_bridge_2_master_bedroom_sleep
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+
+          - *spacer
 
       # ===== BOTTOM NAV BAR =====
+      - *bottom_nav
+
+  # =============================================
+  # VIEW 3: Master Bedroom
+  # Four Caseta dimmers, each with an inline brightness slider.
+  # =============================================
+  - title: Master Bedroom
+    path: master-bedroom
+    icon: mdi:bed-king
+    theme: ios-dark-mode-blue-red
+    cards:
+      # ===== TOP NAV BAR =====
       - type: custom:mod-card
-        card_mod:
-          style: |
-            @media (max-width: 1023px) {
-              ha-card {
-                z-index: 1;
-                position: fixed;
-                bottom: 0px;
-                left: 0px;
-                width: 100%;
-                height: 80px;
-                backdrop-filter: blur(120px);
-                -webkit-backdrop-filter: blur(150px);
-                background: rgba(15, 1, 31, .8);
-                opacity: 1;
-                border-radius: 0px;
-                padding: 0px;
-                padding-left: 5px;
-                padding-right: 5px;
-                border-top: .5px solid rgba(100, 100, 100, 0.2);
-                box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.3);
-              }
-            }
-            @media (min-width: 1024px) {
-              ha-card {
-                z-index: -1;
-                position: fixed;
-                bottom: 0px;
-                left: 0px;
-                width: 20%;
-                height: 75px;
-                background: RGBA(0,0,0,0.50);
-                opacity: 1;
-                border-radius: 0px;
-                padding: 5px;
-              }
-            }
+        card_mod: *topnav_mod
         card:
           type: grid
           square: false
-          columns: 4
+          columns: 1
           cards:
-            - type: custom:button-card
-              icon: local:house-regular
-              name: Home
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace/home
-              styles:
-                icon:
-                  - color: white
-                  - width: 24px
-                  - height: 24px
-                img_cell:
-                  - justify-content: center
-                  - height: 100%
-                card:
-                  - background: none
-                  - padding: 7px
-                  - opacity: 0.5
-                  - width: 74px
-                name:
-                  - font-size: 10px
-                  - align-self: center
-                  - font-weight: 300
-                  - padding-top: 6px
-            - type: custom:button-card
-              icon: local:circle-sort-regular
-              name: Climate
-              tap_action:
-                action: navigate
-                navigation_path: /home-climate/home
-              styles:
-                icon:
-                  - color: white
-                  - width: 24px
-                  - height: 24px
-                img_cell:
-                  - justify-content: center
-                  - height: 100%
-                card:
-                  - background: none
-                  - padding: 7px
-                  - opacity: 0.5
-                  - width: 74px
-                name:
-                  - font-size: 10px
-                  - align-self: center
-                  - font-weight: 300
-                  - padding-top: 6px
-            - type: custom:button-card
-              icon: local:tv-retro-regular
-              name: Media
-              tap_action:
-                action: navigate
-                navigation_path: /media-center/home
-              styles:
-                icon:
-                  - color: white
-                  - width: 24px
-                  - height: 24px
-                img_cell:
-                  - justify-content: center
-                  - height: 100%
-                card:
-                  - background: none
-                  - padding: 7px
-                  - opacity: 0.5
-                  - width: 74px
-                name:
-                  - font-size: 10px
-                  - align-self: center
-                  - font-weight: 300
-                  - padding-top: 6px
-            - type: custom:button-card
-              icon: local:lightbulb-on-regular
-              name: Lights
-              tap_action:
-                action: navigate
-                navigation_path: /home-lights/home
-              styles:
-                icon:
-                  - color: white
-                  - width: 24px
-                  - height: 24px
-                img_cell:
-                  - justify-content: center
-                  - height: 100%
-                card:
-                  - background: none
-                  - padding: 7px
-                  - opacity: 1
-                  - width: 74px
-                name:
-                  - font-size: 10px
-                  - align-self: center
-                  - font-weight: 400
-                  - padding-top: 6px
+            - type: custom:mushroom-chips-card
+              chips:
+                - type: back
+                  icon: mdi:arrow-left
+                - type: spacer
+                - type: template
+                  icon: mdi:bed-king
+                  icon_color: '#0171A4'
+                  content: Master Bedroom
+                  card_mod: *chip_mod
+                - type: spacer
+              card_mod: *chips_card_mod
+
+      # ===== LIGHTS SECTION =====
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: Lights
+
+          # Row 1: Main Lights | Accent
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.master_bedroom_master_bedroom_main_lights
+                    name: Main Lights
+                    icon: mdi:ceiling-light
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: &slider_mod
+                      style: |
+                        ha-card {
+                          background: rgba(255, 255, 255, .05);
+                          border-radius: 10px;
+                          box-shadow: none;
+                          padding: 0px 8px;
+                          margin-top: 4px;
+                        }
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.master_bedroom_master_bedroom_main_lights
+                        full_row: true
+
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.master_bedroom_master_bedroom_accent
+                    name: Accent
+                    icon: mdi:wall-sconce
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.master_bedroom_master_bedroom_accent
+                        full_row: true
+
+          # Row 2: Left Reading | Right Reading
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.master_bedroom_master_bedroom_left_reading
+                    name: Left Reading
+                    icon: mdi:lamp
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.master_bedroom_master_bedroom_left_reading
+                        full_row: true
+
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.master_bedroom_master_bedroom_right_reading
+                    name: Right Reading
+                    icon: mdi:lamp
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.master_bedroom_master_bedroom_right_reading
+                        full_row: true
+
+      # ===== SCENES SECTION =====
+      # The same three scenes the 4-button Pico fires, so the dashboard and the
+      # wall control stay in agreement.
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: Master Suite Scenes
+
+          # Row 1: All On | All Low
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: scene.master_suite_all_on
+                name: All On
+                icon: mdi:white-balance-sunny
+                show_state: false
+                tap_action:
+                  action: perform-action
+                  perform_action: scene.turn_on
+                  target:
+                    entity_id: scene.master_suite_all_on
+                  data:
+                    transition: 1
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+
+              - type: custom:button-card
+                entity: scene.master_suite_all_low
+                name: All Low
+                icon: mdi:brightness-4
+                show_state: false
+                tap_action:
+                  action: perform-action
+                  perform_action: scene.turn_on
+                  target:
+                    entity_id: scene.master_suite_all_low
+                  data:
+                    transition: 1
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+
+          # Row 2: Reading | (gap)
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: scene.master_suite_reading
+                name: Reading
+                icon: mdi:book-open-variant
+                show_state: false
+                tap_action:
+                  action: perform-action
+                  perform_action: scene.turn_on
+                  target:
+                    entity_id: scene.master_suite_reading
+                  data:
+                    transition: 1
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+
+              - type: custom:button-card
+                color_type: blank-card
+
+          - *spacer
+
+      # ===== BOTTOM NAV BAR =====
+      - *bottom_nav
+
+  # =============================================
+  # VIEW 4: Master Bathroom
+  # =============================================
+  - title: Master Bathroom
+    path: master-bathroom
+    icon: mdi:shower
+    theme: ios-dark-mode-blue-red
+    cards:
+      # ===== TOP NAV BAR =====
+      - type: custom:mod-card
+        card_mod: *topnav_mod
+        card:
+          type: grid
+          square: false
+          columns: 1
+          cards:
+            - type: custom:mushroom-chips-card
+              chips:
+                - type: back
+                  icon: mdi:arrow-left
+                - type: spacer
+                - type: template
+                  icon: mdi:shower
+                  icon_color: '#0171A4'
+                  content: Master Bathroom
+                  card_mod: *chip_mod
+                - type: spacer
+              card_mod: *chips_card_mod
+
+      # ===== LIGHTS SECTION =====
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: Lights
+
+          # Row 1: Toilet | (gap)
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.master_bathroom_master_bathroom_toilet
+                    name: Toilet
+                    icon: mdi:toilet
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.master_bathroom_master_bathroom_toilet
+                        full_row: true
+
+              - type: custom:button-card
+                color_type: blank-card
+
+          - *spacer
+
+      # ===== BOTTOM NAV BAR =====
+      - *bottom_nav
+
+  # =============================================
+  # VIEW 5: Master Closet
+  # DVRF-5NS switches — no dimming, so no sliders.
+  # =============================================
+  - title: Master Closet
+    path: master-closet
+    icon: mdi:hanger
+    theme: ios-dark-mode-blue-red
+    cards:
+      # ===== TOP NAV BAR =====
+      - type: custom:mod-card
+        card_mod: *topnav_mod
+        card:
+          type: grid
+          square: false
+          columns: 1
+          cards:
+            - type: custom:mushroom-chips-card
+              chips:
+                - type: back
+                  icon: mdi:arrow-left
+                - type: spacer
+                - type: template
+                  icon: mdi:hanger
+                  icon_color: '#0171A4'
+                  content: Master Closet
+                  card_mod: *chip_mod
+                - type: spacer
+              card_mod: *chips_card_mod
+
+      # ===== LIGHTS SECTION =====
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: Lights
+
+          # Row 1: Entrance | Main
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.master_closet_master_closet_entrance
+                name: Entrance
+                icon: mdi:door-open
+                show_state: false
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+                state: *tile_on_state
+
+              - type: custom:button-card
+                entity: switch.master_closet_master_closet_main
+                name: Main
+                icon: mdi:hanger
+                show_state: false
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+                state: *tile_on_state
+
+          - *spacer
+
+      # ===== BOTTOM NAV BAR =====
+      - *bottom_nav
+
+  # =============================================
+  # VIEW 6: Basement Game Area
+  # =============================================
+  - title: Basement Game Area
+    path: basement-game-area
+    icon: mdi:gamepad-variant
+    theme: ios-dark-mode-blue-red
+    cards:
+      # ===== TOP NAV BAR =====
+      - type: custom:mod-card
+        card_mod: *topnav_mod
+        card:
+          type: grid
+          square: false
+          columns: 1
+          cards:
+            - type: custom:mushroom-chips-card
+              chips:
+                - type: back
+                  icon: mdi:arrow-left
+                - type: spacer
+                - type: template
+                  icon: mdi:gamepad-variant
+                  icon_color: '#0171A4'
+                  content: Basement Game Area
+                  card_mod: *chip_mod
+                - type: spacer
+              card_mod: *chips_card_mod
+
+      # ===== LIGHTS SECTION =====
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: Lights
+
+          # Row 1: Main Lights | (gap)
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.basement_game_area_main_lights
+                name: Main Lights
+                icon: mdi:ceiling-light
+                show_state: false
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                styles: *tile_styles
+                state: *tile_on_state
+
+              - type: custom:button-card
+                color_type: blank-card
+
+          - *spacer
+
+      # ===== BOTTOM NAV BAR =====
+      - *bottom_nav
