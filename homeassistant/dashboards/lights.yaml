@@ -168,9 +168,18 @@ views:
                   navigation_path: /home-lights/master-closet
                 styles: *room_tile_styles
 
-          # Row 3: Basement Game Area | (gap)
+          # Row 3: Study | Basement Game Area
           - type: horizontal-stack
             cards:
+              - type: custom:button-card
+                name: Study
+                icon: mdi:desk-lamp
+                show_state: false
+                tap_action:
+                  action: navigate
+                  navigation_path: /home-lights/study
+                styles: *room_tile_styles
+
               - type: custom:button-card
                 name: Basement Game Area
                 icon: mdi:gamepad-variant
@@ -179,9 +188,6 @@ views:
                   action: navigate
                   navigation_path: /home-lights/basement-game-area
                 styles: *room_tile_styles
-
-              - type: custom:button-card
-                color_type: blank-card
 
           # Spacer for bottom nav. gap-card is not installed, so this is a
           # blank button-card sized to match the fixed bottom bar.
@@ -828,7 +834,348 @@ views:
       - *bottom_nav
 
   # =============================================
-  # VIEW 6: Basement Game Area
+  # VIEW 6: Study
+  # Lutron HomeWorks, reached through the Connect Bridge over HomeKit.
+  # All ten lights dim; the three shades report position.
+  # =============================================
+  - title: Study
+    path: study
+    icon: mdi:desk-lamp
+    theme: ios-dark-mode-blue-red
+    cards:
+      # ===== TOP NAV BAR =====
+      - type: custom:mod-card
+        card_mod: *topnav_mod
+        card:
+          type: grid
+          square: false
+          columns: 1
+          cards:
+            - type: custom:mushroom-chips-card
+              chips:
+                - type: back
+                  icon: mdi:arrow-left
+                - type: spacer
+                - type: template
+                  icon: mdi:desk-lamp
+                  icon_color: '#0171A4'
+                  content: Study
+                  card_mod: *chip_mod
+                - type: spacer
+              card_mod: *chips_card_mod
+
+      # ===== TRACK LIGHTING =====
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: Track Lighting
+
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.track_a
+                    name: Track A
+                    icon: mdi:track-light
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.track_a
+                        full_row: true
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.track_b
+                    name: Track B
+                    icon: mdi:track-light
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.track_b
+                        full_row: true
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.track_c
+                    name: Track C
+                    icon: mdi:track-light
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.track_c
+                        full_row: true
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.track_d
+                    name: Track D
+                    icon: mdi:track-light
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.track_d
+                        full_row: true
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.track_e
+                    name: Track E
+                    icon: mdi:track-light
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.track_e
+                        full_row: true
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.track_f
+                    name: Track F
+                    icon: mdi:track-light
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.track_f
+                        full_row: true
+
+      # ===== LED GROUPS =====
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: LED Groups
+
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.led_group_a
+                    name: LED Group A
+                    icon: mdi:led-strip-variant
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.led_group_a
+                        full_row: true
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.led_group_b
+                    name: LED Group B
+                    icon: mdi:led-strip-variant
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.led_group_b
+                        full_row: true
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.led_group_c
+                    name: LED Group C
+                    icon: mdi:led-strip-variant
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.led_group_c
+                        full_row: true
+              - type: custom:button-card
+                color_type: blank-card
+
+      # ===== CLOSET =====
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: Closet
+
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: light.closet
+                    name: Closet
+                    icon: mdi:hanger
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *tile_on_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: light.closet
+                        full_row: true
+              - type: custom:button-card
+                color_type: blank-card
+
+      # ===== SHADES =====
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: Shades
+
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: cover.north
+                    name: North Shade
+                    icon: mdi:window-shutter
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: &cover_open_state
+                      - value: open
+                        styles:
+                          card:
+                            - background-color: 'rgba(255, 255, 255, .8)'
+                          icon:
+                            - color: '#0171A4'
+                          name:
+                            - color: black
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: cover.north
+                        full_row: true
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: cover.east
+                    name: East Shade
+                    icon: mdi:window-shutter
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *cover_open_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: cover.east
+                        full_row: true
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: custom:button-card
+                    entity: cover.west
+                    name: West Shade
+                    icon: mdi:window-shutter
+                    show_state: false
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    styles: *tile_styles
+                    state: *cover_open_state
+                  - type: entities
+                    card_mod: *slider_mod
+                    entities:
+                      - type: custom:slider-entity-row
+                        entity: cover.west
+                        full_row: true
+              - type: custom:button-card
+                color_type: blank-card
+
+          - *spacer
+
+      # ===== BOTTOM NAV BAR =====
+      - *bottom_nav
+
+  # =============================================
+  # VIEW 7: Basement Game Area
   # =============================================
   - title: Basement Game Area
     path: basement-game-area
