@@ -1,13 +1,69 @@
-# HACS Integrations (install via HACS > Integrations)
-pyscript
+# HACS inventory for this Home Assistant config
+#
+# Known-good against Home Assistant Core 2026.7.4.
+#
+# Generated from what is actually installed on the box:
+#   custom_components/  ->  integrations
+#   www/community/      ->  frontend plugins
+#   themes/             ->  themes
+#
+# Install HACS itself first (https://hacs.xyz), then add everything below.
+# Slugs are full owner/repo so they are unambiguous in the HACS search box.
 
-# HACS Frontend Cards (install via HACS > Frontend)
-button-card
-lovelace-mushroom
-lovelace-slider-entity-row
-android-tv-card
-lovelace-card-mod
-lovelace-layout-card
-bootstrap-grid-card
-kiosk-mode
-mini-media-player
+
+## Integrations (HACS > Integrations)
+
+custom-components/pyscript                    # pyscript
+thomasloven/hass-custom_icons                 # custom_icons - serves /homeassistant/custom_icons/*.svg
+dwainscheeren/dwains-lovelace-dashboard       # dwains_dashboard
+rzulian/lutron_lip                            # lutron_lip v0.1.4 -- CUSTOM REPOSITORY, see note below
+
+
+## Frontend plugins (HACS > Frontend)
+
+custom-cards/button-card
+piitaya/lovelace-mushroom
+thomasloven/lovelace-card-mod
+thomasloven/lovelace-layout-card
+thomasloven/lovelace-slider-entity-row
+ownbee/bootstrap-grid-card
+NemesisRE/kiosk-mode                          # also wired into configuration.yaml frontend.extra_module_url
+kalkih/mini-media-player
+Nerwyn/universal-remote-card                  # formerly "android-tv-card"; www/community/ still has both dirs
+
+
+## Themes (HACS > Themes)
+
+catppuccin/home-assistant                     # themes/catppuccin
+Nerwyn/material-you-theme                     # themes/material_you
+Nezz/homeassistant-visionos-theme             # themes/visionos
+wessamlauf/homeassistant-frosted-glass-themes # themes/Frosted Glass
+
+
+## Not from HACS -- restored by ./sync.sh push
+
+themes/zz-flow      # Flow theme, from the Flow-Premium bundle (mirrored in flow/ at repo root)
+themes/ios-themes   # hand-added iOS/HomeKit themes + background jpgs
+custom_icons/       # 31 SVGs consumed by the custom_icons integration above
+
+
+## Not from HACS and NOT tracked in this repo
+
+sony/               # hand-rolled Sony integration, 9 Python files under /homeassistant/sony/.
+                    # Recoverable only from a Home Assistant supervisor backup tar.
+                    # See RECOVERY.md.
+
+
+## Notes
+
+- lutron_lip is not in the default HACS index. Add it first via
+  HACS > three-dot menu > Custom repositories:
+    Repository: https://github.com/rzulian/lutron_lip
+    Type:       Integration
+  It also needs the Lutron LIP cert/key/pem files at the config root
+  (lutron_caseta-*.pem), which come from the supervisor backup, not this repo.
+
+- Installing a plugin via HACS writes it to www/community/ and registers a
+  Lovelace resource. This repo tracks .storage/lovelace_resources, so the
+  resource list is restored by ./sync.sh push -- but the plugin JS files
+  themselves are not tracked and must come from HACS.

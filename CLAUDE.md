@@ -25,13 +25,20 @@ The repo tracks a specific subset of HA files — YAML configs, select `.storage
 
 ## Repo Structure
 
-- `homeassistant/` — Tracked copy of live HA config files (YAML configs, dashboards, themes, storage)
+- `homeassistant/` — Tracked copy of live HA config files, mirroring the live layout:
+  - YAML configs, `dashboards/`, `www/`
+  - `themes/` — all six theme directories
+  - `custom_icons/` — the 31 SVGs served by the `custom_icons` integration (same content
+    as `flow/custom_icons/`, but at the path HA actually loads from)
+  - `.storage/` — Lovelace dashboards/resources, input helpers, and the four
+    credential-free registries (area, floor, device, entity)
 - `flow/` — Custom Lovelace UI components for the "Flow" theme:
   - `card-yaml/` — Reusable card definitions (nav bars, remote controls, page layouts)
-  - `custom_icons/` — 37 SVG icons used by cards (referenced via `fapro:` and `local:` prefixes)
+  - `custom_icons/` — 31 SVG icons used by cards (referenced via `fapro:` and `local:` prefixes)
   - `complete-yaml` — Full merged Lovelace config (~30K lines)
   - `flow-theme.yaml` — Dark iOS-inspired theme definition
-- `hacs_manifest.txt` — HACS integrations and frontend plugins to install
+- `hacs_manifest.txt` — Everything installed via HACS, by `owner/repo` slug
+- `RECOVERY.md` — Rebuild runbook: what's in git vs. what's only in a supervisor backup
 - `secrets.yaml.example` — Template for HA secrets (actual `secrets.yaml` is gitignored)
 
 ## Key Conventions
@@ -41,3 +48,9 @@ The repo tracks a specific subset of HA files — YAML configs, select `.storage
 - The setup targets a media-center/kiosk use case (kiosk-mode plugin, Apple TV remote card, media scripts)
 - Scripts in `homeassistant/scripts.yaml` focus on AV control (Sony TV, Denon receiver, HDMI source switching via IR blaster)
 - No CI/CD, linting, or test tooling exists — validation is manual via `sync.sh diff` and HA config check
+- `.storage/core.config_entries` is **deliberately never tracked** — it is the only registry
+  holding live credentials. The other four registries were audited and are credential-free.
+- `sync.sh` copies but never deletes. A file removed on one side lingers on the other until
+  it is removed by hand.
+- `core.device_registry` and `core.entity_registry` rewrite `modified_at` on most HA
+  restarts, so `sync.sh pull` shows them as changed constantly. That churn is noise.

@@ -21,17 +21,28 @@ YAML_FILES=(
 )
 
 STORAGE_FILES=(
-  .storage/lovelace.dashboard_test
   .storage/lovelace_dashboards
   .storage/lovelace_resources
   .storage/input_boolean
   .storage/input_select
+  # Registries. These carry the room layout (areas/floors, and the device->area
+  # assignments the dashboards depend on) and every entity rename. Deliberately
+  # NOT core.config_entries -- that one holds live OAuth tokens and passwords.
+  .storage/core.area_registry
+  .storage/core.floor_registry
+  .storage/core.device_registry
+  .storage/core.entity_registry
 )
 
-THEME_DIRS=(
+# Directories mirrored wholesale. Note "Frosted Glass" has a space in it.
+SYNC_DIRS=(
   themes/catppuccin
   themes/ios-themes
   themes/zz-flow
+  "themes/Frosted Glass"
+  themes/material_you
+  themes/visionos
+  custom_icons
 )
 
 usage() {
@@ -40,6 +51,9 @@ usage() {
   echo "  pull   Copy from live HA config into this repo"
   echo "  push   Copy from this repo into live HA config (restarts HA)"
   echo "  diff   Show differences between repo and live HA config"
+  echo ""
+  echo "Note: pull and push copy, they never delete. A file removed on one side"
+  echo "      lingers on the other until you delete it by hand."
   exit 1
 }
 
@@ -81,8 +95,8 @@ do_pull() {
   done
 
   echo ""
-  echo "Themes:"
-  for d in "${THEME_DIRS[@]}"; do
+  echo "Directories (themes, icons):"
+  for d in "${SYNC_DIRS[@]}"; do
     sync_dir "$HA_DIR/$d" "$REPO_HA/$d"
   done
 
@@ -106,8 +120,8 @@ do_push() {
   done
 
   echo ""
-  echo "Themes:"
-  for d in "${THEME_DIRS[@]}"; do
+  echo "Directories (themes, icons):"
+  for d in "${SYNC_DIRS[@]}"; do
     sync_dir "$REPO_HA/$d" "$HA_DIR/$d"
   done
 
@@ -142,6 +156,25 @@ do_diff() {
       has_diff=true
     elif [ -f "$REPO_HA/$f" ] && [ ! -f "$HA_DIR/$f" ]; then
       echo "=== $f (only in repo, not in HA) ==="
+      has_diff=true
+    fi
+  done
+
+  for d in "${SYNC_DIRS[@]}"; do
+    if [ -d "$REPO_HA/$d" ] && [ -d "$HA_DIR/$d" ]; then
+      local dir_diff
+      dir_diff="$(diff -rq "$REPO_HA/$d" "$HA_DIR/$d" 2>&1 || true)"
+      if [ -n "$dir_diff" ]; then
+        echo "=== $d/ ==="
+        echo "$dir_diff"
+        echo ""
+        has_diff=true
+      fi
+    elif [ -d "$HA_DIR/$d" ]; then
+      echo "=== $d/ (only in HA, not in repo) ==="
+      has_diff=true
+    elif [ -d "$REPO_HA/$d" ]; then
+      echo "=== $d/ (only in repo, not in HA) ==="
       has_diff=true
     fi
   done

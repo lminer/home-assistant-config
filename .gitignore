@@ -1,2 +1,6 @@
 secrets.yaml
 .claude/
+
+# Theme download artifacts. HACS re-fetches these; the merged .yaml is what
+# Home Assistant actually loads, and that is tracked.
+homeassistant/themes/**/*.zip
