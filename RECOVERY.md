@@ -209,24 +209,37 @@ it needs are already at the top of the file. Restart, run the flow with **`prefe
 ticked**, then revert the patch — only the setup path needs it, and HACS updates overwrite
 it anyway. Check whether upstream has fixed this before bothering.
 
-The account also covers a second property (`Middle unit` at `10.0.0.8`, `South unit` at
-`10.0.0.9`). They come along with the cache. Do not prune them from it — that discards
-their credentials permanently, on the same terms as above.
+#### The second property's units were removed from the cache on 2026-08-02
 
-**Disabling those devices in HA does not stop them being polled.** `__init__.py` builds a
-`KumoDataUpdateCoordinator` for every unit `make_pykumos()` returns, before any entity
-exists and without consulting the entity registry, so the coordinators keep running
-against unreachable addresses regardless. Observed cost is ~11 timeout warnings a minute
-and roughly one failed coordinator refresh per unit per cycle. It is noise, not breakage —
-but note it scales with `connect_timeout`, so raising that to help the Office unit makes
-each dead-unit attempt correspondingly slower.
+The Comfort account also covers a second property — `Middle unit` (`9Z34P008D100060F`,
+`10.0.0.8`) and `South unit` (`9Z34P008D100061F`, `10.0.0.9`). They arrived with the cache
+and were deleted from it. **Their `password` and `cryptoSerial` now exist only in backups**,
+and since the V3 API no longer returns those fields, no backup means no local control of
+that property, ever. They are in:
 
-If the log noise becomes a problem, point those two at an address that refuses instantly
-instead of hanging: **Kumo → Configure → Unit Settings**, set the IP to `127.0.0.1`.
-Measured here, `127.0.0.1:80` refuses in 27 ms where `10.0.0.9` burns the full timeout.
-This only rewrites the `address` field in the cache and leaves `password` and
-`cryptoSerial` untouched, so it is reversible and costs nothing if that property is ever
-brought onto this network.
+- `/homeassistant/kumo_cache.json.bak-20260802-vlan` (same disk — not a real backup)
+- every supervisor backup tar taken before 2026-08-02
+
+**Get one of those off this machine.** That is the whole safety net.
+
+Why they were removed rather than disabled: **disabling the devices in HA does not stop
+them being polled.** `__init__.py` builds a `KumoDataUpdateCoordinator` for every unit
+`make_pykumos()` returns, before any entity exists and without consulting the entity
+registry. The coordinators kept hammering two unreachable addresses forever — ~11 timeout
+warnings a minute and a failed refresh per unit per cycle. Worse, the cost scales with
+`connect_timeout`, so raising that to 5s to rescue the Office unit made each dead attempt
+four times slower.
+
+Do not repeat this dead end: pointing them at `127.0.0.1` so connections refuse instantly
+(via **Kumo → Configure → Unit Settings**) does fix the *time* cost — 27 ms instead of a
+full timeout — but it makes the log **worse**, not better. Failing fast lets pykumo get
+all the way through ~30 per-field queries per unit instead of giving up early, measured at
+72 log lines a minute versus 9. Deleting the units is the only thing that actually stops
+it. After removal, steady-state kumo logging is zero lines.
+
+Removing them leaves orphaned rows in `core.device_registry` and `core.entity_registry`
+(2 devices, 13 entities), which are tracked here. Delete the devices in the UI to clear
+them; HA does not do it automatically.
 
 ### Registry files churn
 
