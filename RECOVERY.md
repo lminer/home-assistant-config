@@ -209,10 +209,24 @@ it needs are already at the top of the file. Restart, run the flow with **`prefe
 ticked**, then revert the patch — only the setup path needs it, and HACS updates overwrite
 it anyway. Check whether upstream has fixed this before bothering.
 
-The account also covers a second property (`Middle unit`, `South unit`, on `10.0.0.x`).
-Those come along with the cache and are disabled at the device level in HA; leaving them
-enabled costs ~24 seconds per poll cycle in connection timeouts. Do not prune them from
-the cache — that discards their credentials permanently, on the same terms as above.
+The account also covers a second property (`Middle unit` at `10.0.0.8`, `South unit` at
+`10.0.0.9`). They come along with the cache. Do not prune them from it — that discards
+their credentials permanently, on the same terms as above.
+
+**Disabling those devices in HA does not stop them being polled.** `__init__.py` builds a
+`KumoDataUpdateCoordinator` for every unit `make_pykumos()` returns, before any entity
+exists and without consulting the entity registry, so the coordinators keep running
+against unreachable addresses regardless. Observed cost is ~11 timeout warnings a minute
+and roughly one failed coordinator refresh per unit per cycle. It is noise, not breakage —
+but note it scales with `connect_timeout`, so raising that to help the Office unit makes
+each dead-unit attempt correspondingly slower.
+
+If the log noise becomes a problem, point those two at an address that refuses instantly
+instead of hanging: **Kumo → Configure → Unit Settings**, set the IP to `127.0.0.1`.
+Measured here, `127.0.0.1:80` refuses in 27 ms where `10.0.0.9` burns the full timeout.
+This only rewrites the `address` field in the cache and leaves `password` and
+`cryptoSerial` untouched, so it is reversible and costs nothing if that property is ever
+brought onto this network.
 
 ### Registry files churn
 
