@@ -177,10 +177,16 @@ separate accounts; see [pykumo#78](https://github.com/dlarrick/pykumo/issues/78)
 workaround. Power-cycling the units does not help.
 
 The only surviving copy of those credentials for this house is `kumo_cache.json` at the
-config root, which predates the change. It is **not in git** — it holds the units' local
-passwords and the WiFi PSK — and it is not in `sync.sh`. It is in supervisor backups.
-**Keep an offline copy.** If it is lost, there is no local control until Mitsubishi
-restores the API, and a factory reset of the adapter would invalidate it regardless.
+config root, which predates the change. It is **not in git** and not in `sync.sh`; it is in
+supervisor backups. **Keep an offline copy.** If it is lost, there is no local control until
+Mitsubishi restores the API, and a factory reset of the adapter would invalidate it regardless.
+
+What the file actually contains, per unit: `address`, `mac`, `serial`, `label`, `unitType`,
+and the two that matter — **`password` and `cryptoSerial`**. Earlier revisions of this
+document also claimed it held the house WiFi PSK. **It does not** — checked by enumerating
+every scalar path in the file, and there is no `psk`, `ssid`, or equivalent key at any depth.
+It is still credential material and still must stay out of git, but the blast radius is the
+heat pumps, not the network.
 
 Setup depends on it in a way that needs a temporary patch. `__init__.py` passes the cache
 to pykumo at runtime, but `config_flow.py` does not, so a fresh install reaches for the
