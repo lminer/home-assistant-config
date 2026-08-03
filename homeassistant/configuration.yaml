@@ -79,8 +79,11 @@ light:
 # warns against enabling it when the relays are not physically installed. The
 # Switch 1/2 load sensors appear either way; they will just read zero.
 #
-# update_interval defaults to 30s, which is left alone -- the client raises
-# AccountLockedException, so polling harder is not free.
+# update_interval is 60s rather than the 30s default. At 30s the API returned
+# "Invalid Body Returned" on roughly 1 cycle in 5, and about 1 in 8 exhausted
+# all three retries. Halving the request rate trades resolution -- which does
+# not matter, since the energy sensors are cumulative totals and statistics are
+# compiled hourly -- for a better chance each request lands.
 sensor:
   - platform: franklin_wh
     username: lminer@gmail.com
@@ -88,6 +91,7 @@ sensor:
     id: "10060010A00X25281779"
     use_sn: true
     tolerate_stale_data: true
+    update_interval: 60
 
 automation: !include automations.yaml
 script: !include scripts.yaml
