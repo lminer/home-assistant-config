@@ -4,3 +4,12 @@ secrets.yaml
 # Theme download artifacts. HACS re-fetches these; the merged .yaml is what
 # Home Assistant actually loads, and that is tracked.
 homeassistant/themes/**/*.zip
+
+# Hand-made backup copies. These accumulate in live HA whenever something edits
+# a config or registry file in place. None of them belong in git, and one class
+# of them is actively dangerous: .storage/core.config_entries.bak* holds live
+# OAuth tokens and passwords, which is exactly what this repo is careful never
+# to track. sync.sh does not copy them, but a stray `git add -A` would.
+*.bak
+*.bak-*
+*.bak.*

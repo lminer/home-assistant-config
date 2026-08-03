@@ -11,7 +11,10 @@ YAML_FILES=(
   automations.yaml
   scripts.yaml
   scenes.yaml
-  scratch.yaml
+  # scratch.yaml is deliberately NOT synced. Nothing in configuration.yaml
+  # includes it, so Home Assistant never loads it -- it is a leftover Lovelace
+  # card fragment. The live file and its git history both survive; it just stops
+  # being treated as live config. Re-add it here if it ever gets wired up.
   dashboards/media-center.yaml
   dashboards/climate.yaml
   dashboards/lights.yaml

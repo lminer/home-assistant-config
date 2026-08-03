@@ -49,21 +49,14 @@ One agent, one disk. To fix:
 3. Set retention. Local 3 copies is fine; give the remote more (30 days is a reasonable
    default) since remote storage is cheap and it protects against a corruption you don't
    notice for a week.
-4. Add a failure alarm. A backup you think is running is worse than no backup:
+4. ~~Add a failure alarm.~~ **Done 2026-08-02.** `automations.yaml` now has
+   `backup_failure_alert`, which raises a persistent notification on either signal:
+   `event.backup_automatic_backup` reporting `event_type: failed`, or
+   `sensor.backup_backup_manager_state` sitting at `blocked` for 15 minutes. It is tracked
+   here, so a rebuild restores it.
 
-```yaml
-# automations.yaml
-- alias: Alert on backup failure
-  triggers:
-    - trigger: state
-      entity_id: sensor.backup_backup_manager_state
-      to: "blocked"
-  actions:
-    - action: notify.persistent_notification
-      data:
-        title: Home Assistant backup failed
-        message: "Backup manager is in a failed state. Check Settings > System > Backups."
-```
+   Steps 1–3 above are **still outstanding.** The alarm tells you a backup broke; it does
+   nothing about the fact that every copy is on one disk.
 
 ### 3. Keep the repo pushed
 
@@ -76,7 +69,9 @@ that survives the house burning down.
 
 ### In this repo (restored by `./sync.sh push`)
 
-- `configuration.yaml`, `automations.yaml`, `scripts.yaml`, `scenes.yaml`, `scratch.yaml`
+- `configuration.yaml`, `automations.yaml`, `scripts.yaml`, `scenes.yaml`
+  (**not** `scratch.yaml` — nothing includes it, so HA never loads it; dropped from `sync.sh`
+  on 2026-08-02, though the live file and the git history both still have it)
 - `dashboards/` — the Media Center, Climate, and Lights YAML dashboards
 - `themes/` — all six theme directories
 - `custom_icons/` — 31 SVGs
@@ -240,6 +235,30 @@ it. After removal, steady-state kumo logging is zero lines.
 Removing them leaves orphaned rows in `core.device_registry` and `core.entity_registry`
 (2 devices, 13 entities), which are tracked here. Delete the devices in the UI to clear
 them; HA does not do it automatically.
+
+### The 2026-08-02 VLAN move
+
+Most of the house moved from `192.168.1.x` to `192.168.55.x`. Devices generally kept their
+last octet. Integrations that store an IP rather than rediscovering it need re-pointing by
+hand; mDNS-based ones sorted themselves out after a reload.
+
+| Device | Result |
+|---|---|
+| Sonos Study / Media Room / Living Room | Fine after an integration reload — `.122`, `.130`, `.198` |
+| Apple TV Duncan | **Still on `192.168.1.202`** and working. Deliberately not moved. |
+| Sony UBP-X800 | Moved to `192.168.55.9`. Three entries (`songpal`, `dlna_dmr`, `dlna_dms`) held the old `192.168.1.9` and retried every 3m10s until they were deleted and rediscovered. Songpal has no reconfigure flow, so delete-and-re-add is the only route. Nothing references `media_player.ubp_x800`, so this is safe; the `source: UBP-X800` lines in `scripts.yaml` are the Denon input name, not the player. |
+| Mitsubishi Office Kumo | `kumo_cache.json` hardcodes the address, so it must be edited by hand. Give the adapter (MAC `c4:ac:59:8f:35:c7`) a DHCP reservation — the cache cannot follow a lease change. |
+
+### Leftover `.bak` files
+
+In-place edits leave `.bak` copies scattered through the config root. Seventeen were deleted
+on 2026-08-02, including four copies of `core.config_entries` that held live OAuth tokens and
+passwords in plaintext — the exact thing this repo is careful never to track. `.gitignore` now
+carries `*.bak`, `*.bak-*`, and `*.bak.*` so none can ever be committed.
+
+If you make one, delete it when you are done. The registry and YAML files are all recoverable
+from git; `core.config_entries` is only in the supervisor tars, so a stale copy of it is pure
+liability with no upside.
 
 ### Registry files churn
 

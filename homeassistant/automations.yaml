@@ -89,3 +89,65 @@
                 entity_id:
                   - switch.master_closet_master_closet_entrance
                   - switch.master_closet_master_closet_main
+
+# Backups are the whole disaster-recovery story (see RECOVERY.md), and a backup
+# you believe is running is worse than no backup at all. Nothing was watching
+# them until now.
+#
+# Two triggers, because they catch different failures:
+#
+#   event.backup_automatic_backup   fires per run with event_type completed /
+#                                   failed / in_progress. This is the precise
+#                                   "last night's backup did not work" signal.
+#                                   Triggered on any state change and filtered
+#                                   on the attribute rather than with
+#                                   `attribute: event_type, to: failed`, because
+#                                   an attribute trigger will not re-fire when
+#                                   two consecutive runs both fail -- the
+#                                   attribute never changes value.
+#
+#   sensor.backup_backup_manager_state -> blocked
+#                                   catches the manager wedging outside of a
+#                                   scheduled run, which the event entity would
+#                                   never report. Held for 15 minutes first:
+#                                   "blocked" is also briefly normal during a
+#                                   restore, and alerting on that is noise.
+- id: backup_failure_alert
+  alias: Alert on backup failure
+  description: >-
+    Raise a persistent notification when an automatic backup fails or the backup
+    manager gets stuck. Uses a fixed notification_id so repeat failures replace
+    the previous notice instead of stacking up.
+  mode: single
+  triggers:
+    - trigger: state
+      entity_id: event.backup_automatic_backup
+      id: run_failed
+    - trigger: state
+      entity_id: sensor.backup_backup_manager_state
+      to: blocked
+      for: "00:15:00"
+      id: manager_blocked
+  conditions:
+    - condition: or
+      conditions:
+        - condition: trigger
+          id: manager_blocked
+        - condition: template
+          value_template: >-
+            {{ trigger.to_state.attributes.event_type | default('') == 'failed' }}
+  actions:
+    - action: persistent_notification.create
+      data:
+        notification_id: backup_failure
+        title: Home Assistant backup failed
+        message: >-
+          {% if trigger.id == 'manager_blocked' %}
+          The backup manager has been blocked for 15 minutes and is not making
+          progress.
+          {% else %}
+          The automatic backup run failed.
+          {% endif %}
+          Last successful backup:
+          {{ states('sensor.backup_last_successful_automatic_backup') }}.
+          Check Settings > System > Backups.

@@ -20,6 +20,19 @@ rzulian/lutron_lip                            # lutron_lip v0.1.4 -- needs the c
 dlarrick/hass-kumo                            # kumo v0.4.6 -- Mitsubishi heat pump. Pin to the
                                               # latest non-prerelease; HACS defaults the dropdown
                                               # to v0.4.7-beta. Needs kumo_cache.json, see RECOVERY.md.
+wuwentao/midea_ac_lan                         # midea_ac_lan v0.7.1 -- the Server Room portable
+                                              # AC. Note the owner: this is the maintained fork,
+                                              # NOT georgezhao2010/midea_ac_lan, which is the
+                                              # original and is archived. Searching HACS for
+                                              # "Midea AC LAN" finds the right one.
+                                              # Local push over the LAN, no cloud. Configured
+                                              # through the UI, so its setup lives in the
+                                              # untracked core.config_entries: after a rebuild
+                                              # you re-add it by hand and re-enter the device
+                                              # token/key. The climate dashboard card points at
+                                              # climate.150633093664036_climate, which is the
+                                              # device serial -- if you ever rename that entity,
+                                              # dashboards/climate.yaml has to change with it.
 richo/homeassistant-franklinwh                # franklin_wh -- FranklinWH battery/solar.
                                               # CUSTOM REPOSITORY, see note below. No tagged
                                               # releases exist, so HACS installs whatever is on
