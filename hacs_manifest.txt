@@ -16,10 +16,16 @@
 custom-components/pyscript                    # pyscript
 thomasloven/hass-custom_icons                 # custom_icons - serves /homeassistant/custom_icons/*.svg
 dwainscheeren/dwains-lovelace-dashboard       # dwains_dashboard
-rzulian/lutron_lip                            # lutron_lip v0.1.4 -- CUSTOM REPOSITORY, see note below
+rzulian/lutron_lip                            # lutron_lip v0.1.4 -- needs the cert/pem files, see note below
 dlarrick/hass-kumo                            # kumo v0.4.6 -- Mitsubishi heat pump. Pin to the
                                               # latest non-prerelease; HACS defaults the dropdown
                                               # to v0.4.7-beta. Needs kumo_cache.json, see RECOVERY.md.
+richo/homeassistant-franklinwh                # franklin_wh -- FranklinWH battery/solar.
+                                              # CUSTOM REPOSITORY, see note below. No tagged
+                                              # releases exist, so HACS installs whatever is on
+                                              # main -- there is no version to pin. Configured in
+                                              # configuration.yaml, not the UI; needs
+                                              # franklinwh_password in secrets.yaml.
 
 
 ## Frontend plugins (HACS > Frontend)
@@ -59,12 +65,21 @@ sony/               # hand-rolled Sony integration, 9 Python files under /homeas
 
 ## Notes
 
-- lutron_lip is not in the default HACS index. Add it first via
+- lutron_lip is in the default HACS index now (it was not when this file was
+  first written, hence the old "custom repository" instructions -- searching
+  HACS for it is enough). It does still need the Lutron LIP cert/key/pem files
+  at the config root (lutron_caseta-*.pem), which come from the supervisor
+  backup, not this repo.
+
+- richo/homeassistant-franklinwh is NOT in the default HACS index -- checked
+  against hacs/default, and the upstream "publish on HACS" issue (#12) was
+  closed in May 2025 without the repo being listed. Add it via
   HACS > three-dot menu > Custom repositories:
-    Repository: https://github.com/rzulian/lutron_lip
+    Repository: https://github.com/richo/homeassistant-franklinwh
     Type:       Integration
-  It also needs the Lutron LIP cert/key/pem files at the config root
-  (lutron_caseta-*.pem), which come from the supervisor backup, not this repo.
+  After that it updates through HACS like anything else. Note its hacs.json sets
+  content_in_root, so the component files live at the repo root rather than
+  under custom_components/ -- HACS handles that, but a manual install would not.
 
 - Installing a plugin via HACS writes it to www/community/ and registers a
   Lovelace resource. This repo tracks .storage/lovelace_resources, so the

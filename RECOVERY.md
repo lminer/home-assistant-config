@@ -83,6 +83,8 @@ that survives the house burning down.
 - `www/custom-icons.js` and `www/images/`
 - `.storage/lovelace_dashboards`, `.storage/lovelace_resources`
 - `.storage/input_boolean`, `.storage/input_select`
+- `.storage/energy` — Energy dashboard sources (which sensor is grid/solar/battery). UI-only
+  config with no YAML equivalent, so this file is the only reproducible record of it.
 - `.storage/core.area_registry`, `core.floor_registry`, `core.device_registry`,
   `core.entity_registry`
 
@@ -93,7 +95,7 @@ Nothing below is in git, and none of it can be reconstructed by hand without pai
 | Item | Why it matters |
 |---|---|
 | `.storage/core.config_entries` | Every integration's setup **and its credentials** — Ecobee OAuth, mobile_app secrets, Bravia/Sony keys, MQTT login. Excluded from git on purpose. |
-| `secrets.yaml` | Referenced by `configuration.yaml`. Gitignored; see `secrets.yaml.example` for shape. |
+| `secrets.yaml` | Referenced by `configuration.yaml`. Gitignored; see `secrets.yaml.example` for shape. Holds `franklinwh_password` — without it the FranklinWH sensors do not load. |
 | `.storage/broadlink_remote_*_codes` | **Learned IR codes.** Lose these and you re-learn every button on every remote by hand. The single most annoying thing to lose. |
 | `kumo_cache.json` (config root) | **Mitsubishi local credentials — currently irreplaceable.** See the section below. |
 | `.storage/auth`, `.storage/auth_provider.homeassistant` | User accounts, long-lived tokens, refresh tokens. |

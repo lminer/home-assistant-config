@@ -25,6 +25,10 @@ STORAGE_FILES=(
   .storage/lovelace_resources
   .storage/input_boolean
   .storage/input_select
+  # Energy dashboard source config (which sensor feeds grid/solar/battery, plus
+  # any cost settings). Created by the UI, no YAML equivalent, credential-free.
+  # Without this the only copy is in a supervisor backup.
+  .storage/energy
   # Registries. These carry the room layout (areas/floors, and the device->area
   # assignments the dashboards depend on) and every entity rename. Deliberately
   # NOT core.config_entries -- that one holds live OAuth tokens and passwords.

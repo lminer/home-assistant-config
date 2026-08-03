@@ -56,6 +56,39 @@ light:
       - light.led_group_b
       - light.led_group_c
 
+# FranklinWH battery/solar, via richo/homeassistant-franklinwh (HACS custom
+# repository -- see hacs_manifest.txt). This integration is YAML-only; there is
+# no config flow, which is why it lives here rather than in .storage.
+#
+# Cloud polling. It talks to FranklinWH's web API, not to the aGate on the LAN.
+# A local protocol does exist (TCP on 10.100.1.1:9000) but it is only reachable
+# while joined to the gateway's own WiFi hotspot, so it is no use from here.
+# That means this integration dies if FranklinWH changes their API -- exactly
+# how the Mitsubishi units broke. See RECOVERY.md.
+#
+# use_sn matters and is NOT the default. Without it the integration never sets
+# a unique_id, so the entities never enter core.entity_registry: no renaming,
+# no area assignment, and nothing this repo tracks. With it, unique_ids are
+# derived from the gateway serial below.
+#
+# tolerate_stale_data holds the last-known reading for one cycle instead of
+# flipping every sensor to "unavailable". The FranklinWH API drops requests
+# often enough that this matters.
+#
+# No switch: platform. That controls the smart relays, and the upstream README
+# warns against enabling it when the relays are not physically installed. The
+# Switch 1/2 load sensors appear either way; they will just read zero.
+#
+# update_interval defaults to 30s, which is left alone -- the client raises
+# AccountLockedException, so polling harder is not free.
+sensor:
+  - platform: franklin_wh
+    username: lminer@gmail.com
+    password: !secret franklinwh_password
+    id: "10060010A00X25281779"
+    use_sn: true
+    tolerate_stale_data: true
+
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
