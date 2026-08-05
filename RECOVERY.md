@@ -89,15 +89,13 @@ Nothing below is in git, and none of it can be reconstructed by hand without pai
 
 | Item | Why it matters |
 |---|---|
-| `.storage/core.config_entries` | Every integration's setup **and its credentials** — Ecobee OAuth, mobile_app secrets, Bravia/Sony keys, MQTT login. Excluded from git on purpose. |
+| `.storage/core.config_entries` | Every integration's setup **and its credentials** — Ecobee OAuth, mobile_app secrets, the LG webOS pairing `client_secret`, the Panasonic API key, MQTT login. Excluded from git on purpose. |
 | `secrets.yaml` | Referenced by `configuration.yaml`. Gitignored; see `secrets.yaml.example` for shape. Holds `franklinwh_password` — without it the FranklinWH sensors do not load. |
-| `.storage/broadlink_remote_*_codes` | **Learned IR codes.** Lose these and you re-learn every button on every remote by hand. The single most annoying thing to lose. |
+| `.storage/broadlink_remote_*_codes` | **Learned IR codes.** Lose these and the whole Blu-ray panel goes dead — it is IR-driven. Recovery is `script.learn_bluray_commands`, which re-learns all 16 codes under the `bluray` device group; budget ten minutes with the Panasonic remote, and note each command allows only 30 seconds before the run aborts. Codes save incrementally, so a partial run keeps what it captured. A stale `television` group is also present: Sony UBP-X800 codes for a player that no longer exists, called by nothing. |
 | `kumo_cache.json` (config root) | **Mitsubishi local credentials — currently irreplaceable.** See the section below. |
 | `.storage/auth`, `.storage/auth_provider.homeassistant` | User accounts, long-lived tokens, refresh tokens. |
 | `homekit.*`, `homekit_controller-entity-map` | HomeKit bridge pairing state. Without it, re-pair every accessory. |
 | `lutron_caseta-*.pem` | Lutron bridge cert/key/pem at the config root. |
-| `sony/` | Hand-rolled 9-file Sony integration. Not in HACS, not in this repo. |
-| `androidtv_remote_*.pem` | Android TV remote pairing. |
 
 ---
 
@@ -144,7 +142,39 @@ files and you want to know which before overwriting them.
 
 - `secrets.yaml` — copy `secrets.yaml.example` and fill in real values (only
   `some_password` is currently used).
-- `sony/` — re-fetch from wherever it originally came from, if the tar did not restore it.
+- **Media room AV** — none of the pairing state is in git, and each device has a
+  prerequisite that lives only in the hardware's own menus:
+  - **LG webOS TV** (`192.168.55.87`) — enable *LG Connect Apps* in the TV's Network
+    settings, then add the LG webOS TV integration and accept the on-screen pairing
+    prompt. Rename the entity to `media_player.media_room_tv`; every AV script and
+    both remote panels are hardcoded to that id.
+    Also enable *Mobile TV On* / *Turn On Via Wi-Fi*, and keep the TV on **Ethernet** —
+    the `lg_tv_turn_on` automation wakes it by magic packet and Wake-on-LAN over
+    Wi-Fi is unreliable. The MAC (`d0:cd:bf:95:0d:b1`) is in `automations.yaml`,
+    so that half is recoverable; the pairing secret is not.
+  - **Panasonic DP-UB820** (`192.168.55.22`) — two player settings, and the second
+    one is counterintuitive:
+    - *Voice Control* **on** (Player Settings → Network → Voice Control). Without
+      it the player answers ping but opens **no TCP ports at all** and the entity
+      stays unavailable — easy to misread as a broken integration.
+    - *Quick Start* **off**. `cCMD_GET_STATUS` fails authentication on stock UHD
+      firmware, so the integration cannot tell standby from stopped and reads
+      "idle" whenever the player is reachable. The only remaining power signal is
+      the request timing out when the player leaves the LAN, and Quick Start keeps
+      the NIC alive in standby, which destroys it. `scripts.yaml` guards the IR
+      power toggle on that state, so with Quick Start on the player never turns on.
+
+    Nothing to install: it is the core `panasonic_bluray` integration, configured
+    in `configuration.yaml`, so it is the one AV device that comes back from git
+    alone. Needs a DHCP reservation; the host is hardcoded.
+    **It is a status source, not a control path** — the integration's `send_key`
+    refuses to transmit at all once it detects a UB player. The buttons are IR;
+    see `script.learn_bluray_commands`.
+  - **Denon** — the Blu-ray input is still named `UBP-X800`, after the Sony player
+    that was replaced on 2026-08-05. `scripts.yaml` matches that literal string.
+    Renaming it on the receiver (Setup → Input Setup → Rename) means editing the
+    two `source: UBP-X800` lines in `scripts.yaml` to match, or the Blu-ray scripts
+    silently become no-ops. Same trap applies to any receiver factory reset.
 
 ### Step 6 — Verify
 
@@ -155,8 +185,13 @@ ha core check          # config validates
 
 Then in the UI: confirm all six themes appear in the theme picker, the three YAML
 dashboards load (Media Center / Climate / Lights), rooms and floors are populated
-(13 areas across 3 floors), and the Broadlink IR buttons on the media dashboard
-actually fire.
+(13 areas across 3 floors), and the Blu-ray panel on the media dashboard actually
+drives the player — eject is the quickest unambiguous test, since it needs no disc
+and it confirms the Broadlink IR path end to end.
+
+Also confirm the TV wakes from fully off: turn it off at the set, then call
+`media_player.turn_on` on `media_player.media_room_tv`. That exercises the
+`lg_tv_turn_on` automation, which every "Turn On …" script depends on.
 
 ---
 
@@ -252,7 +287,9 @@ hand; mDNS-based ones sorted themselves out after a reload.
 |---|---|
 | Sonos Study / Media Room / Living Room | Fine after an integration reload — `.122`, `.130`, `.198` |
 | Apple TV Duncan | **Still on `192.168.1.202`** and working. Deliberately not moved. |
-| Sony UBP-X800 | Moved to `192.168.55.9`. Three entries (`songpal`, `dlna_dmr`, `dlna_dms`) held the old `192.168.1.9` and retried every 3m10s until they were deleted and rediscovered. Songpal has no reconfigure flow, so delete-and-re-add is the only route. Nothing references `media_player.ubp_x800`, so this is safe; the `source: UBP-X800` lines in `scripts.yaml` are the Denon input name, not the player. |
+| Sony UBP-X800 | *Retired 2026-08-05, replaced by the Panasonic below — kept here for the lesson.* Moved to `192.168.55.9`. Three entries (`songpal`, `dlna_dmr`, `dlna_dms`) held the old `192.168.1.9` and retried every 3m10s until they were deleted and rediscovered. Songpal has no reconfigure flow, so delete-and-re-add is the only route. **Assume any AV integration lacks a reconfigure flow until proven otherwise, and give this gear DHCP reservations.** |
+| LG webOS TV | `192.168.55.87`, wired. Replaced the Sony XR-85Z9J on 2026-08-05. Needs a DHCP reservation: the webostv config entry stores the host, and Wake-on-LAN needs the wired MAC to stay put. |
+| Panasonic Blu-ray | `192.168.55.22`. Replaced the UBP-X800 on 2026-08-05, on the same Denon input. Needs a DHCP reservation — the `panasonic_ub` entry stores the host. |
 | Mitsubishi Office Kumo | `kumo_cache.json` hardcodes the address, so it must be edited by hand. Give the adapter (MAC `c4:ac:59:8f:35:c7`) a DHCP reservation — the cache cannot follow a lease change. |
 
 ### Leftover `.bak` files

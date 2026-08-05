@@ -5,22 +5,6 @@
   "data": {
     "energy_sources": [
       {
-        "type": "grid",
-        "stat_energy_from": "sensor.franklinwh_grid_import",
-        "stat_energy_to": "sensor.franklinwh_grid_export",
-        "stat_cost": null,
-        "stat_compensation": null,
-        "entity_energy_price": null,
-        "number_energy_price": null,
-        "entity_energy_price_export": null,
-        "number_energy_price_export": null,
-        "cost_adjustment_day": 0.0,
-        "power_config": {
-          "stat_rate": "sensor.franklinwh_grid_use"
-        },
-        "stat_rate": "sensor.franklinwh_grid_use"
-      },
-      {
         "type": "solar",
         "stat_energy_from": "sensor.franklinwh_solar_energy",
         "config_entry_solar_forecast": null,
@@ -35,6 +19,22 @@
         },
         "stat_soc": "sensor.franklinwh_state_of_charge",
         "stat_rate": "sensor.franklinwh_battery_use"
+      },
+      {
+        "type": "grid",
+        "stat_energy_from": "sensor.franklinwh_grid_import",
+        "stat_energy_to": "sensor.franklinwh_grid_export",
+        "stat_cost": null,
+        "stat_compensation": null,
+        "entity_energy_price": null,
+        "number_energy_price": null,
+        "entity_energy_price_export": null,
+        "number_energy_price_export": null,
+        "cost_adjustment_day": 0.0,
+        "power_config": {
+          "stat_rate": "sensor.franklinwh_grid_use"
+        },
+        "stat_rate": "sensor.franklinwh_grid_use"
       }
     ],
     "device_consumption": [],

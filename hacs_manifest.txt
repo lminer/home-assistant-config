@@ -69,11 +69,32 @@ themes/ios-themes   # hand-added iOS/HomeKit themes + background jpgs
 custom_icons/       # 31 SVGs consumed by the custom_icons integration above
 
 
-## Not from HACS and NOT tracked in this repo
+## Panasonic Blu-ray -- deliberately NOT a custom component
 
-sony/               # hand-rolled Sony integration, 9 Python files under /homeassistant/sony/.
-                    # Recoverable only from a Home Assistant supervisor backup tar.
-                    # See RECOVERY.md.
+The media room player is a DP-UB820 on stock firmware. It uses the CORE
+panasonic_bluray integration (configured in configuration.yaml) for STATUS, and
+Broadlink IR for the buttons -- because UHD-series players reject network control
+commands without a per-device player key that the core integration does not
+implement. Nothing to install.
+
+Noted here because the obvious move, if that hybrid ever grates, is to reach for a
+custom component -- and there are two, both with real drawbacks:
+
+  matteoraf/ha-panasonic_ub         # Full keymap (dpad, eject, subtitle, audio, skip,
+                                    # scan) over the same network protocol, on stock
+                                    # firmware. This is the one to use if the built-in
+                                    # gets too thin. Caveats: not in HACS and not even
+                                    # installable as a HACS custom repository -- no
+                                    # releases, no hacs.json -- so it is a manual copy
+                                    # of custom_components/panasonic_ub/ with no update
+                                    # notifications. As of 2026-08-05 the repo was one
+                                    # day of commits with 2 stars. It exposes a
+                                    # panasonic_ub.remote_command service rather than a
+                                    # remote entity, so the dashboard panel would call
+                                    # that service directly.
+
+  albaintor/panasonic_bluray_remote # Ruled out. Last touched May 2024, and wants the
+                                    # player's firmware PATCHED for current models.
 
 
 ## Notes

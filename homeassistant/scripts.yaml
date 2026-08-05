@@ -2,15 +2,18 @@ turn_on_apple_tv:
   alias: Turn On Apple TV
   sequence:
   - target:
-      entity_id: media_player.sony_xr_85z9j
+      entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
+  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
+    timeout: 00:00:20
+    continue_on_timeout: true
   - action: media_player.select_source
     target:
       entity_id:
-      - media_player.sony_xr_85z9j
+      - media_player.media_room_tv
     data:
-      source: HDMI 4
+      source: AVR-X4700H
   - target:
       entity_id: media_player.denon_avr_x4700h
     action: media_player.turn_on
@@ -35,15 +38,18 @@ turn_on_switch:
   alias: Turn On Switch
   sequence:
   - target:
-      entity_id: media_player.sony_xr_85z9j
+      entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
+  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
+    timeout: 00:00:20
+    continue_on_timeout: true
   - action: media_player.select_source
     target:
       entity_id:
-      - media_player.sony_xr_85z9j
+      - media_player.media_room_tv
     data:
-      source: HDMI 4
+      source: AVR-X4700H
   - target:
       entity_id: media_player.denon_avr_x4700h
     action: media_player.turn_on
@@ -68,7 +74,7 @@ turn_off_home_theater:
     action: media_player.turn_off
     data: {}
   - target:
-      entity_id: media_player.sony_xr_85z9j
+      entity_id: media_player.media_room_tv
     action: media_player.turn_off
     data: {}
   description: ''
@@ -77,15 +83,18 @@ turn_on_ps5:
   alias: Turn On PS5
   sequence:
   - target:
-      entity_id: media_player.sony_xr_85z9j
+      entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
+  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
+    timeout: 00:00:20
+    continue_on_timeout: true
   - action: media_player.select_source
     target:
       entity_id:
-      - media_player.sony_xr_85z9j
+      - media_player.media_room_tv
     data:
-      source: HDMI 4
+      source: Sony DVD Player
   - target:
       entity_id: media_player.denon_avr_x4700h
     action: media_player.turn_on
@@ -93,7 +102,7 @@ turn_on_ps5:
   - target:
       entity_id: media_player.denon_avr_x4700h
     data:
-      source: PlayStation 5
+      source: TV Audio
     action: media_player.select_source
   description: ''
   icon: mdi:sony-playstation
@@ -101,15 +110,18 @@ turn_on_mac_mini:
   alias: Turn On Mac Mini
   sequence:
   - target:
-      entity_id: media_player.sony_xr_85z9j
+      entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
+  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
+    timeout: 00:00:20
+    continue_on_timeout: true
   - action: media_player.select_source
     target:
       entity_id:
-      - media_player.sony_xr_85z9j
+      - media_player.media_room_tv
     data:
-      source: HDMI 4
+      source: AVR-X4700H
   - target:
       entity_id: media_player.denon_avr_x4700h
     action: media_player.turn_on
@@ -125,15 +137,18 @@ turn_on_blu_ray_player:
   alias: Turn On Blu-ray Player
   sequence:
   - target:
-      entity_id: media_player.sony_xr_85z9j
+      entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
+  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
+    timeout: 00:00:20
+    continue_on_timeout: true
   - action: media_player.select_source
     target:
       entity_id:
-      - media_player.sony_xr_85z9j
+      - media_player.media_room_tv
     data:
-      source: HDMI 4
+      source: AVR-X4700H
   - target:
       entity_id: media_player.denon_avr_x4700h
     action: media_player.turn_on
@@ -143,21 +158,29 @@ turn_on_blu_ray_player:
     data:
       source: UBP-X800
     action: media_player.select_source
-  - action: remote.send_command
-    target:
-      entity_id: remote.ir_blaster
-    data:
-      device: television
-      command: toggle power
+  - if:
+    - condition: state
+      entity_id: media_player.media_room_bluray
+      state: 'off'
+    then:
+    - action: remote.send_command
+      target:
+        entity_id: remote.ir_blaster
+      data:
+        device: bluray
+        command: toggle power
   description: ''
   icon: mdi:disc
 turn_on_television:
   alias: Turn On Television
   sequence:
   - target:
-      entity_id: media_player.sony_xr_85z9j
+      entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
+  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
+    timeout: 00:00:20
+    continue_on_timeout: true
   - target:
       entity_id: media_player.denon_avr_x4700h
     action: media_player.turn_on
@@ -169,14 +192,14 @@ turn_on_television:
     action: media_player.select_source
   description: ''
   icon: mdi:television-classic
-learn_tv_commands:
-  alias: learn_bluray_commands
+learn_bluray_commands:
+  alias: Learn Blu-ray Commands
   sequence:
   - action: remote.learn_command
     target:
       entity_id: remote.ir_blaster
     data:
-      device: television
+      device: bluray
       command:
       - toggle power
       - up
@@ -194,9 +217,17 @@ learn_tv_commands:
       - home
       - return
       - open close
-      - subtitle
-      - audio
-  description: ''
+  description: >-
+    Re-learn the Panasonic DP-UB820's IR codes into the Broadlink RM4, under the
+    "bluray" device group. Point the Panasonic remote at the blaster and run it;
+    each command raises a "Learn command" persistent notification and gives you
+    30 seconds to press that button. Codes are saved one at a time as they are
+    captured, but a single timeout aborts the rest of the run -- just re-run it,
+    since re-learning simply overwrites. The command names here must match the
+    ones the Blu-ray panel in dashboards/media-center.yaml sends. Deliberately
+    16 commands: the UB820 remote has no subtitle or audio key, so those cannot
+    be learned and are not on the panel.
+  icon: mdi:remote
 turn_off_blu_ray_player:
   alias: Turn off Blu-ray Player
   sequence:
@@ -205,25 +236,27 @@ turn_off_blu_ray_player:
     action: input_select.select_option
     target:
       entity_id: input_select.selected_remote
-  - action: remote.send_command
-    target:
-      entity_id: remote.ir_blaster
-    data:
-      device: television
-      command: toggle power
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: media_player.media_room_bluray
+        state: 'off'
+    then:
+    - action: remote.send_command
+      target:
+        entity_id: remote.ir_blaster
+      data:
+        device: bluray
+        command: toggle power
   - target:
-      entity_id: media_player.sony_xr_85z9j
+      entity_id: media_player.media_room_tv
     action: media_player.turn_off
     data: {}
   - target:
       entity_id: media_player.denon_avr_x4700h
     action: media_player.turn_off
     data: {}
-  - target:
-      entity_id: media_player.denon_avr_x4700h
-    data:
-      source: UBP-X800
-    action: media_player.select_source
   description: ''
   icon: mdi:power
 turn_on_apple_tv_and_show_remote:

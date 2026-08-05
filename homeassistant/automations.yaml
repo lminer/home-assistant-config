@@ -151,3 +151,55 @@
           Last successful backup:
           {{ states('sensor.backup_last_successful_automatic_backup') }}.
           Check Settings > System > Backups.
+
+# LG TV power-on. webostv has no way to turn on a TV that is fully off -- the
+# TV is not listening -- so calling media_player.turn_on makes the integration
+# fire this trigger instead, and this automation does the actual waking.
+#
+# Every "Turn On <device>" script in scripts.yaml starts with
+# media_player.turn_on against the TV, so this is load-bearing for all of them,
+# not just for turning the TV on by itself.
+#
+# The MAC is the TV's WIRED interface. Wake-on-LAN over Wi-Fi does not work
+# reliably on these sets, and the wired and Wi-Fi MACs are different.
+# wake_on_lan: is enabled in configuration.yaml.
+#
+# broadcast_address is NOT optional here, despite every example online omitting
+# it. wake_on_lan defaults to 255.255.255.255, and Home Assistant Core runs in a
+# container on the hassio bridge network (172.30.32.0/23) while the TV is on the
+# LAN (192.168.55.0/24). A limited broadcast never leaves the bridge, so the
+# packet is simply thrown away -- verified 2026-08-05: sending to
+# 255.255.255.255 from inside the container fails outright with EACCES, while
+# 192.168.55.255 goes out fine. The host itself is on 192.168.55.133, which is
+# why the subnet-directed address works.
+#
+# Symptom if this regresses: "Turn On <anything>" appears to do nothing, because
+# every one of those scripts starts by turning the TV on. The automation still
+# shows as triggered -- the packet just goes nowhere.
+- id: lg_tv_turn_on
+  alias: LG TV -- wake on turn_on request
+  description: >-
+    Send a Wake-on-LAN magic packet when something asks the media room TV to
+    turn on. Required because webOS cannot be reached while the TV is off.
+  mode: single
+  triggers:
+    # Keyed on device_id, NOT entity_id, and that is deliberate.
+    #
+    # webostv exposes TURN_ON on the media_player only while a matching trigger
+    # is attached to the TV's DEVICE -- see supported_features in
+    # components/webostv/media_player.py, which ORs in TURN_ON only when the
+    # coordinator's turn_on PluggableAction has a subscriber. The trigger's
+    # attach step resolves entity_id -> device_id itself, so entity_id is
+    # documented as valid, but going straight to the device_id removes that
+    # lookup and matches what async_get_turn_on_trigger() registers.
+    #
+    # 2af5499... is the webostv device for media_player.media_room_tv
+    # (identifier webostv/b9b54e49-e094-6ac6-48af-40f82d913480). If the TV is
+    # ever removed and re-added, this id changes and must be updated here.
+    - trigger: webostv.turn_on
+      device_id: 2af549903901b8cf6eaa77d9936c6904
+  actions:
+    - action: wake_on_lan.send_magic_packet
+      data:
+        mac: d0:cd:bf:95:0d:b1
+        broadcast_address: 192.168.55.255

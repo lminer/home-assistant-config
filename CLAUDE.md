@@ -46,7 +46,31 @@ The repo tracks a specific subset of HA files — YAML configs, select `.storage
 - Lovelace runs in **storage mode** — dashboard JSON lives in `.storage/` files, YAML dashboards are declared in `configuration.yaml`
 - Custom frontend relies heavily on **Mushroom cards**, **card-mod** (CSS), **button-card**, and **layout-card** from HACS
 - The setup targets a media-center/kiosk use case (kiosk-mode plugin, Apple TV remote card, media scripts)
-- Scripts in `homeassistant/scripts.yaml` focus on AV control (Sony TV, Denon receiver, HDMI source switching via IR blaster)
+- Scripts in `homeassistant/scripts.yaml` focus on AV control (LG webOS TV, Denon
+  receiver, Panasonic DP-UB820 Blu-ray). Source switching is all network calls; the
+  Blu-ray is the one hybrid — its buttons are Broadlink IR (`device: bluray`) because
+  a stock UB820 rejects network control commands without a player key, while the
+  `panasonic_bluray` integration supplies playback state. The scripts guard the IR
+  power toggle on that state, which is what keeps it idempotent.
+- That guard depends on **Quick Start being off on the player**. `cCMD_GET_STATUS`
+  fails authentication on a UB820, so the integration cannot distinguish standby from
+  stopped and reports `idle` whenever the player is reachable; the only power signal
+  left is the network request timing out when the player drops off the LAN. Turn Quick
+  Start on and `turn_on_blu_ray_player` silently stops powering the player on. Do not
+  "fix" this by removing the guard — it is what stops the toggle desyncing.
+  Two things there are string-matched and have no validation: the Denon's input names
+  (`Apple TV`, `Switch 2`, `Mac Mini`, `UBP-X800`, `TV Audio`) and the LG's source names
+  (`AVR-X4700H` for the receiver, `Sony DVD Player` for the PS5). Rename an input on
+  either box and the matching script silently stops working.
+- Two of those names are misleading and both are correct as written. The Denon's
+  `UBP-X800` input is named after the Sony player replaced in Aug 2026; the Panasonic
+  is on that input now. The LG reports the PS5's HDMI port as `Sony DVD Player` — a
+  stale CEC label on the physical HDMI 3 port. Note the LG is also inconsistent about
+  spacing (`HDMI 1` but `HDMI4`), so always read `source_list` off the live entity
+  rather than assuming a format.
+- The PS5 is wired straight into the LG, not through the Denon; its audio returns over
+  eARC. So `turn_on_ps5` selects a TV input and puts the Denon on `TV Audio`, unlike the
+  other sources which select a Denon input.
 - No CI/CD, linting, or test tooling exists — validation is manual via `sync.sh diff` and HA config check
 - `.storage/core.config_entries` is **deliberately never tracked** — it is the only registry
   holding live credentials. The other four registries were audited and are credential-free.

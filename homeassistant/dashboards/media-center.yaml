@@ -473,7 +473,7 @@ views:
                             - padding: 0
 
                 # ---- Touchpad (fills main area) ----
-                - type: custom:android-tv-card
+                - type: custom:universal-remote-card
                   remote_id: remote.appletv_duncan
                   keyboard_id: remote.appletv_duncan
                   media_player_id: media_player.appletv_duncan
@@ -560,7 +560,7 @@ views:
                   custom_fields:
                     seekbar:
                       card:
-                        type: custom:android-tv-card
+                        type: custom:universal-remote-card
                         remote_id: remote.appletv_duncan
                         media_player_id: media_player.appletv_duncan
                         rows:
@@ -733,7 +733,7 @@ views:
                             - border-width: 0px
                     vol:
                       card:
-                        type: custom:android-tv-card
+                        type: custom:universal-remote-card
                         remote_id: remote.appletv_duncan
                         media_player_id: media_player.denon_avr_x4700h
                         rows:
@@ -811,7 +811,7 @@ views:
             card:
               type: vertical-stack
               cards:
-                - type: custom:android-tv-card
+                - type: custom:universal-remote-card
                   card_mod:
                     style: |
                       ha-card {
@@ -821,6 +821,27 @@ views:
                         border-radius: 10px;
                         min-height: calc(100vh - 180px);
                       }
+                  # Hybrid: state from the network, buttons over IR.
+                  #
+                  # The player is a DP-UB820 on stock firmware. The core
+                  # panasonic_bluray integration can READ its status
+                  # unauthenticated, but control commands on UHD models need a
+                  # player key it does not implement -- so media_player_id below
+                  # gives the card real playback state (title, position,
+                  # duration) while every button goes out through the Broadlink.
+                  #
+                  # IR device group is "bluray". The old one was called
+                  # "television" and held Sony UBP-X800 codes -- wrong name,
+                  # wrong hardware. Re-learn with script.learn_bluray_commands.
+                  #
+                  # 16 buttons, not 18. There is no subtitle or audio here
+                  # because the UB820's remote has no key for either -- on this
+                  # player subtitle selection lives behind the OPTION menu
+                  # during playback. Nothing can be learned that was never
+                  # transmitted, so those buttons were removed rather than left
+                  # on the panel doing nothing.
+                  #
+                  # Volume stays on the Denon, as on every other panel.
                   rows:
                     - - power
                       - return
@@ -833,9 +854,7 @@ views:
                     - - prev
                       - pause
                       - next
-                    - - subtitle
-                      - stop
-                      - audio
+                    - - stop
                     - - volume_down
                       - volume
                       - volume_up
@@ -845,7 +864,6 @@ views:
                       tap_action:
                         action: perform-action
                         perform_action: script.turn_off_blu_ray_player
-                        key: POWER
                       icon: mdi:power
                     - type: button
                       name: up
@@ -853,11 +871,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: up
                         target:
                           entity_id: remote.ir_blaster
-                        key: Up
                       hold_action:
                         action: repeat
                       icon: mdi:chevron-up
@@ -868,11 +885,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: down
                         target:
                           entity_id: remote.ir_blaster
-                        key: Down
                       hold_action:
                         action: repeat
                       icon: mdi:chevron-down
@@ -883,11 +899,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: left
                         target:
                           entity_id: remote.ir_blaster
-                        key: Left
                       hold_action:
                         action: repeat
                       icon: mdi:chevron-left
@@ -898,11 +913,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: right
                         target:
                           entity_id: remote.ir_blaster
-                        key: Right
                       hold_action:
                         action: repeat
                       icon: mdi:chevron-right
@@ -913,11 +927,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: select
                         target:
                           entity_id: remote.ir_blaster
-                        key: Select
                       icon: mdi:circle
                       entity_id: remote.ir_blaster
                     - type: button
@@ -926,11 +939,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: play
                         target:
                           entity_id: remote.ir_blaster
-                        key: Play
                       icon: mdi:play
                       entity_id: remote.ir_blaster
                     - type: button
@@ -939,11 +951,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: pause
                         target:
                           entity_id: remote.ir_blaster
-                        key: Pause
                       icon: mdi:pause
                       entity_id: remote.ir_blaster
                     - type: button
@@ -952,11 +963,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: stop
                         target:
                           entity_id: remote.ir_blaster
-                        key: Stop
                       icon: mdi:stop
                       entity_id: remote.ir_blaster
                     - type: button
@@ -965,11 +975,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: fforward
                         target:
                           entity_id: remote.ir_blaster
-                        key: fast_forward
                       icon: mdi:fast-forward
                       entity_id: remote.ir_blaster
                     - type: button
@@ -978,11 +987,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: rewind
                         target:
                           entity_id: remote.ir_blaster
-                        key: Rewind
                       icon: mdi:rewind
                       entity_id: remote.ir_blaster
                     - type: button
@@ -991,11 +999,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: prev
                         target:
                           entity_id: remote.ir_blaster
-                        key: Previous
                       icon: mdi:skip-previous
                       entity_id: remote.ir_blaster
                     - type: button
@@ -1004,11 +1011,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: next
                         target:
                           entity_id: remote.ir_blaster
-                        key: Next
                       icon: mdi:skip-next
                       entity_id: remote.ir_blaster
                     - type: button
@@ -1017,11 +1023,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: home
                         target:
                           entity_id: remote.ir_blaster
-                        key: Home
                       icon: mdi:home
                       entity_id: remote.ir_blaster
                     - type: button
@@ -1030,11 +1035,10 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: return
                         target:
                           entity_id: remote.ir_blaster
-                        key: Return
                       icon: mdi:keyboard-return
                       entity_id: remote.ir_blaster
                     - type: button
@@ -1043,38 +1047,11 @@ views:
                         action: perform-action
                         perform_action: remote.send_command
                         data:
-                          device: television
+                          device: bluray
                           command: open close
                         target:
                           entity_id: remote.ir_blaster
-                        key: Open
                       icon: mdi:eject
-                      entity_id: remote.ir_blaster
-                    - type: button
-                      name: subtitle
-                      tap_action:
-                        action: perform-action
-                        perform_action: remote.send_command
-                        data:
-                          device: television
-                          command: subtitle
-                        target:
-                          entity_id: remote.ir_blaster
-                        key: Subtitle
-                      icon: mdi:subtitles
-                      entity_id: remote.ir_blaster
-                    - type: button
-                      name: audio
-                      tap_action:
-                        action: perform-action
-                        perform_action: remote.send_command
-                        data:
-                          device: television
-                          command: audio
-                        target:
-                          entity_id: remote.ir_blaster
-                        key: Audio
-                      icon: mdi:audio-video
                       entity_id: remote.ir_blaster
                     - type: slider
                       name: volume
@@ -1094,8 +1071,10 @@ views:
                       name: volume_down
                       entity_id: media_player.denon_avr_x4700h
                       tap_action:
-                        action: key
-                        key: volume_down
+                        action: perform-action
+                        perform_action: media_player.volume_down
+                        target:
+                          entity_id: media_player.denon_avr_x4700h
                       hold_action:
                         action: repeat
                       icon: mdi:volume-minus
@@ -1103,19 +1082,27 @@ views:
                     - type: button
                       name: volume_up
                       tap_action:
-                        action: key
-                        key: volume_up
+                        action: perform-action
+                        perform_action: media_player.volume_up
+                        target:
+                          entity_id: media_player.denon_avr_x4700h
                       hold_action:
                         action: repeat
                       icon: mdi:volume-plus
                       entity_id: media_player.denon_avr_x4700h
-                      action: perform-action
-                      perform_action: media_player.volume_up
                       styles: ".icon {\n  --size: 30px;\n}"
-                  platform: Sony BRAVIA
-                  remote_id: remote.ir_blaster
-                  keyboard_id: remote.ir_blaster
-                  media_player_id: media_player.sony_xr_85z9j_2
+                  # No platform, and deliberately no remote_id either. Every
+                  # button above names remote.ir_blaster in its own target, so
+                  # there is no default keymap to inherit and nothing here uses
+                  # `action: key`. That matters -- a `key` action with no
+                  # platform falls through to remote.send_command against an
+                  # empty entity and silently does nothing.
+                  #
+                  # media_player_id is state only: the card reads playback state
+                  # from the Panasonic here while the buttons go out over IR.
+                  # It used to point at the old TV's DLNA entity, which was
+                  # never more than a stand-in.
+                  media_player_id: media_player.media_room_bluray
                 # Spacer for bottom nav
                 - type: custom:gap-card
                   height: 50
@@ -1129,7 +1116,7 @@ views:
             card:
               type: vertical-stack
               cards:
-                - type: custom:android-tv-card
+                - type: custom:universal-remote-card
                   card_mod:
                     style: |
                       ha-card {
@@ -1157,7 +1144,10 @@ views:
                     - - volume_down
                       - volume
                       - volume_up
-                  platform: Sony BRAVIA
+                  # LG webOS drives keys through webostv.button, which takes a
+                  # media_player entity -- the integration creates no remote
+                  # entity at all, so there is no remote_id/keyboard_id here.
+                  platform: LG webOS
                   custom_actions:
                     - type: button
                       name: power
@@ -1183,8 +1173,10 @@ views:
                       name: volume_down
                       entity_id: media_player.denon_avr_x4700h
                       tap_action:
-                        action: key
-                        key: volume_down
+                        action: perform-action
+                        perform_action: media_player.volume_down
+                        target:
+                          entity_id: media_player.denon_avr_x4700h
                       hold_action:
                         action: repeat
                       icon: mdi:volume-minus
@@ -1192,18 +1184,16 @@ views:
                     - type: button
                       name: volume_up
                       tap_action:
-                        action: key
-                        key: volume_up
+                        action: perform-action
+                        perform_action: media_player.volume_up
+                        target:
+                          entity_id: media_player.denon_avr_x4700h
                       hold_action:
                         action: repeat
                       icon: mdi:volume-plus
                       entity_id: media_player.denon_avr_x4700h
-                      action: perform-action
-                      perform_action: media_player.volume_up
                       styles: ".icon {\n  --size: 30px;\n}"
-                  remote_id: remote.sony_xr_85z9j
-                  keyboard_id: remote.sony_xr_85z9j
-                  media_player_id: media_player.sony_xr_85z9j
+                  media_player_id: media_player.media_room_tv
                 # Spacer for bottom nav
                 - type: custom:gap-card
                   height: 50
@@ -1217,7 +1207,7 @@ views:
             card:
               type: vertical-stack
               cards:
-                - type: custom:android-tv-card
+                - type: custom:universal-remote-card
                   card_mod:
                     style: |
                       ha-card {
@@ -1259,8 +1249,10 @@ views:
                       name: volume_down
                       entity_id: media_player.denon_avr_x4700h
                       tap_action:
-                        action: key
-                        key: volume_down
+                        action: perform-action
+                        perform_action: media_player.volume_down
+                        target:
+                          entity_id: media_player.denon_avr_x4700h
                       hold_action:
                         action: repeat
                       icon: mdi:volume-minus
@@ -1268,14 +1260,14 @@ views:
                     - type: button
                       name: volume_up
                       tap_action:
-                        action: key
-                        key: volume_up
+                        action: perform-action
+                        perform_action: media_player.volume_up
+                        target:
+                          entity_id: media_player.denon_avr_x4700h
                       hold_action:
                         action: repeat
                       icon: mdi:volume-plus
                       entity_id: media_player.denon_avr_x4700h
-                      action: perform-action
-                      perform_action: media_player.volume_up
                       styles: ".icon {\n  --size: 30px;\n}"
                 # Spacer for bottom nav
                 - type: custom:gap-card
@@ -1290,7 +1282,7 @@ views:
             card:
               type: vertical-stack
               cards:
-                - type: custom:android-tv-card
+                - type: custom:universal-remote-card
                   card_mod:
                     style: |
                       ha-card {
@@ -1332,8 +1324,10 @@ views:
                       name: volume_down
                       entity_id: media_player.denon_avr_x4700h
                       tap_action:
-                        action: key
-                        key: volume_down
+                        action: perform-action
+                        perform_action: media_player.volume_down
+                        target:
+                          entity_id: media_player.denon_avr_x4700h
                       hold_action:
                         action: repeat
                       icon: mdi:volume-minus
@@ -1341,14 +1335,14 @@ views:
                     - type: button
                       name: volume_up
                       tap_action:
-                        action: key
-                        key: volume_up
+                        action: perform-action
+                        perform_action: media_player.volume_up
+                        target:
+                          entity_id: media_player.denon_avr_x4700h
                       hold_action:
                         action: repeat
                       icon: mdi:volume-plus
                       entity_id: media_player.denon_avr_x4700h
-                      action: perform-action
-                      perform_action: media_player.volume_up
                       styles: ".icon {\n  --size: 30px;\n}"
                 # Spacer for bottom nav
                 - type: custom:gap-card
@@ -1363,7 +1357,7 @@ views:
             card:
               type: vertical-stack
               cards:
-                - type: custom:android-tv-card
+                - type: custom:universal-remote-card
                   card_mod:
                     style: |
                       ha-card {
@@ -1405,8 +1399,10 @@ views:
                       name: volume_down
                       entity_id: media_player.denon_avr_x4700h
                       tap_action:
-                        action: key
-                        key: volume_down
+                        action: perform-action
+                        perform_action: media_player.volume_down
+                        target:
+                          entity_id: media_player.denon_avr_x4700h
                       hold_action:
                         action: repeat
                       icon: mdi:volume-minus
@@ -1414,14 +1410,14 @@ views:
                     - type: button
                       name: volume_up
                       tap_action:
-                        action: key
-                        key: volume_up
+                        action: perform-action
+                        perform_action: media_player.volume_up
+                        target:
+                          entity_id: media_player.denon_avr_x4700h
                       hold_action:
                         action: repeat
                       icon: mdi:volume-plus
                       entity_id: media_player.denon_avr_x4700h
-                      action: perform-action
-                      perform_action: media_player.volume_up
                       styles: ".icon {\n  --size: 30px;\n}"
                 # Spacer for bottom nav
                 - type: custom:gap-card

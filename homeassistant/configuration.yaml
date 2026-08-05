@@ -30,6 +30,23 @@ lovelace:
       icon: mdi:lightbulb-group
       show_in_sidebar: true
 
+# Wake-on-LAN, used only by the "LG TV -- wake on turn_on request" automation.
+#
+# The webostv integration cannot power on a TV that is fully off: webOS is not
+# listening at that point. What it does instead is fire a webostv.turn_on
+# trigger and expect something else to do the waking. That automation lives in
+# automations.yaml and sends a magic packet to the TV's wired MAC.
+#
+# This split matters for recovery. The webostv config entry itself -- host plus
+# the pairing client_secret -- is in .storage/core.config_entries, which this
+# repo deliberately does not track, so it has to be re-paired by hand after a
+# rebuild. The wake path is the half that IS recoverable from git, which is why
+# the MAC is written here rather than being buried in a UI helper.
+#
+# Requires the TV on Ethernet, with "Mobile TV On"/"Turn On Via Wi-Fi" enabled
+# in its Network settings. See RECOVERY.md.
+wake_on_lan:
+
 # Study lighting groups. The Connect Bridge publishes every track head and LED
 # run as its own HomeKit accessory, which is more granularity than the room
 # needs day to day. These collapse them into one control each, and the Study
@@ -84,6 +101,63 @@ light:
 # all three retries. Halving the request rate trades resolution -- which does
 # not matter, since the energy sensors are cumulative totals and statistics are
 # compiled hourly -- for a better chance each request lands.
+# Panasonic DP-UB820 in the media room. Present for STATUS ONLY -- the buttons
+# on the Blu-ray dashboard panel go out over Broadlink IR, not through here.
+#
+# Why the split, verified against this player on 2026-08-05:
+#   cCMD_PST        (playback state)  -> works unauthenticated
+#   cCMD_GET_STATUS (power/standby)   -> error 52, "authentication failed"
+# UHD-series players want a per-device "player key" that this integration does
+# not implement. Its send_key is hard-guarded (`if variant == UB: return error`)
+# so it will not transmit at all -- hence IR for every button.
+#
+# ---- LEAVE "QUICK START" OFF ON THE PLAYER ----
+# This is load-bearing, and counterintuitive. Because GET_STATUS fails, panacotta
+# marks the player as a UB variant and substitutes a hardcoded dummy status, so
+# it can no longer tell standby from stopped: while the player is reachable this
+# entity reads "idle" whether it is on or in standby. The one power signal left
+# is reachability -- when the player drops off the LAN the request times out and
+# the integration reports "off". Quick Start keeps the NIC alive in standby and
+# therefore destroys that signal.
+#
+# scripts.yaml guards the IR power toggle on this state, so a wrong reading is
+# not cosmetic: with Quick Start ON the state never reads "off",
+# turn_on_blu_ray_player skips its power step, and the player never switches on.
+# Nothing is lost by leaving it off -- power goes out over IR, not the network.
+#
+# The guard is what makes a one-way IR toggle idempotent, which is the failure
+# the old Sony setup had: running "Turn On" twice switched the player back off.
+#
+# This is the core integration, YAML-only, no config flow. Unlike every other AV
+# device here, its setup is tracked in git and survives a rebuild with nothing
+# to re-pair.
+#
+# Requires Voice Control enabled in the player's Network menu (Player Settings >
+# Network > Voice Control) -- without it the player answers ping but opens no TCP
+# ports at all, and this entity stays unavailable. Needs a DHCP reservation; the
+# host is hardcoded here.
+#
+# Expect play/pause/stop on this entity to do nothing if called directly. They
+# are unreachable by design on a UB player; the dashboard does not call them.
+#
+# This platform sets no unique_id, so -- exactly like franklin_wh above, but for
+# the opposite reason -- media_player.media_room_bluray never enters
+# core.entity_registry. Consequences worth knowing before hunting for it:
+#   - it will NOT appear in Settings > Entities, and cannot be renamed or given
+#     an area through the UI
+#   - `jq` over .storage/core.entity_registry will not find it; it exists only
+#     in the running state machine (Developer Tools > States)
+#   - its entity_id is derived purely from the `name:` below, so changing that
+#     name silently renames the entity and breaks every reference in
+#     scripts.yaml and dashboards/media-center.yaml
+#
+# If full network control ever matters, matteoraf/ha-panasonic_ub implements the
+# player key and would replace both this and the IR path. See hacs_manifest.txt.
+media_player:
+  - platform: panasonic_bluray
+    host: 192.168.55.22
+    name: Media Room Bluray
+
 sensor:
   - platform: franklin_wh
     username: lminer@gmail.com
