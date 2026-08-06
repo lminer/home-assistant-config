@@ -170,11 +170,19 @@ files and you want to know which before overwriting them.
     **It is a status source, not a control path** — the integration's `send_key`
     refuses to transmit at all once it detects a UB player. The buttons are IR;
     see `script.learn_bluray_commands`.
-  - **Denon** — the Blu-ray input is still named `UBP-X800`, after the Sony player
-    that was replaced on 2026-08-05. `scripts.yaml` matches that literal string.
-    Renaming it on the receiver (Setup → Input Setup → Rename) means editing the
-    two `source: UBP-X800` lines in `scripts.yaml` to match, or the Blu-ray scripts
-    silently become no-ops. Same trap applies to any receiver factory reset.
+  - **Denon** — input labels are string-matched by `scripts.yaml` and **`denonavr`
+    does not validate them**. A wrong name is a silent no-op: no error, no aborted
+    script, the receiver simply stays on its current input. Do not guess these;
+    read them off the receiver:
+
+    ```bash
+    exec 3<>/dev/tcp/192.168.55.62/23; printf 'SSFUN ?\r' >&3
+    while IFS= read -r -t 4 -d $'\r' l <&3; do echo "$l"; done
+    ```
+
+    As of 2026-08-05: `BD` and `8K` → **Panasonic BD**, `MPLAY` → Apple TV,
+    `GAME` → Switch 2, `SAT/CBL` → Mac Mini, `TV` → TV Audio. A factory reset
+    restores the stock names and silently breaks every "Turn On" script.
 
 ### Step 6 — Verify
 

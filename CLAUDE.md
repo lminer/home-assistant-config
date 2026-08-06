@@ -59,12 +59,16 @@ The repo tracks a specific subset of HA files — YAML configs, select `.storage
   Start on and `turn_on_blu_ray_player` silently stops powering the player on. Do not
   "fix" this by removing the guard — it is what stops the toggle desyncing.
   Two things there are string-matched and have no validation: the Denon's input names
-  (`Apple TV`, `Switch 2`, `Mac Mini`, `UBP-X800`, `TV Audio`) and the LG's source names
+  (`Apple TV`, `Switch 2`, `Mac Mini`, `Panasonic BD`, `TV Audio`) and the LG's source names
   (`AVR-X4700H` for the receiver, `Sony DVD Player` for the PS5). Rename an input on
   either box and the matching script silently stops working.
-- Two of those names are misleading and both are correct as written. The Denon's
-  `UBP-X800` input is named after the Sony player replaced in Aug 2026; the Panasonic
-  is on that input now. The LG reports the PS5's HDMI port as `Sony DVD Player` — a
+- The two boxes fail differently when a name is wrong, which matters when debugging:
+  `webostv` raises `source_not_found` and aborts the script, but **`denonavr` does
+  not validate at all** — a wrong Denon source is a silent no-op, so the receiver
+  just stays where it was and everything downstream still runs. Read the real names
+  off the receiver with `SSFUN ?` over telnet on port 23 rather than trusting this
+  file; that is how the stale `UBP-X800` was caught.
+- The LG reports the PS5's HDMI port as `Sony DVD Player` — a
   stale CEC label on the physical HDMI 3 port. Note the LG is also inconsistent about
   spacing (`HDMI 1` but `HDMI4`), so always read `source_list` off the live entity
   rather than assuming a format.

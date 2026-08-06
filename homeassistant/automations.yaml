@@ -199,7 +199,31 @@
     - trigger: webostv.turn_on
       device_id: 2af549903901b8cf6eaa77d9936c6904
   actions:
-    - action: wake_on_lan.send_magic_packet
-      data:
-        mac: d0:cd:bf:95:0d:b1
-        broadcast_address: 192.168.55.255
+    # Retry, do not fire once and hope. Two separate reasons:
+    #
+    # 1. Turning the TV off with its own remote leaves a window of a few seconds
+    #    before the NIC is actually listening for magic packets. A packet sent
+    #    into that window is silently dropped, which showed up as "the first
+    #    turn-on after using the physical remote does nothing, the second works".
+    # 2. webostv can still report "on" for a moment after the set powers off, so
+    #    a naive until-condition would exit before sending anything useful.
+    #    Hence at least two packets regardless of what the state says.
+    #
+    # Up to 5 attempts, 8s apart -- worst case ~40s, which fits inside the 45s
+    # wait_template the turn_on_* scripts use. Extra packets are harmless: WoL is
+    # idempotent and an already-awake TV ignores them.
+    - repeat:
+        sequence:
+          - action: wake_on_lan.send_magic_packet
+            data:
+              mac: d0:cd:bf:95:0d:b1
+              broadcast_address: 192.168.55.255
+          - wait_template: "{{ is_state('media_player.media_room_tv', 'on') }}"
+            timeout: "00:00:08"
+            continue_on_timeout: true
+        until:
+          - condition: template
+            value_template: >-
+              {{ (repeat.index >= 2 and
+              is_state('media_player.media_room_tv', 'on'))
+              or repeat.index >= 5 }}

@@ -5,24 +5,31 @@ turn_on_apple_tv:
       entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
-  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
-    timeout: 00:00:20
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_on
+    data: {}
+  - wait_template: >-
+      {{ not is_state('media_player.denon_avr_x4700h', 'off') }}
+    timeout: 00:00:15
     continue_on_timeout: true
+  - delay: 00:00:02
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    data:
+      source: Apple TV
+    action: media_player.select_source
+  - wait_template: >-
+      {{ is_state('media_player.media_room_tv', 'on') and 'AVR-X4700H' in
+      (state_attr('media_player.media_room_tv', 'source_list') or []) }}
+    timeout: 00:00:45
+    continue_on_timeout: false
   - action: media_player.select_source
     target:
       entity_id:
       - media_player.media_room_tv
     data:
       source: AVR-X4700H
-  - target:
-      entity_id: media_player.denon_avr_x4700h
-    action: media_player.turn_on
-    data: {}
-  - target:
-      entity_id: media_player.denon_avr_x4700h
-    data:
-      source: Apple TV
-    action: media_player.select_source
   - delay: 00:00:01
   - target:
       entity_id: remote.appletv_duncan
@@ -32,7 +39,13 @@ turn_on_apple_tv:
       delay_secs: 1
       command:
       - home
-  description: ''
+  description: >-
+    The receiver is set up first, while the TV is still booting, because a cold
+    Wake-on-LAN start takes longer than the Denon needs. The wait then gates on
+    the source actually being present in the TV's source_list, not merely on the
+    TV reporting "on" -- webOS publishes its input list a few seconds after it
+    starts answering, and calling select_source before then fails with
+    "source not found".
   icon: mdi:apple
 turn_on_switch:
   alias: Turn On Switch
@@ -41,25 +54,33 @@ turn_on_switch:
       entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
-  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
-    timeout: 00:00:20
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_on
+    data: {}
+  - wait_template: >-
+      {{ not is_state('media_player.denon_avr_x4700h', 'off') }}
+    timeout: 00:00:15
     continue_on_timeout: true
+  - delay: 00:00:02
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    data:
+      source: Switch 2
+    action: media_player.select_source
+  - wait_template: >-
+      {{ is_state('media_player.media_room_tv', 'on') and 'AVR-X4700H' in
+      (state_attr('media_player.media_room_tv', 'source_list') or []) }}
+    timeout: 00:00:45
+    continue_on_timeout: false
   - action: media_player.select_source
     target:
       entity_id:
       - media_player.media_room_tv
     data:
       source: AVR-X4700H
-  - target:
-      entity_id: media_player.denon_avr_x4700h
-    action: media_player.turn_on
-    data: {}
-  - target:
-      entity_id: media_player.denon_avr_x4700h
-    data:
-      source: Switch 2
-    action: media_player.select_source
-  description: ''
+  description: >-
+    See turn_on_apple_tv for why the Denon is configured before the TV input.
   icon: mdi:nintendo-switch
 turn_off_home_theater:
   alias: Turn Off Home Theater
@@ -86,25 +107,38 @@ turn_on_ps5:
       entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
-  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
-    timeout: 00:00:20
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_on
+    data: {}
+  - wait_template: >-
+      {{ not is_state('media_player.denon_avr_x4700h', 'off') }}
+    timeout: 00:00:15
     continue_on_timeout: true
+  - delay: 00:00:02
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    data:
+      source: TV Audio
+    action: media_player.select_source
+  - wait_template: >-
+      {{ is_state('media_player.media_room_tv', 'on') and 'Sony DVD Player' in
+      (state_attr('media_player.media_room_tv', 'source_list') or []) }}
+    timeout: 00:00:45
+    continue_on_timeout: false
   - action: media_player.select_source
     target:
       entity_id:
       - media_player.media_room_tv
     data:
       source: Sony DVD Player
-  - target:
-      entity_id: media_player.denon_avr_x4700h
-    action: media_player.turn_on
-    data: {}
-  - target:
-      entity_id: media_player.denon_avr_x4700h
-    data:
-      source: TV Audio
-    action: media_player.select_source
-  description: ''
+  description: >-
+    The PS5 is wired straight into the TV, so this selects a TV input and puts
+    the Denon on TV Audio to take the eARC return -- unlike every other source,
+    which selects a Denon input. "Sony DVD Player" is the PS5's HDMI port: a
+    stale CEC label the TV reports for physical HDMI 3. Note webOS hides inputs
+    with nothing detected on them, so this source only appears once the PS5 is
+    powered, which is what the wait below is really checking for.
   icon: mdi:sony-playstation
 turn_on_mac_mini:
   alias: Turn On Mac Mini
@@ -113,25 +147,33 @@ turn_on_mac_mini:
       entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
-  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
-    timeout: 00:00:20
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    action: media_player.turn_on
+    data: {}
+  - wait_template: >-
+      {{ not is_state('media_player.denon_avr_x4700h', 'off') }}
+    timeout: 00:00:15
     continue_on_timeout: true
+  - delay: 00:00:02
+  - target:
+      entity_id: media_player.denon_avr_x4700h
+    data:
+      source: Mac Mini
+    action: media_player.select_source
+  - wait_template: >-
+      {{ is_state('media_player.media_room_tv', 'on') and 'AVR-X4700H' in
+      (state_attr('media_player.media_room_tv', 'source_list') or []) }}
+    timeout: 00:00:45
+    continue_on_timeout: false
   - action: media_player.select_source
     target:
       entity_id:
       - media_player.media_room_tv
     data:
       source: AVR-X4700H
-  - target:
-      entity_id: media_player.denon_avr_x4700h
-    action: media_player.turn_on
-    data: {}
-  - target:
-      entity_id: media_player.denon_avr_x4700h
-    data:
-      source: Mac Mini
-    action: media_player.select_source
-  description: ''
+  description: >-
+    See turn_on_apple_tv for why the Denon is configured before the TV input.
   icon: mdi:laptop
 turn_on_blu_ray_player:
   alias: Turn On Blu-ray Player
@@ -140,28 +182,27 @@ turn_on_blu_ray_player:
       entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
-  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
-    timeout: 00:00:20
-    continue_on_timeout: true
-  - action: media_player.select_source
-    target:
-      entity_id:
-      - media_player.media_room_tv
-    data:
-      source: AVR-X4700H
   - target:
       entity_id: media_player.denon_avr_x4700h
     action: media_player.turn_on
     data: {}
-  - target:
+  - wait_template: >-
+      {{ not is_state('media_player.denon_avr_x4700h', 'off') }}
+    timeout: 00:00:15
+    continue_on_timeout: true
+  - delay: 00:00:02
+  - action: denonavr.get_command
+    target:
       entity_id: media_player.denon_avr_x4700h
     data:
-      source: UBP-X800
-    action: media_player.select_source
+      command: /goform/formiPhoneAppDirect.xml?SIBD
   - if:
     - condition: state
       entity_id: media_player.media_room_bluray
-      state: 'off'
+      state:
+      - 'off'
+      - unknown
+      - unavailable
     then:
     - action: remote.send_command
       target:
@@ -169,7 +210,47 @@ turn_on_blu_ray_player:
       data:
         device: bluray
         command: toggle power
-  description: ''
+  - wait_template: >-
+      {{ is_state('media_player.media_room_tv', 'on') and 'AVR-X4700H' in
+      (state_attr('media_player.media_room_tv', 'source_list') or []) }}
+    timeout: 00:00:45
+    continue_on_timeout: false
+  - action: media_player.select_source
+    target:
+      entity_id:
+      - media_player.media_room_tv
+    data:
+      source: AVR-X4700H
+  description: >-
+    This is the ONE Denon input not selected by name, and deliberately so. The
+    receiver has TWO inputs both labelled "Panasonic BD" -- physical BD and 8K --
+    so media_player.select_source cannot address it unambiguously: HA's
+    source_list literally contains "Panasonic BD" twice, and the name-to-code
+    lookup collapses, landing on the wrong input (observed: DVD, which sits
+    directly before the first duplicate in the list).
+
+    denonavr.get_command sends the raw control code instead, so it is immune to
+    both the duplicate and to anyone renaming inputs later. SIBD selects physical
+    input BD. If the Panasonic turns out to be on the 8K input instead, change
+    this to SI8K -- those are the only two candidates, and both are confirmed
+    selectable. Note SIDVD is NOT: that input is disabled on this receiver and
+    silently redirects to 8K.
+
+    The other sources still use select_source with names, which is fine because
+    their labels are unique. Beware that denonavr does NOT validate names -- a
+    wrong one is a silent no-op, not an error. Read the real labels off the
+    receiver with `SSFUN ?` over telnet on port 23.
+    The IR power step is guarded on the player's reported state so the toggle
+    stays idempotent; that guard depends on Quick Start being OFF on the player,
+    which is what lets it read "off" in standby. It runs before the TV wait so
+    the player starts spinning up while the TV finishes booting.
+
+    The guard matches off/unknown/unavailable rather than just off, and its
+    counterpart in turn_off_blu_ray_player matches only the known-on states.
+    Both are deliberate: an ambiguous state should still let the player be
+    powered ON, but must never fire the toggle in the OFF direction, since that
+    would switch off a player that was only briefly unreachable. Matching just
+    "off" here meant a player HA had not polled yet was silently never woken.
   icon: mdi:disc
 turn_on_television:
   alias: Turn On Television
@@ -178,19 +259,24 @@ turn_on_television:
       entity_id: media_player.media_room_tv
     action: media_player.turn_on
     data: {}
-  - wait_template: '{{ is_state(''media_player.media_room_tv'', ''on'') }}'
-    timeout: 00:00:20
-    continue_on_timeout: true
   - target:
       entity_id: media_player.denon_avr_x4700h
     action: media_player.turn_on
     data: {}
+  - wait_template: >-
+      {{ not is_state('media_player.denon_avr_x4700h', 'off') }}
+    timeout: 00:00:15
+    continue_on_timeout: true
+  - delay: 00:00:02
   - target:
       entity_id: media_player.denon_avr_x4700h
     data:
       source: TV Audio
     action: media_player.select_source
-  description: ''
+  description: >-
+    No TV select_source step: this uses the set's own tuner and apps, so there is
+    no input to switch to and nothing that has to wait for webOS to publish its
+    source list.
   icon: mdi:television-classic
 learn_bluray_commands:
   alias: Learn Blu-ray Commands
@@ -237,11 +323,13 @@ turn_off_blu_ray_player:
     target:
       entity_id: input_select.selected_remote
   - if:
-    - condition: not
-      conditions:
-      - condition: state
-        entity_id: media_player.media_room_bluray
-        state: 'off'
+    - condition: state
+      entity_id: media_player.media_room_bluray
+      state:
+      - 'on'
+      - idle
+      - playing
+      - paused
     then:
     - action: remote.send_command
       target:
