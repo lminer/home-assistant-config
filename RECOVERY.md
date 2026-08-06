@@ -91,7 +91,8 @@ Nothing below is in git, and none of it can be reconstructed by hand without pai
 |---|---|
 | `.storage/core.config_entries` | Every integration's setup **and its credentials** — Ecobee OAuth, mobile_app secrets, the LG webOS pairing `client_secret`, the Panasonic API key, MQTT login. Excluded from git on purpose. |
 | `secrets.yaml` | Referenced by `configuration.yaml`. Gitignored; see `secrets.yaml.example` for shape. Holds `franklinwh_password` — without it the FranklinWH sensors do not load. |
-| `.storage/broadlink_remote_*_codes` | **Learned IR codes.** Lose these and the whole Blu-ray panel goes dead — it is IR-driven. Recovery is `script.learn_bluray_commands`, which re-learns all 16 codes under the `bluray` device group; budget ten minutes with the Panasonic remote, and note each command allows only 30 seconds before the run aborts. Codes save incrementally, so a partial run keeps what it captured. A stale `television` group is also present: Sony UBP-X800 codes for a player that no longer exists, called by nothing. |
+| `.storage/broadlink_remote_*_codes` | **Learned IR codes.** Lose these and the whole Blu-ray panel goes dead — it is IR-driven. Recovery is `script.learn_bluray_commands`, which re-learns all 16 codes under the `bluray` device group; budget ten minutes with the Panasonic remote, and note each command allows only 30 seconds before the run aborts. Codes save incrementally, so a partial run keeps what it captured. `bluray` is the only group in the file — a stale `television` group of Sony UBP-X800 codes was deleted on 2026-08-05. |
+| `www/community/*` | **HACS frontend plugin JS.** `sync.sh` tracks `.storage/lovelace_resources`, so the resource *list* comes back from git — but the files it points at do not, and a dashboard whose resources 404 renders as a wall of "Custom element doesn't exist". Re-download each plugin listed in `hacs_manifest.txt` from HACS. |
 | `kumo_cache.json` (config root) | **Mitsubishi local credentials — currently irreplaceable.** See the section below. |
 | `.storage/auth`, `.storage/auth_provider.homeassistant` | User accounts, long-lived tokens, refresh tokens. |
 | `homekit.*`, `homekit_controller-entity-map` | HomeKit bridge pairing state. Without it, re-pair every accessory. |
@@ -122,7 +123,8 @@ still apply and will save you the dashboard and theme work.
 ### Step 3 — Install HACS and its content
 
 Install HACS (https://hacs.xyz), restart, then work through `hacs_manifest.txt`. Note
-`lutron_lip` must be added as a custom repository before it appears in search.
+`richo/homeassistant-franklinwh` is not in the default index and must be added as a
+custom repository before it appears in search; the manifest has the exact steps.
 
 Restart Home Assistant.
 
@@ -183,6 +185,29 @@ files and you want to know which before overwriting them.
     As of 2026-08-05: `BD` and `8K` → **Panasonic BD**, `MPLAY` → Apple TV,
     `GAME` → Switch 2, `SAT/CBL` → Mac Mini, `TV` → TV Audio. A factory reset
     restores the stock names and silently breaks every "Turn On" script.
+
+    Two inputs carry the *same* label, which is why `turn_on_blu_ray_player`
+    sends the raw `SIBD` command instead of `select_source`. `denonavr` reports
+    this at startup, using its own names rather than the telnet function codes —
+    so the same pair reads as `BD`/`8K` over telnet and as `Blu-ray`/`AUX2` in
+    the log:
+
+    ```
+    Input source 'Blu-ray' is renamed to non-unique name 'Panasonic BD'
+    Input source 'AUX2'    is renamed to non-unique name 'Panasonic BD'
+    ```
+
+    **Renaming is done in the receiver's web UI, which is on port 10443 over
+    HTTPS** — `https://192.168.55.62:10443` (port 80 nginx-redirects there). The
+    telnet socket above reads names fine but refuses every write format, which is
+    a dead end worth not rediscovering. The HTTP control API is on a third port:
+    `http://192.168.55.62:8080/goform/formMainZone_MainZoneXmlStatusLite.xml`
+    returns power, input and volume, which is the quickest way to see what the
+    receiver actually did.
+
+    Note the raw `SIBD` approach stays correct even after a rename: the Denon's
+    `source_list` has a different membership in standby than when awake, and the
+    scripts run against a sleeping receiver.
 
 ### Step 6 — Verify
 
