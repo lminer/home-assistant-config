@@ -13,10 +13,10 @@
 
 ## Integrations (HACS > Integrations)
 
-custom-components/pyscript                    # pyscript
 thomasloven/hass-custom_icons                 # custom_icons - serves /homeassistant/custom_icons/*.svg
-dwainscheeren/dwains-lovelace-dashboard       # dwains_dashboard
-rzulian/lutron_lip                            # lutron_lip v0.1.4 -- needs the cert/pem files, see note below
+dwainscheeren/dwains-lovelace-dashboard       # dwains_dashboard -- present in custom_components/ but
+                                              # has no config entry, so it is installed and idle.
+                                              # Nothing in this repo depends on it.
 dlarrick/hass-kumo                            # kumo v0.4.6 -- Mitsubishi heat pump. Pin to the
                                               # latest non-prerelease; HACS defaults the dropdown
                                               # to v0.4.7-beta. Needs kumo_cache.json, see RECOVERY.md.
@@ -51,7 +51,11 @@ thomasloven/lovelace-slider-entity-row
 ownbee/bootstrap-grid-card
 NemesisRE/kiosk-mode                          # also wired into configuration.yaml frontend.extra_module_url
 kalkih/mini-media-player
-Nerwyn/universal-remote-card                  # formerly "android-tv-card"; www/community/ still has both dirs
+Nerwyn/universal-remote-card                  # formerly "android-tv-card". The leftover
+                                              # www/community/android-tv-card/ dir was deleted on
+                                              # 2026-08-05; it held an older copy of the same JS and
+                                              # was not a registered Lovelace resource. Cards use
+                                              # type: custom:universal-remote-card, not the old alias.
 
 
 ## Themes (HACS > Themes)
@@ -99,11 +103,13 @@ custom component -- and there are two, both with real drawbacks:
 
 ## Notes
 
-- lutron_lip is in the default HACS index now (it was not when this file was
-  first written, hence the old "custom repository" instructions -- searching
-  HACS for it is enough). It does still need the Lutron LIP cert/key/pem files
-  at the config root (lutron_caseta-*.pem), which come from the supervisor
-  backup, not this repo.
+- Lutron is the CORE lutron_caseta integration, not a HACS install. Earlier
+  versions of this file listed rzulian/lutron_lip; it is not in
+  custom_components/ and holds no config entry, so it was dropped on 2026-08-05.
+  What survived the change is the part that matters for a rebuild: the setup
+  still needs the cert/key/pem files at the config root (lutron_caseta-*.pem),
+  and those come from the supervisor backup, not this repo. Without them the
+  bridge will not pair and the Pico automation in automations.yaml goes dead.
 
 - richo/homeassistant-franklinwh is NOT in the default HACS index -- checked
   against hacs/default, and the upstream "publish on HACS" issue (#12) was
