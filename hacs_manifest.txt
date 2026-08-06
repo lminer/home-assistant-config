@@ -43,14 +43,20 @@ richo/homeassistant-franklinwh                # franklin_wh -- FranklinWH batter
 
 ## Frontend plugins (HACS > Frontend)
 
-custom-cards/button-card
-piitaya/lovelace-mushroom
-thomasloven/lovelace-card-mod
-thomasloven/lovelace-layout-card
-thomasloven/lovelace-slider-entity-row
-ownbee/bootstrap-grid-card
-NemesisRE/kiosk-mode                          # also wired into configuration.yaml frontend.extra_module_url
-kalkih/mini-media-player
+custom-cards/button-card                      # v7.0.1 -- 64 uses, the most-used card here
+piitaya/lovelace-mushroom                     # v5.2.2 -- 45 uses: entity, title, climate, chips, template
+thomasloven/lovelace-card-mod                 # v4.2.1 -- 11 custom:mod-card wrappers plus inline
+                                              # card_mod: blocks throughout. This is what styles the
+                                              # translucent blurred panels; it breaks first when any
+                                              # other card takes a major version bump.
+thomasloven/lovelace-layout-card              # v2.4.7 -- looks unused, IS NOT. custom:layout-card appears
+                                              # zero times, but this bundle also provides custom:gap-card,
+                                              # which is the bottom spacer in all seven remote panels.
+                                              # Check what a bundle REGISTERS, not what shares its name.
+thomasloven/lovelace-slider-entity-row        # v17.5.0 -- 11 rows on the Lights dashboard
+NemesisRE/kiosk-mode                          # v14.0.2 -- also wired into configuration.yaml
+                                              # frontend.extra_module_url
+kalkih/mini-media-player                      # v1.16.12
 Nerwyn/universal-remote-card                  # formerly "android-tv-card". The leftover
                                               # www/community/android-tv-card/ dir was deleted on
                                               # 2026-08-05; it held an older copy of the same JS and
@@ -125,3 +131,16 @@ custom component -- and there are two, both with real drawbacks:
   Lovelace resource. This repo tracks .storage/lovelace_resources, so the
   resource list is restored by ./sync.sh push -- but the plugin JS files
   themselves are not tracked and must come from HACS.
+
+- ownbee/bootstrap-grid-card was removed on 2026-08-06. It had a directory and a
+  registered Lovelace resource but zero uses -- nothing in any dashboard, in
+  flow/, or in the unloaded scratch.yaml referenced it.
+
+- Five of these plugins had drifted out of HACS's index: files on disk and
+  working resources, but no `installed` key in .storage/hacs.repositories, so
+  their update entities read "unavailable" and no update ever surfaced. Cause
+  unknown; the files dated from Nov-Dec 2024. Redownloading each in HACS
+  reattached them, which also jumped Mushroom from the 2.x line to v5.2.2 in one
+  step. Nothing broke, including the card_mod styling. If it happens again the
+  fix is just Redownload -- but snapshot www/community/ first, because that is
+  the only rollback (see RECOVERY.md).
