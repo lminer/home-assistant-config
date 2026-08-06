@@ -75,6 +75,16 @@ The repo tracks a specific subset of HA files — YAML configs, select `.storage
 - The PS5 is wired straight into the LG, not through the Denon; its audio returns over
   eARC. So `turn_on_ps5` selects a TV input and puts the Denon on `TV Audio`, unlike the
   other sources which select a Denon input.
+- **Every `turn_on_*` script must end by selecting a TV source**, including
+  `turn_on_television`, which selects `Live TV`. The tuner needs no HDMI input, so the
+  step looks droppable — but the TV never starts from nowhere. Coming from any other
+  source it is parked on `AVR-X4700H`, and without that step it stays there while the
+  Denon moves to `TV Audio`: blank screen, eARC pointed at a TV that is not sourcing
+  anything. This was the pre-existing behaviour until 2026-08-05.
+- `sync.sh push` copies the **repo's** `.storage/` registries over the live ones. The
+  repo copies are usually staler than live (see the `modified_at` note below), so for a
+  YAML-only change prefer copying the single file and calling `script.reload` /
+  `automation.reload` over a full push plus restart.
 - No CI/CD, linting, or test tooling exists — validation is manual via `sync.sh diff` and HA config check
 - `.storage/core.config_entries` is **deliberately never tracked** — it is the only registry
   holding live credentials. The other four registries were audited and are credential-free.

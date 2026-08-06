@@ -273,10 +273,30 @@ turn_on_television:
     data:
       source: TV Audio
     action: media_player.select_source
+  - wait_template: >-
+      {{ is_state('media_player.media_room_tv', 'on') and 'Live TV' in
+      (state_attr('media_player.media_room_tv', 'source_list') or []) }}
+    timeout: 00:00:45
+    continue_on_timeout: false
+  - action: media_player.select_source
+    target:
+      entity_id:
+      - media_player.media_room_tv
+    data:
+      source: Live TV
   description: >-
-    No TV select_source step: this uses the set's own tuner and apps, so there is
-    no input to switch to and nothing that has to wait for webOS to publish its
-    source list.
+    This tile means the set's own tuner, so the last step is not optional: the TV
+    does not start from nowhere. Coming from Blu-ray, Apple TV, Mac Mini or
+    Switch it is parked on AVR-X4700H, and without the select_source below it
+    stays there -- the Denon moves to TV Audio while the screen still shows the
+    receiver's now-idle HDMI port, so you get a blank picture and eARC pointed at
+    a TV that is not sourcing anything.
+
+    Denon first, TV second, for the same reason as the other scripts: a cold
+    Wake-on-LAN start takes longer than the receiver needs. The wait gates on
+    'Live TV' actually being in the TV's source_list rather than on the TV merely
+    reporting "on", because webOS publishes its input list a few seconds after it
+    starts answering.
   icon: mdi:television-classic
 learn_bluray_commands:
   alias: Learn Blu-ray Commands
